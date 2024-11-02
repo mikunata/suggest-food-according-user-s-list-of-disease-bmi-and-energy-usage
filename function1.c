@@ -10,6 +10,7 @@ FILE *f, *p;
 void user_register();
 void read_file();
 int login();
+void select_function();
 void user_register()
 {
     char name[50], surname[50], name2[50], data_age[50], data_sur[50], data_name[50], data_weight[50], data_height[50],
@@ -100,14 +101,15 @@ void user_register()
         scanf("%s", decision);
         if (strcmp(decision, "yes") == 0 || strcmp(decision, "YES") == 0 || strcmp(decision, "Yes") == 0 || strcmp(decision, "YeS") == 0 ||
             strcmp(decision, "YEs") == 0 || strcmp(decision, "yES") == 0 || strcmp(decision, "yEs") == 0 || strcmp(decision, "yeS") == 0)
-            printf("Complete your register!");
+            {
+                printf("Complete your register!");
+                return main();
+            }
     } while (a == 0 || w == 0 || h == 0 || strcmp(decision, "No") == 0 || strcmp(decision, "NO") == 0 || strcmp(decision, "no") == 0 || strcmp(decision, "nO") == 0 ||
              strcmp(decision, "N") == 0 || strcmp(decision, "n") == 0);
 }
 int main()
 {
-    do
-    {
         system("clear");
         printf("\n********************\n");
         printf("*  1.register      *\n");
@@ -127,18 +129,24 @@ int main()
         }
         if (choice == 3)
             return (0);
-    } while (1);
 }
 int login()
 {
-    char name[50], sur[50], data[50], username[50], data_password[50], password[50]=" ", user_password[50], ans[1], real_password[50]=" ";
+    char name[50], sur[50], data[50], username[50], data_password[50], password[50]="\0", user_password[50], ans[1], real_password[50]="\0";
     int age;
     do
     {
         system("clear");
         if(strcmp(password,real_password)!=0)
-        {
+        { 
+            char D[1];
+            do{
             printf("Your password is wrong!\nPls check your password\n");
+            printf("accept(y/n): ");
+            scanf("%s",D);
+            }while(strcmp(D, "N") == 0 || strcmp(D, "n") == 0);
+            if(strcmp(D, "Y") == 0 || strcmp(D, "y") == 0)
+                system("clear");
         }
         printf("Name :");
         scanf(" %s", name);
@@ -152,29 +160,74 @@ int login()
         {
             do
             {
-                printf("pls register first\n");
+                system("clear");
+                printf("pls register first or check your username\n");
                 printf("accept(y/n): ");
                 scanf(" %s", ans);
             } while (strcmp(ans, "N") == 0 || strcmp(ans, "n") == 0);
+            if(strcmp(ans,"y")==0||strcmp(ans,"Y")==0)
+                {
+                    int c;
+                    printf("/////////////////////");
+                    printf("\\1.register         \\\n ");
+                    printf("\\2.Recheck again    \\\n");
+                    printf("/////////////////////");
+                    printf("choose : ");
+                    scanf("%d",&c);
+                    if(c==1)user_register();
+                    else continue; 
+                }
         }
         else
         {
-            fclose(f);
-            if (p = fopen(data_password, "r") == NULL)
-                printf("Error");
+            if (f = fopen(data_password, "r") == NULL)
+             { 
+                  printf("Error");
+                  break;
+             }
             else
             {
-                fscanf(p, "%s", real_password);
-                fclose(p);
+                f=fopen(data_password,"r");
+                fscanf(f, "%s", real_password);
+                fclose(f);
                 printf("password: ");
                 scanf("%s", password);
                 if (strcmp(password, real_password) == 0)
                 {
-                    // function มาต่อ
+                    system("clear");
+                    printf("login successful\n");
                 }
             }
         }
     } while (strcmp(password, real_password) != 0);
+    select_function();
+}
+void select_function() //เอาฟังก์ชั่นที่เสร็จแล้วมาใส่ในนี้
+{
+    int f_c;
+    printf("1....\n");
+    printf("2....\n");
+    printf("3....\n");
+    printf("4.logout\n");
+    printf("choose : ");
+    scanf("%d",&f_c);
+    switch (f_c)
+    {
+    case(1) :
+        //funtion ใดๆๆ
+        break;
+    case(2):
+        //functionใดๆๆ
+        break;
+    case(3):
+        //functionใดๆๆ
+        break;  
+    case(4):
+        main();
+        break;  
+    }
+}
+
 
     /*  ตัวอย่างอ่านข้อมูล2
     void read_data(char name[50],char sur[50],char data[50])
