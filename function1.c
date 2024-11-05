@@ -14,7 +14,7 @@ void select_function();
 void user_register()
 {
     char name[50], surname[50], name2[50], data_age[50], data_sur[50], data_name[50], data_weight[50], data_height[50],
-        data_disease[50], sex[10], password[50], data_password[50], data_exercise[50];
+        data_disease[50], sex[10], password[50], data_password[50], data_exercise[50],disease[100][50];
     int age, num_disease, ex;
     do
     {
@@ -35,7 +35,6 @@ void user_register()
         scanf("%f", &h);
         printf("Num of Disease  :");
         scanf("%d", &nd);
-        char disease[nd][50];
         for (i = 0; i < nd; i++)
         {
             printf("%d. ", i + 1);
@@ -46,6 +45,15 @@ void user_register()
         printf("Create your password: ");
         scanf("%s", password);
         printf("*********************\n");
+          if (a == 0 || w == 0 || h == 0)
+        {
+            printf("Error pls enter your right information!!");
+            continue;
+        }
+        printf("Confirm your information(yes/no): ");
+        scanf("%s", decision);
+    } while (a == 0 || w == 0 || h == 0 || strcmp(decision, "No") == 0 || strcmp(decision, "NO") == 0 || strcmp(decision, "no") == 0 || strcmp(decision, "nO") == 0 ||
+             strcmp(decision, "N") == 0 || strcmp(decision, "n") == 0);
         strcpy(name2, name);
         strcat(name, surname);
         f = fopen(name, "w");
@@ -92,21 +100,12 @@ void user_register()
         f = fopen(data_exercise, "w");
         fprintf(f, "%d", ex);
         fclose(f);
-        if (a == 0 || w == 0 || h == 0)
-        {
-            printf("Error pls enter your right information!!");
-            continue;
-        }
-        printf("Confirm your information(yes/no): ");
-        scanf("%s", decision);
-        if (strcmp(decision, "yes") == 0 || strcmp(decision, "YES") == 0 || strcmp(decision, "Yes") == 0 || strcmp(decision, "YeS") == 0 ||
+        if (strcmp(decision, "Y") == 0 ||strcmp(decision, "y") == 0 ||strcmp(decision, "yes") == 0 || strcmp(decision, "YES") == 0 || strcmp(decision, "Yes") == 0 || strcmp(decision, "YeS") == 0 ||
             strcmp(decision, "YEs") == 0 || strcmp(decision, "yES") == 0 || strcmp(decision, "yEs") == 0 || strcmp(decision, "yeS") == 0)
             {
                 printf("Complete your register!");
                 return main();
             }
-    } while (a == 0 || w == 0 || h == 0 || strcmp(decision, "No") == 0 || strcmp(decision, "NO") == 0 || strcmp(decision, "no") == 0 || strcmp(decision, "nO") == 0 ||
-             strcmp(decision, "N") == 0 || strcmp(decision, "n") == 0);
 }
 int main()
 {
