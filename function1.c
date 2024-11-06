@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-
+//htehglkdjhgksjdhgi
 char op_data[50], op_disease[50][50], decision[10];
 int op_age;
 float weight, height, w, h;
