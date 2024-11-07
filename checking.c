@@ -18,7 +18,7 @@ void readFile() {
  if (fp == NULL) {
   printf("file not found\n");exit(0);
  }
-
+ else{
  int i = 0;
  while (i < 50) {
         int h;
@@ -31,7 +31,7 @@ void readFile() {
             break;
         }
     }
-
+ }
 
  fclose(fp);
 }
