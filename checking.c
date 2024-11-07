@@ -13,8 +13,7 @@ void readFile() {
  FILE *fp;
 
  fp = fopen("mlcfoodlist.txt", "r");
- printf("%p\n", fp);
- printf("%d\n", fp);
+ 
  if (fp == NULL) {
   printf("file not found\n");exit(0);
  }
