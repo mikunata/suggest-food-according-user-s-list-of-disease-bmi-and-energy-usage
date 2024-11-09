@@ -1,4 +1,3 @@
-
 #include<stdio.h>
 
 
@@ -32,21 +31,24 @@
     printf("Do you want to record this calories? \n If you want to do, you will type 1 ,but if you don't want to record, you will type 0.\n ,Or if you want to back to the first page and don't record this data, you will type 3\n :");
     scanf("%d",&REC);
     if(REC==1)
-    {   char filename[100];
-        sprintf(filename, "%s_%02d.%02d_%02d-%02d-%d.txt",MN,T1,T2,Mo,Da,Ye );
-        FILE *CLR = fopen(filename,"w");
-        LOUIS=1; printf("You want to record this data."); 
-        fprintf(CLR,"Meal's name/ Manu = %s\n",MN);
-        fprintf(CLR, "Mont/Date/Year = %02d/%02d/%d\n", Mo,Da,Ye);
-        fprintf(CLR, "Time = %02d:%02d\n", T1,T2);
-        fprintf(CLR, "Protein = %d g\n",Prot );
-        fprintf(CLR, "Carbohydrate = %d g\n",Car );
-        fprintf(CLR, "Fat = %d g\n",Fat );
-        fprintf(CLR, "Dietary fiber = %d g\n",Fi );
-        fprintf(CLR, "***|| Calories = %d C ||***\n",Cal );
-        fclose(CLR);
-        printf("Write data to file %s complete.\n",filename);
+    {   char filename[] = "My_dietary_information1.txt";
         
+        FILE *CLR = fopen(filename,"a+");
+        LOUIS=1; printf("You want to record this data.\n"); 
+        fprintf(CLR,"Meal's name/ Manu = %s ",MN);
+        fprintf(CLR, "Mont/Date/Year = %02d/%02d/%d ", Mo,Da,Ye);
+        fprintf(CLR, "Time = %02d:%02d ", T1,T2);
+        fprintf(CLR, "Protein = %d g ",Prot );
+        fprintf(CLR, "Carbohydrate = %d g ",Car );
+        fprintf(CLR, "Fat = %d g ",Fat );
+        fprintf(CLR, "Dietary fiber = %d g \n",Fi );
+        fprintf(CLR, "%d\n",Cal );//อาร์มดึงไปใช้
+        
+        fclose(CLR);
+        
+        printf("Write data to file %s complete.\n",filename);
+        printf("Go to the first page.");
+        main();
     }
     else if(REC==3)
     {
@@ -68,6 +70,7 @@
         
     }
     }while(LOUIS==0);
+    
 
 }
 
@@ -104,4 +107,3 @@ void main() //ตอนไปรวมกับเพื่อนให้ลบ
     printf("\n ***\\ START TO LOUIS PART /***\n");
     edit_data_calculate_calories();
 }
-
