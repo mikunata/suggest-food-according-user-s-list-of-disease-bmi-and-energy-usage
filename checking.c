@@ -16,7 +16,6 @@ struct seven7
     int min_cal;
     int max_cal;
 };
-
 struct seven7 food7[50];
 
 void readFilemlc()
@@ -87,65 +86,50 @@ void readFile7()
     fclose(fp2);
 }
 
-void printFoodData(int count)
-{
-    for (int i = 0; i < count; i++)
-    {
-        printf("Food Name: %s\n", food[i].name);
-        printf("Min Calories: %d\n", food[i].min_cal);
-        printf("Max Calories: %d\n\n", food[i].max_cal);
-    }
-}
-void printFoodData7(int count)
-{
-    for (int i = 0; i < count; i++)
-    {
-        printf("Food Name: %s\n", food7[i].name);
-        printf("Min Calories: %d\n", food7[i].min_cal);
-        printf("\n");
-    }
-}
-
 void printf_mlc(int g)
 {
-  printf("%s",food[g].name);
-
-
+    printf("-30%s", food[g].name);
+}
+void printf_7(int g)
+{
+    printf("-30%s", food7[g].name);
 }
 
-int main()
+void checking(float yourcal)
 {
-    int i, count, m;
+    int i;
 
-    printf("Your calories : ");
-    scanf("%d",&m);
-    printf("%d \n",m);
     readFilemlc();
-    readFile7(); // เก็บค่าที่อ่านจากไฟล์
-
-   /* printf("---Stored Food mlc Data:---\n\n");
-    printFoodData(51);
-    //เก็บค่าที่อ่านจากไฟล์
-    printf("---Stored Food 7 Data:---\n\n");
-    printFoodData7(32);
-    return 0;*/
-
-    // checking for output
-
+    readFile7();
+    for (i = 0; i < 32; i++)
+     food7[i].max_cal=food7[i].min_cal+50;
+    printf("\n");
+    printf("---recommended food in MLC---");
+    printf("\n\n");
     for (i = 0; i < 51; i++)
     {
-        if((food[i].min_cal < m)&&(m < (food[i].max_cal)))
+        if ((food[i].min_cal < yourcal) && (yourcal < (food[i].max_cal)))
         {
-           printf_mlc(i);
-           printf("%d-%d",food[i].min_cal,food[i].max_cal);
-           printf("\n");
+            printf_mlc(i);
+            printf(" min = %d , max = %d", food[i].min_cal, food[i].max_cal);
+            printf("\n");
         }
 
         else
-         continue;
+            continue;
+    }
+    printf("---recommended food in 7-11---");
+    printf("\n\n");
+    for (i = 0; i < 32; i++)
+    {
+        if ((food7[i].min_cal < yourcal) && (yourcal < food7[i].max_cal))
+        {
+            printf_7(i);
+            printf(" min = %d , max = %d", food7[i].min_cal, food7[i].max_cal);
+            printf("\n");
+        }
 
-
-
-    }}
-
-
+        else
+            continue;
+    }
+}
