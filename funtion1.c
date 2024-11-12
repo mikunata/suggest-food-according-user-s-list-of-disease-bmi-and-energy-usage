@@ -10,14 +10,15 @@ FILE *f, *p;
 void user_register();
 void read_file();
 int login();
-void select_function();
+void select_function(char);
 void user_register()
 {
     char name[50], surname[50], name2[50], data_age[50], data_sur[50], data_name[50], data_weight[50], data_height[50],
-        data_disease[50], sex[10], password[50], data_password[50], data_exercise[50],disease[100][50];
+        data_disease[50], sex[10], password[50], data_password[50], data_exercise[50],disease[50][50];
     int age, num_disease, ex;
     do
     {
+        //รับข้อมูล
         system("clear");
         a = age, nd = num_disease, w = weight, h = height;
         printf("\n*********************\n");
@@ -54,6 +55,7 @@ void user_register()
         scanf("%s", decision);
     } while (a == 0 || w == 0 || h == 0 || strcmp(decision, "No") == 0 || strcmp(decision, "NO") == 0 || strcmp(decision, "no") == 0 || strcmp(decision, "nO") == 0 ||
              strcmp(decision, "N") == 0 || strcmp(decision, "n") == 0);
+        //เริ่มสร้างไฟล์เก็บข้อมูล
         strcpy(name2, name);
         strcat(name, surname);
         f = fopen(name, "w");
@@ -136,17 +138,20 @@ int login()
     do
     {
         system("clear");
+        //ถ้ารหัสผิด
         if(strcmp(password,real_password)!=0)
         { 
             char D[1];
             do{
             printf("Your password is wrong!\nPls check your password\n");
+                //ต้องไปทำลืมรหัสผ่าน
             printf("accept(y/n): ");
             scanf("%s",D);
             }while(strcmp(D, "N") == 0 || strcmp(D, "n") == 0);
             if(strcmp(D, "Y") == 0 || strcmp(D, "y") == 0)
                 system("clear");
         }
+        //กรอกข้อมูลเพื่อเข้าใช้
         printf("Name :");
         scanf(" %s", name);
         printf("Surname :");
@@ -186,6 +191,7 @@ int login()
              }
             else
             {
+                //ตรวจสอบรหัสผ่าน
                 f=fopen(data_password,"r");
                 fscanf(f, "%s", real_password);
                 fclose(f);
@@ -199,9 +205,9 @@ int login()
             }
         }
     } while (strcmp(password, real_password) != 0);
-    select_function();
+    select_function(username);
 }
-void select_function() //เอาฟังก์ชั่นที่เสร็จแล้วมาใส่ในนี้
+void select_function(char user[50]) //เอาฟังก์ชั่นที่เสร็จแล้วมาใส่ในนี้
 {
     int f_c;
     printf("1....\n");
