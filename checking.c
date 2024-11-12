@@ -88,11 +88,11 @@ void readFile7()
 
 void printf_mlc(int g)
 {
-    printf("%s", food[g].name);
+    printf("-30%s", food[g].name);
 }
 void printf_7(int g)
 {
-    printf("%s", food7[g].name);
+    printf("-30%s", food7[g].name);
 }
 
 void checking(float yourcal)
