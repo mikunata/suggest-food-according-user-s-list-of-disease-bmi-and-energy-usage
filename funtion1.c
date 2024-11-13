@@ -10,11 +10,13 @@ FILE *f, *p;
 void user_register();
 void read_file();
 int login();
-void select_function(char);
+void select_function(char user[50]);
+int resetpassword(char passname[50],char [100]);
 void user_register()
 {
     char name[50], surname[50], name2[50], data_age[50], data_sur[50], data_name[50], data_weight[50], data_height[50],
-        data_disease[50], sex[10], password[50], data_password[50], data_exercise[50],disease[50][50];
+        data_disease[50], sex[10], password[50], data_password[50], data_exercise[50],disease[50][50],data_verify_qa[50],data_verify_ans[50];
+    char verify_qa[100],verify_ans[100];
     int age, num_disease, ex;
     do
     {
@@ -45,6 +47,10 @@ void user_register()
         scanf("%d", &ex);
         printf("Create your password: ");
         scanf("%s", password);
+        printf("create your verify question for forgeting password: ");
+        scanf(" %[^\n]",verify_qa);
+        printf("correct answer for your verify: ");
+        scanf(" %[^\n]",verify_ans);
         printf("*********************\n");
           if (a == 0 || w == 0 || h == 0)
         {
@@ -102,6 +108,16 @@ void user_register()
         f = fopen(data_exercise, "w");
         fprintf(f, "%d", ex);
         fclose(f);
+        strcpy(data_verify_qa,name);
+        strcat(data_verify_qa,"_verify_qa");
+        f=fopen(data_verify_qa,"w");
+        fprintf(f, "%s", verify_qa);
+        fclose(f);
+        strcpy(data_verify_ans,name);
+        strcat(data_verify_ans,"_verify_ans");
+        f=fopen(data_verify_ans,"w");
+        fprintf(f, "%s", verify_ans);
+        fclose(f);
         if (strcmp(decision, "Y") == 0 ||strcmp(decision, "y") == 0 ||strcmp(decision, "yes") == 0 || strcmp(decision, "YES") == 0 || strcmp(decision, "Yes") == 0 || strcmp(decision, "YeS") == 0 ||
             strcmp(decision, "YEs") == 0 || strcmp(decision, "yES") == 0 || strcmp(decision, "yEs") == 0 || strcmp(decision, "yeS") == 0)
             {
@@ -134,7 +150,8 @@ int main()
 int login()
 {
     char name[50], sur[50], data[50], username[50], data_password[50], password[50]="\0", user_password[50], ans[1], real_password[50]="\0";
-    int age;
+    char ansreset[100],ansuser[100],resetpass[50],newpass[50]; 
+    int op;
     do
     {
         system("clear");
@@ -195,8 +212,54 @@ int login()
                 f=fopen(data_password,"r");
                 fscanf(f, "%s", real_password);
                 fclose(f);
-                printf("password: ");
-                scanf("%s", password);
+                printf("********************\n");
+                printf("*1.Enter password  *\n");
+                printf("*2.Forgot password *\n");
+                printf("********************\n");
+                printf("choose: ");
+                scanf("%d",&op);
+                switch (op)
+                {
+                case (1) :
+                          printf("password: ");
+                          scanf("%s", password);
+                    break;
+                case (2) :
+                    printf("////////////////////////\n");
+                    printf("//verify your identity//\n");
+                    printf("////////////////////////\n");
+                    resetpassword(username,ansreset);
+                    printf("Ans verify question : ");
+                    scanf("%s",ansuser);
+                    if(strcmp(ansreset,ansuser)==0)
+                        {
+                            strcpy(resetpass,username);
+                            strcat(resetpass,"_password");
+                            f=fopen(resetpass,"w");
+                            printf("Your new password :");
+                            scanf("%s",newpass);
+                            fprintf(f,"%s",newpass);
+                            fclose(f);
+                            login();
+                        }
+                    else{
+                        int i;
+                        printf("pls check your answer again!!\n");
+                        printf("******************************\n");
+                        printf("1.register again\n");
+                        printf("2.relogin\n");
+                        printf("******************************\n");
+                        scanf("%d",&i);
+                        switch (i)
+                        {
+                        case (1): user_register();
+                        break;
+                        case(2): login();
+                        break;
+                        }
+                    }
+                    break; 
+                }
                 if (strcmp(password, real_password) == 0)
                 {
                     system("clear");
@@ -206,6 +269,30 @@ int login()
         }
     } while (strcmp(password, real_password) != 0);
     select_function(username);
+}
+int resetpassword(char passname[50],char verify_ans[100])
+{
+    char question[100],passans[50],passqa[50];
+    FILE *p;
+    strcpy(passqa,passname);
+    strcpy(passans,passname);
+    strcat(passqa,"_verify_qa");
+    if((p=fopen(passqa,"r"))==NULL)
+    {
+        printf("ERROR");
+        return 15;
+    }
+    fgets(question,100,p);
+    fclose(p);
+    printf("%s\n",question);
+    strcat(passans,"_verify_ans");
+     if((p=fopen(passans,"r"))==NULL)
+    {
+        printf("ERROR");
+        return 10;
+    }
+    fgets(verify_ans,100,p);
+    fclose(p);
 }
 void select_function(char user[50]) //เอาฟังก์ชั่นที่เสร็จแล้วมาใส่ในนี้
 {
