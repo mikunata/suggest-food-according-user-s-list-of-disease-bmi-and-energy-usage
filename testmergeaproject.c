@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include"checking.c"
-#include"function3 incomplete.c"
+#include"function3_incomplete.c"
 char op_data[50], op_disease[50][50], decision[10];
 int op_age;
 float weight, height, w, h;
