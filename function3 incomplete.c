@@ -6,14 +6,15 @@
 {    
     int Prot,Car,Fat,Fit,Fi,Cal,Mo,Da,Ye,T1,T2,REC,LOUIS;
     char MN[20];
+    system("cls");
     printf("Calculate calories from nutrients(gram)\n");
     printf("Meal's name/ Manu (English Only) :");
     scanf("%s",MN);
-    printf("Mont/Date/Year(eg. 01/02/2024) :");
-    scanf("%d/%d/%d",&Mo,&Da,&Ye);
+    printf("Date/Mont/Year(eg. 01/02/2024) :");
+    scanf("%d/%d/%d",&Da,&Mo,&Ye);
     printf("Time (eg. 15:24) >>"); //ให้พิมพ์เองเพราะจะได้ระบุเวลาตามความต้องการของผู้ใช้ เช่น กินตั้งแต่เที่ยงแต่จะมาพิมพ์ตอนเวลาบ่ายเป็นต้น
     scanf("%d:%d",&T1,&T2);
-    printf("%02d/%02d/%d\n",Mo,Da,Ye); 
+    printf("%02d/%02d/%d\n",Da,Mo,Ye); 
     printf("%02d:%02d \n",T1,T2);
     printf("Protein(gram) :");
     scanf("%d",&Prot); 
@@ -31,33 +32,33 @@
     printf("Do you want to record this calories? \n If you want to do, you will type 1 ,but if you don't want to record, you will type 0.\n ,Or if you want to back to the first page and don't record this data, you will type 3\n :");
     scanf("%d",&REC);
     if(REC==1)
-    {   char filename[] = "My_dietary_information1.txt";
+    {   char filename[] = "User_dietary_information1.txt";
         
         FILE *CLR = fopen(filename,"a+");
         LOUIS=1; printf("You want to record this data.\n"); 
         fprintf(CLR,"Meal's name/ Manu = %s ",MN);
-        fprintf(CLR, "Mont/Date/Year = %02d/%02d/%d ", Mo,Da,Ye);
-        fprintf(CLR, "Time = %02d:%02d ", T1,T2);
-        fprintf(CLR, "Protein = %d g ",Prot );
-        fprintf(CLR, "Carbohydrate = %d g ",Car );
-        fprintf(CLR, "Fat = %d g ",Fat );
-        fprintf(CLR, "Dietary fiber = %d g \n",Fi );
+        fprintf(CLR, "|Time = %02d:%02d ", T1,T2);
+        fprintf(CLR, "|Protein = %d g ",Prot );
+        fprintf(CLR, "|Carbohydrate = %d g ",Car );
+        fprintf(CLR, "|Fat = %d g ",Fat );
+        fprintf(CLR, "|Dietary fiber = %d g \n",Fi );
+        fprintf(CLR, "%02d/%02d/%d\n ", Da,Mo,Ye);//อาร์มดึงไปใช้
         fprintf(CLR, "%d\n",Cal );//อาร์มดึงไปใช้
         
         fclose(CLR);
-        
+        system("cls");
         printf("Write data to file %s complete.\n",filename);
-        printf("Go to the first page.");
-        main();
+        printf("Go to the homepage.");
+        main(); // อย่าลืมเชื่อมไปหน้ารวมฟังก์ชั่น;
     }
     else if(REC==3)
-    {
-        printf("You want to back to the first page.\n");
-        printf("Go to the first page.");
-        main(); // อย่าลืมเชื่อมไปหน้าแรก main();
+    {   system("cls");
+        printf("You want to back to the homepage.\n");
+        printf("Go to the homepage.");
+        main(); // อย่าลืมเชื่อมไปหน้ารวมฟังก์ชั่น;
     }
     else if(REC==0)
-    {   
+    {   system("cls");
         LOUIS=1;
         printf("You don't want to record this data.\n");
         printf("And you want to calculate calories again.\n");
@@ -65,7 +66,9 @@
         
     }
     else if(REC!=0 && REC!=1&&REC!=3)
-    {   LOUIS=0;
+    {   
+        system("cls");
+        LOUIS=0;
         printf("You are incorrect.\n You must type again.\n");
         
     }
@@ -75,7 +78,8 @@
 }
 
 void edit_data()
-{
+{   
+    system("cls");
     printf("Edit your recorded data");
 //ยังไม่เสร็จจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจ****************************************************************************************************************
 }
@@ -84,7 +88,7 @@ void edit_data()
 void edit_data_calculate_calories()
 {
     int Prot,Car,Fat,Fit,Fi,Cal,Mo,Da,Ye,T1,T2,Ans;
-    printf("What do you want to ...? \n 1.calculate calories from nutrients(gram) \n 2.edit your recorded data \n 3.back to the first page \n**Your answer is 1,2 or 3** \n :");
+    printf("What do you want to ...? \n 1.record and calculate calories from nutrients(gram) \n 2.edit your recorded data \n 3.back to the first page \n**Your answer is 1,2 or 3** \n :");
     scanf("%d",&Ans);
     switch (Ans)
     {
