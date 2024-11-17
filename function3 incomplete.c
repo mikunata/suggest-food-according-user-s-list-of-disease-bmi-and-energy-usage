@@ -4,11 +4,11 @@
 
  void calculate_calories()
 {    
-    int Prot,Car,Fat,Fit,Fi,Cal,Mo,Da,Ye,T1,T2,REC,LOUIS;
+    int Prot,Car,Fat,Fit,Fi,Cal,Mo,Da,Ye,T1,T2,REC,LOUIS,Crown,knowncal ;
     char MN[20];
     system("cls");
-    printf("Calculate calories from nutrients(gram)\n");
-    printf("Meal's name/ Manu (English Only) :");
+    printf("Record and calculate calories from nutrients(gram)\n");
+    printf("Meal's name/ Manu (English Only and Don't have space) :");
     scanf("%s",MN);
     printf("Date/Mont/Year(eg. 01/02/2024) :");
     scanf("%d/%d/%d",&Da,&Mo,&Ye);
@@ -16,6 +16,27 @@
     scanf("%d:%d",&T1,&T2);
     printf("%02d/%02d/%d\n",Da,Mo,Ye); 
     printf("%02d:%02d \n",T1,T2);
+    do{system("cls");
+    printf("Do you know the calories? \n If you know, you will type 1 ,but if you don't know, you will type 0.\n ,Or if you want to back, you will type 3\n :");
+    scanf("%d",&knowncal);
+    if(knowncal==1)
+    { system("cls");
+    Crown=1;
+    printf("Meal's name/ Manu = %s\n",MN);
+    printf("%02d/%02d/%d\n",Da,Mo,Ye); 
+    printf("%02d:%02d \n",T1,T2);
+    printf("You know your meal's calories.\n");
+    printf("Please, enter your meal's calories.\n");
+    scanf("%d",&Cal);
+    printf("*****|| Calories in this meal is %d kilocalories ||***** \n",Cal);}
+    else if(knowncal==0)
+    { system("cls");
+    Crown=1;
+    printf("Meal's name/ Manu = %s\n",MN);
+    printf("%02d/%02d/%d\n",Da,Mo,Ye); 
+    printf("%02d:%02d \n",T1,T2);
+    printf("You want to calculate your meal's calories.\n");
+    printf("Please, enter the number of grams of protein, carbohydrate, fat and dietary fiber.\n");
     printf("Protein(gram) :");
     scanf("%d",&Prot); 
     printf("Carbohydrate(gram) :");
@@ -26,7 +47,16 @@
     scanf("%d",&Fi); 
     printf("Protein = %d g,Carbohydrate = %d g, Fat = %d g, Dietary fiber = %d g\n",Prot,Car,Fat,Fi);
     Cal=Prot*4+Car*4+Fat*9+Fi*0;
-    printf("*****|| Calories in this meal is %d C ||***** \n",Cal);
+    printf("*****|| Calories in this meal is %d kilocalories ||***** \n",Cal);} 
+    else if(knowncal==3)
+    { system("cls");printf("Already back\n");
+    Crown=1;calculate_calories();}
+    else 
+    {   system("cls");
+        printf("incorrect");
+    Crown=0;
+
+    ;}}while(Crown==0);
     
     do{
     printf("Do you want to record this calories? \n If you want to do, you will type 1 ,but if you don't want to record, you will type 0.\n ,Or if you want to back to the first page and don't record this data, you will type 3\n :");
