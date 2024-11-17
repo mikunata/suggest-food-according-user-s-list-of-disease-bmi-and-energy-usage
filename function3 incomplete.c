@@ -4,16 +4,29 @@
 
  void calculate_calories()
 {    
-    int Prot,Car,Fat,Fit,Fi,Cal,Mo,Da,Ye,T1,T2,REC,LOUIS,Crown,knowncal ;
+    int Prot,Car,Fat,Fit,Fi,Cal,Mo,Da,Ye,T1,T2,REC,LOUIS,Crown,knowncal,date_mont_correct,Time_correct ;
     char MN[20];
     system("cls");
     printf("Record and calculate calories from nutrients(gram)\n");
     printf("Meal's name/ Manu (English Only and Don't have space) :");
     scanf("%s",MN);
+    date_mont_correct=0;
+    Time_correct=0;
+    do{ 
+        if(date_mont_correct==0){
     printf("Date/Mont/Year(eg. 01/02/2024) :");
-    scanf("%d/%d/%d",&Da,&Mo,&Ye);
+    scanf("%d/%d/%d",&Da,&Mo,&Ye);date_mont_correct=1;}
+        if(date_mont_correct==1){printf("   Date/Mont/year is incorrect.\nTry again.\n");
+    printf("Date/Mont/Year(eg. 01/02/2024) :");
+    scanf("%d/%d/%d",&Da,&Mo,&Ye);}}while(Da<=0||Da>=32||Mo<=0||Mo>=13);
+    
+    do{
+        if(Time_correct==0){printf("Time (eg. 15:24) >>"); //ให้พิมพ์เองเพราะจะได้ระบุเวลาตามความต้องการของผู้ใช้ เช่น กินตั้งแต่เที่ยงแต่จะมาพิมพ์ตอนเวลาบ่ายเป็นต้น
+    scanf("%d:%d",&T1,&T2);Time_correct=1;}
+    if(Time_correct==1){printf("   Time is incorrect.\nTry again.\n");
     printf("Time (eg. 15:24) >>"); //ให้พิมพ์เองเพราะจะได้ระบุเวลาตามความต้องการของผู้ใช้ เช่น กินตั้งแต่เที่ยงแต่จะมาพิมพ์ตอนเวลาบ่ายเป็นต้น
-    scanf("%d:%d",&T1,&T2);
+    scanf("%d:%d",&T1,&T2);Time_correct=1;}}while(T1<0||T1>=24||T2<0||T2>=60);
+    
     printf("%02d/%02d/%d\n",Da,Mo,Ye); 
     printf("%02d:%02d \n",T1,T2);
     do{system("cls");
@@ -28,7 +41,9 @@
     printf("You know your meal's calories.\n");
     printf("Please, enter your meal's calories.\n");
     scanf("%d",&Cal);
-    printf("*****|| Calories in this meal is %d kilocalories ||***** \n",Cal);}
+    printf("*****|| Calories in this meal is %d kilocalories ||***** \n",Cal);
+    Prot=0;Car=0;Fat=0;Fi=0;
+    }
     else if(knowncal==0)
     { system("cls");
     Crown=1;
@@ -51,7 +66,7 @@
     else if(knowncal==3)
     { system("cls");printf("Already back\n");
     Crown=1;calculate_calories();}
-    else 
+    else if(knowncal!=0 && knowncal!=1&&knowncal!=3)
     {   system("cls");
         printf("incorrect");
     Crown=0;
