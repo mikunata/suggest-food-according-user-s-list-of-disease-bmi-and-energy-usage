@@ -1,5 +1,10 @@
 #include<stdio.h>
-
+#include <string.h>
+#define MAX_RECORDS 100
+typedef struct {
+    char date[11]; // วันที่ในรูปแบบ "DD-MM-YYYY"
+    int calories;  // จำนวนแคลอรี่
+} UserData;
 
 
  void calculate_calories()
@@ -122,12 +127,79 @@
 
 }
 
+int readFile(UserData data[], int maxRecords, const char*fileName) {
+    FILE *file = fopen(fileName, "r");
+    if (!file) {
+        printf("Cannot open file!\n");
+        return 0;
+    }
+    int count = 0;
+    while (fscanf(file, "%10s %d", data[count].date, &data[count].calories) != EOF && count < maxRecords) {
+        count++;
+    }
+    fclose(file);
+    return count;
+}
+
+int findRecordByDate(UserData data[], int count, const char* date) {
+    for (int i = 0; i < count; i++) {
+        if (strcmp(data[i].date, date) == 0) {
+            return i; // คืนค่า index ที่พบ
+        }
+    }
+    return -1; // หากไม่พบ
+}
+void editRecord(UserData *record) {
+    printf("Current date: %s, calories: %d\n", record->date, record->calories);
+    printf("Enter new calories: ");
+    scanf("%d", &record->calories);
+    printf("Data has been edited successfully.\n");
+}
+
+void writeFile(UserData data[], int count, const char* fileName) {
+    FILE *file = fopen(fileName, "w");
+    if (!file) {
+        printf("Unable to open file for writing.\n");
+        return;
+    }
+    for (int i = 0; i < count; i++) {
+        fprintf(file, "%s %d\n", data[i].date, data[i].calories);
+    }
+    fclose(file);
+    printf("Data was successfully saved.\n");
+}
+
 void edit_data()
 {   
     system("cls");
     printf("Edit your recorded data");
-//ยังไม่เสร็จจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจ****************************************************************************************************************
+    
+    UserData data[MAX_RECORDS];
+    int count = 0;
+    const char *fileName = "User_dietary_information1.txt";
+    
+    count = readFile(data, MAX_RECORDS, fileName);
+    printf("Data in file:\n");
+    for (int i = 0; i < count; i++) {
+        printf("%s %d\n", data[i].date, data[i].calories);
+    }
+    
+    char date[11];
+    printf("Enter your date/mont/year of data that you want to edit (DD-MM-YYYY): ");
+    scanf("%10s", date);
+    int index = findRecordByDate(data, count, date);
+    if (index != -1) {
+        editRecord(&data[index]);
+        writeFile(data, count, fileName);
+    } else {
+        printf("No data found in the date\n");
+    }
+    
+    return 0;
+    
 }
+//ยังไม่เสร็จจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจ****************************************************************************************************************
+
 
 
 void edit_data_calculate_calories()
