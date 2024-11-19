@@ -13,17 +13,16 @@ typedef struct {
     char date[11];
     int calories;
 } FoodRecord;
-void calculate_calories();
-int readFile(FoodRecord data[], const char *fileName) ;
-void writeFile(FoodRecord data[], int count, const char *fileName);
-void writeFile(FoodRecord data[], int count, const char *fileName);
+void calculate_calories(char user[50]);
+int readFile(FoodRecord data[], const char *fileName,char user[50]) ;
+void writeFile(FoodRecord data[], int count, const char *fileName,char user[50]);
 void displayData(FoodRecord data[], int count);
 void editRecord(FoodRecord *record);
-void edit_data();
-void edit_data_calculate_calories();
+void edit_data(char user[50]);
+void edit_data_calculate_calories(char user[50]);
 
 
- void calculate_calories()
+ void calculate_calories(char user[50])
 {    
     int Prot,Car,Fat,Fit,Fi,Cal,Mo,Da,Ye,T1,T2,REC,LOUIS,Crown,knowncal,date_mont_correct,Time_correct ;
     char MN[20];
@@ -86,7 +85,7 @@ void edit_data_calculate_calories();
     printf("*****|| Calories in this meal is %d kilocalories ||***** \n",Cal);} 
     else if(knowncal==3)
     { system("cls");printf("Already back\n");
-    Crown=1;calculate_calories();}
+    Crown=1;calculate_calories(user);}
     else if(knowncal!=0 && knowncal!=1&&knowncal!=3)
     {   system("cls");
         printf("incorrect");
@@ -108,27 +107,27 @@ void edit_data_calculate_calories();
         fprintf(CLR, "%d ",Car );
         fprintf(CLR, "%d ",Fat );
         fprintf(CLR, "%d\n",Fi );
-        fprintf(CLR, "%02d/%02d/%d\n", Da,Mo,Ye);//อาร์มดึงไปใช้
-        fprintf(CLR, "%d\n",Cal );//อาร์มดึงไปใช้
+        fprintf(CLR, "%02d/%02d/%d\n", Da,Mo,Ye);
+        fprintf(CLR, "%d\n",Cal );
         
         fclose(CLR);
         system("cls");
         printf("Write data to file %s complete.\n",filename);
         printf("Go to the homepage.");
-        main(); // อย่าลืมเชื่อมไปหน้ารวมฟังก์ชั่น;
+        main(user); // อย่าลืมเชื่อมไปหน้ารวมฟังก์ชั่น;
     }
     else if(REC==3)
     {   system("cls");
         printf("You want to back to the homepage.\n");
         printf("Go to the homepage.");
-        main(); // อย่าลืมเชื่อมไปหน้ารวมฟังก์ชั่น;
+        main(user); // อย่าลืมเชื่อมไปหน้ารวมฟังก์ชั่น;
     }
     else if(REC==0)
     {   system("cls");
         LOUIS=1;
         printf("You don't want to record this data.\n");
         printf("And you want to calculate calories again.\n");
-        calculate_calories();
+        calculate_calories(user);
         
     }
     else if(REC!=0 && REC!=1&&REC!=3)
@@ -144,11 +143,11 @@ void edit_data_calculate_calories();
 }
 
 // ฟังก์ชันสำหรับอ่านข้อมูลจากไฟล์
-int readFile(FoodRecord data[], const char *fileName) {
+int readFile(FoodRecord data[], const char *fileName,char user[50]) {
     FILE *file = fopen(fileName, "r");
     if (file == NULL) {
         printf("Unable to open file. Record your calories first.\n");
-        edit_data_calculate_calories();
+        edit_data_calculate_calories(user);
         
     }
     
@@ -166,11 +165,11 @@ int readFile(FoodRecord data[], const char *fileName) {
 }
 
 // ฟังก์ชันสำหรับเขียนข้อมูลกลับไปยังไฟล์
-void writeFile(FoodRecord data[], int count, const char *fileName) {
+void writeFile(FoodRecord data[], int count, const char *fileName,char user[50]) {
     FILE *file = fopen(fileName, "w");
     if (file == NULL) {
         printf("Unable to write file\n BACK TO THE HOMEPAGE\n");
-        main();//เชื่อมไปhomepage
+        main(user);//เชื่อมไปhomepage
         
     }
     
@@ -254,7 +253,7 @@ void editRecord(FoodRecord *record) {
     }}while(Quay==1);
 }
 
-void edit_data()
+void edit_data(char user[50])
 {   
     system("cls");
     printf("Edit your recorded data\n");
@@ -263,10 +262,10 @@ void edit_data()
     const char *fileName = "User_dietary_information1.txt";
     
     // อ่านข้อมูลจากไฟล์
-    count = readFile(data, fileName);
+    count = readFile(data, fileName,user);
     if (count == 0) {
         printf("There is no data in the file.\n Record your calories first.\n");
-        edit_data_calculate_calories();
+        edit_data_calculate_calories(user);
         
     }
     
@@ -288,7 +287,7 @@ void edit_data()
     editRecord(&data[recordIndex - 1]);
     
     // บันทึกข้อมูลกลับไปที่ไฟล์
-    writeFile(data, count, fileName);
+    writeFile(data, count, fileName,user);
     
     printf("Data has been edited successfully.\n" );
     int I_want_to_Sleep;
@@ -297,9 +296,9 @@ void edit_data()
     printf("Will you continue to make corrections? (1.Yes/2.No)\n(1 or 2):");
     scanf("%d",&I_want_to_Sleep);
     if(I_want_to_Sleep==1)
-    { Puvit_Sleep_at_6_am=1;edit_data();}
+    { Puvit_Sleep_at_6_am=1;edit_data(user);}
     else if(I_want_to_Sleep==2)
-    {Puvit_Sleep_at_6_am=1; main();}//ไปhomepage
+    {Puvit_Sleep_at_6_am=1; main(user);}//ไปhomepage
     }while(Puvit_Sleep_at_6_am==0);
   
     
@@ -308,30 +307,31 @@ void edit_data()
 
 
 
-void edit_data_calculate_calories()
+void edit_data_calculate_calories(char user[50])
 {
-    int Prot,Car,Fat,Fit,Fi,Cal,Mo,Da,Ye,T1,T2,Ans;
+    int Prot,Car,Fat,Fit,Fi,Cal,Mo,Da,Ye,T1,T2,Ans,io;
     printf("What do you want to ...? \n 1.record and calculate calories from nutrients(gram) \n 2.edit your recorded data \n 3.back to the homepage \n**Your answer is 1,2 or 3** \n :");
     scanf("%d",&Ans);
+    do{ io=0;
     switch (Ans)
     {
-    case (1):
-        calculate_calories();
+    case (1): io=1;
+        calculate_calories(user);
         break;
-    case (2):
-        edit_data();
+    case (2): io=1;
+        edit_data(user);
         break;
-    case (3):
+    case (3): io=1;
         system("cls");
-        main(); // อย่าลืมเชื่อมไปหน้าแรก main();
+        main(user); // อย่าลืมเชื่อมไปหน้าแรก main();
         break;
-    default: { printf("That is not correct.");system("cls"); main(); // อย่าลืมเชื่อมไปหน้าแรก main();
-    }
-}}
+    default: { io=0;printf("That is not correct.");system("cls"); main(user); // อย่าลืมเชื่อมไปหน้าแรก main();
+    }}
+}while(io==0); }
 
-void main() //ตอนไปรวมกับเพื่อนให้ลบออก main() หลัก จะได้เป็นหน้าแรก
+void main(char user[50]) //ตอนไปรวมกับเพื่อนให้ลบออก main() หลัก จะได้เป็นหน้าแรก
 {   system("cls");
     printf("\n ***\\ START TO LOUIS PART /***\n");
 
-    edit_data_calculate_calories();
+    edit_data_calculate_calories(user);
 }
