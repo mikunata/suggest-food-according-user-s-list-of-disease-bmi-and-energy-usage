@@ -6,10 +6,10 @@ int age, activity_level;
 char gender;
 
 // Function to calculate BMI
-float calculate_bmi(const char *data_weight, const char *data_height, const char *f_bmi) {
+float calculate_bmi(float weight, float height) {
 
     // Open the weight file
-    p = fopen(data_weight, "r");
+    p = fopen("data_weight", "r");
     if (p == NULL) {
         printf("Error opening weight file\n");
         return -1;
@@ -22,7 +22,7 @@ float calculate_bmi(const char *data_weight, const char *data_height, const char
     fclose(p);
 
     // Open the height file
-    p = fopen(data_height, "r");
+    p = fopen("data_height", "r");
     if (p == NULL) {
         printf("Error opening height file\n");
         return -1;
@@ -47,6 +47,14 @@ float calculate_bmi(const char *data_weight, const char *data_height, const char
 // Function to calculate BMR
 float calculate_bmr(float weight, float height, int age, char gender) {
 
+    p = fopen("data_sex", "r");
+    if (p == NULL) {
+        printf("Error opening sex data file\n");
+        return -1;
+    }
+    fscanf(p, "%c", &gender);
+    fclose(p);
+
     // Mifflin-St Jeor equation for BMR calculation
     if (gender == 'M' || gender == 'm') {
         bmr = 10 * weight + 6.25 * height - 5 * age + 5;  // For men
@@ -58,15 +66,23 @@ float calculate_bmr(float weight, float height, int age, char gender) {
     }
 
     // Write the BMR result to a file
-        p = fopen(bmr_file, "w");
+        p = fopen("bmr_result.txt", "w");
+    if (p != NULL) {
         fprintf(p, "%.2f\n", bmr);  // Write the BMR value to the file
         fclose(p);
+    } else {
+        printf("Error opening BMR result file\n");
+    }
     return bmr;
     }
     
 
 // Function to calculate TDEE (Total Daily Energy Expenditure)
 float calculate_tdee(float bmr, int activity_level) {
+
+    p = fopen("data_exercise", "r");
+    fscanf(p, "%d", activity_level);
+    fclose(p);
 
     // Activity factor based on activity level
     switch (activity_level) {
@@ -102,7 +118,7 @@ float calculate_tdee(float bmr, int activity_level) {
 int main() {
 
     // First, calculate BMI
-    float bmi = calculate_bmi(weight_file, height_file, bmi_file);
+    float bmi = calculate_bmi(weight, height);
     if (bmi != -1) {
         printf("BMI calculated: %.2f\n", bmi);
     }
@@ -117,4 +133,7 @@ int main() {
     if (tdee != -1) {
         printf("Calories needed per day (TDEE): %.2f\n", tdee);
 	printf("Calories needed per meal : %.2f\n", tdee/3);}   
-    return 0;
+
+    checking(tdee/3);
+
+}
