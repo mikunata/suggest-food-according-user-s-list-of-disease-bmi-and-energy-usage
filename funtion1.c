@@ -157,7 +157,7 @@ int user_register()
     strcat(data_disease, "_disease");
     f = fopen(data_disease, "w");
     for (i = 0; i < nd; i++)
-        fprintf(f, "%s ", disease[i]);
+        fprintf(f, "%s,", disease[i]);
     fclose(f);
     strcpy(data_password, name);
     strcat(data_password, "_password");
