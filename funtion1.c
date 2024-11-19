@@ -65,7 +65,7 @@ int user_register()
 {
     char name[50], surname[50], name2[50], data_age[50], data_sur[50], data_name[50], data_weight[50], data_height[50],
         data_disease[50], sex[10], password[50], data_password[50], data_exercise[50], disease[50][50], data_verify_qa[50], data_verify_ans[50];
-    char verify_qa[100], verify_ans[100], comfirm_pass[50];
+    char verify_qa[100], verify_ans[100], comfirm_pass[50],data_sex[50];
     int age, num_disease, ex;
     do
     {
@@ -137,6 +137,11 @@ int user_register()
     strcat(data_age, "_age");
     f = fopen(data_age, "w");
     fprintf(f, "%d", a);
+    fclose(f);
+    strcpy(data_sex,name);
+    strcat(data_sex,"_sex");
+    f=fopen(data_sex,"w");
+    fprintf(f,"%s",sex);
     fclose(f);
     strcpy(data_weight, name);
     strcat(data_weight, "_weight");
