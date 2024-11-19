@@ -87,11 +87,11 @@ int user_register()
         scanf("%f", &h);
         printf("Num of Disease  :");
         scanf("%d", &nd);
-        for (i = 0; i < nd; i++)
+       /* for (i = 0; i < nd; i++)
         {
             printf("%d. ", i + 1);
             scanf("%s", disease[i]);
-        }
+        }*/
         printf("Exercise per week: ");
         scanf("%d", &ex);
         do
@@ -153,12 +153,12 @@ int user_register()
     f = fopen(data_height, "w");
     fprintf(f, "%.2f", h);
     fclose(f);
-    strcpy(data_disease, name);
+    /*strcpy(data_disease, name);
     strcat(data_disease, "_disease");
     f = fopen(data_disease, "w");
     for (i = 0; i < nd; i++)
         fprintf(f, "%s,", disease[i]);
-    fclose(f);
+    fclose(f);*/
     strcpy(data_password, name);
     strcat(data_password, "_password");
     f = fopen(data_password, "w");
