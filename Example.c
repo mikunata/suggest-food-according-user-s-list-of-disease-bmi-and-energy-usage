@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "check.c"
+#include "checking.c"
 #include <stdlib.h>
 
 void main()
