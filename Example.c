@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include "checking.c"
+#include "distest.c"
+#include <stdlib.h>
 
 void main()
 {
