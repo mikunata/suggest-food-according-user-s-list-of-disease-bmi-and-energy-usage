@@ -1,23 +1,24 @@
 #include <stdio.h>
+#include <ctype.h>
+#include <string.h>
 #include <stdlib.h>
+float checking(int yourcal);
 
+void collectResponses(char responses[], const char *diseases[], int count, int *p);
+int confirmAction();
 struct mlc
 {
     char name[20];
-    int min_cal;
-    int max_cal;
+    int min_cal, max_cal, Sugar, Car, Sodium, Fats, Chol, Pota, Phos, Purine, Fruc, spicy;
+    int lim[10];
 };
-
 struct mlc food[50];
-
 struct seven7
 {
     char name[50];
-    int min_cal;
-    int max_cal;
+    int min_cal, max_cal, price; 
 };
 struct seven7 food7[50];
-
 void readFilemlc()
 {
     FILE *fp;
@@ -32,11 +33,11 @@ void readFilemlc()
     else
     {
         int i = 0;
-        while (i < 50)
+        while (i < 34)
         {
             int h;
-            h = fscanf(fp, "%25[^,],%d,%d\n", food[i].name, &food[i].min_cal, &food[i].max_cal);
-            if (h == 3)
+            h = fscanf(fp, "%30[^,],%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", food[i].name, &food[i].min_cal, &food[i].lim[0], &food[i].lim[1], &food[i].lim[2], &food[i].lim[3], &food[i].lim[4], &food[i].lim[5], &food[i].lim[6], &food[i].lim[7], &food[i].lim[8], &food[i].lim[9]);
+            if (h == 12)
             {
 
                 i++;
@@ -66,11 +67,11 @@ void readFile7()
     else
     {
         int i = 0;
-        while (i < 50)
+        while (i < 32)
         {
             int h;
-            h = fscanf(fp2, "%30[^,],%d\n", food7[i].name, &food7[i].min_cal);
-            if (h == 2)
+            h = fscanf(fp2, "%30[^,],%d,%d\n", food7[i].name, &food7[i].min_cal, &food7[i].price);
+            if (h == 3)
             {
 
                 i++;
@@ -86,45 +87,190 @@ void readFile7()
     fclose(fp2);
 }
 
-void printf_mlc(int g)
+float checking(int yourcal)
 {
-    printf("-30%s", food[g].name);
-}
-void printf_7(int g)
-{
-    printf("-30%s", food7[g].name);
-}
+    typedef struct
+    {
+        int state;
+       
+        int lim[10];
 
-void checking(float yourcal)
-{
-    int i;
+    } nutrie;
+    nutrie Dia = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    nutrie Hyper = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    nutrie Card = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    nutrie Kidney = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    nutrie GERD = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    nutrie Gout = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    nutrie Obesity = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    nutrie Liver = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    nutrie Allergies = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    nutrie Peptic = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    // Array of disease names
+    int *pt, i = 0;
+    int check[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    const char *diseases[] = {
+        "Diabetes Mellitus",
+        "Hypertension",
+        "Cardiovascular Diseases",
+        "Kidney Diseases",
+        "GERD",
+        "Gout",
+        "Obesity",
+        "Liver Diseases",
+        "Allergies",
+        "Peptic Ulcer"};
 
+    const int numDiseases = 10;
+    char responses[10];
+    pt = &check[0];
+
+    do
+    {
+        collectResponses(responses, diseases, numDiseases, pt);
+    } while (confirmAction() != 1);
+    Dia.state = check[0];
+    Hyper.state = check[1];
+    Card.state = check[2];
+    Kidney.state = check[3];
+    GERD.state = check[4];
+    Gout.state = check[5];
+    Obesity.state = check[6];
+    Liver.state = check[7];
+    Allergies.state = check[8];
+    Peptic.state = check[9];
+    if ((Dia.state) == 1)
+    {
+
+        Dia.lim[0] = 1;
+        Dia.lim[1] = 1;
+        Dia.lim[3] = 1;
+    }
+
+    if (Hyper.state == 1)
+    {
+        Hyper.lim[0] = 1;
+        Hyper.lim[2] = 1;
+        Hyper.lim[3] = 1;
+    }
+
+    if (Card.state == 1)
+    {
+
+        Card.lim[2] = 1;
+        Card.lim[3] = 1;
+        Card.lim[4] = 1;
+    }
+
+    if (Kidney.state == 1)
+    {
+
+        Kidney.lim[2] = 1;
+        Kidney.lim[5] = 1;
+        Kidney.lim[6] = 1;
+    }
+
+    if (GERD.state == 1)
+    {
+
+        GERD.lim[3] = 1;
+        GERD.lim[9] = 1;
+    }
+
+    if (Gout.state == 1)
+    {
+        Gout.lim[7] = 1;
+        Gout.lim[8] = 1;
+    }
+
+    if (Obesity.state == 1)
+    {
+        Obesity.lim[0] = 1;
+        Obesity.lim[3] = 1;
+    }
+
+    if (Liver.state == 1)
+    {
+
+        Liver.lim[3] = 1;
+        Liver.lim[8] = 1;
+    }
+
+    if (Allergies.state == 1)
+    {
+        Allergies.lim[9] = 1;
+    }
+
+    if (Peptic.state == 1)
+    {
+
+        Peptic.lim[9] = 1;
+    }
     readFilemlc();
     readFile7();
     for (i = 0; i < 32; i++)
-     food7[i].max_cal=food7[i].min_cal+50;
-    printf("\n");
+        food7[i].max_cal = food7[i].min_cal + 50;
+    for (i = 0; i < 34; i++)
+        food[i].max_cal = food[i].min_cal + 50;
+
+    int h, j;
     printf("---recommended food in MLC---");
     printf("\n\n");
-    for (i = 0; i < 51; i++)
+    for (i = 0; i < 34; i++)
     {
-        if ((food[i].min_cal < yourcal) && (yourcal < (food[i].max_cal)))
-        {
-            printf_mlc(i);
-            printf(" min = %d , max = %d", food[i].min_cal, food[i].max_cal);
-            printf("\n");
-        }
+        h = 0;
 
+       
+        if (food[i].min_cal <= yourcal && yourcal <= food[i].max_cal)
+        {
+        }
         else
-            continue;
+            h++;
+
+        
+        for (j = 0; j < 10; j++)
+        {
+            if (food[i].lim[j] == 1)
+            {
+                if (food[i].lim[j] == Dia.lim[j] ||
+                    food[i].lim[j] == Hyper.lim[j] ||
+                    food[i].lim[j] == Card.lim[j] ||
+                    food[i].lim[j] == Kidney.lim[j] ||
+                    food[i].lim[j] == GERD.lim[j] ||
+                    food[i].lim[j] == Gout.lim[j] ||
+                    food[i].lim[j] == Obesity.lim[j] ||
+                    food[i].lim[j] == Liver.lim[j] ||
+                    food[i].lim[j] == Allergies.lim[j] ||
+                    food[i].lim[j] == Peptic.lim[j])
+                {
+                    h++;
+                    
+                }
+                
+            }
+            
+            
+            
+        }
+        if (h != 0)
+            {
+                
+            }
+
+            else
+            { // Output the valid food
+                printf("%-30s ", food[i].name);
+                printf(" min = %d , max = %d\n", food[i].min_cal, food[i].max_cal);
+            }
     }
+
     printf("---recommended food in 7-11---");
     printf("\n\n");
     for (i = 0; i < 32; i++)
     {
         if ((food7[i].min_cal < yourcal) && (yourcal < food7[i].max_cal))
         {
-            printf_7(i);
+            printf("%-30s", food7[i].name);
             printf(" min = %d , max = %d", food7[i].min_cal, food7[i].max_cal);
             printf("\n");
         }
@@ -132,4 +278,68 @@ void checking(float yourcal)
         else
             continue;
     }
+}
+void collectResponses(char responses[], const char *diseases[], int count, int *p)
+{
+    int i;
+    char response;
+    printf("\n");
+
+    printf("----Answer the following questions with 'y' (yes) or 'n' (no):\n");
+
+    for (i = 0; i < count; i++)
+    {
+
+        do
+        {
+            printf("%d.)Do you have %s? (y/n): ", i + 1, diseases[i]);
+            scanf(" %c", &response);
+            response = tolower(response);
+
+            if (response == 'y')
+            {
+                responses[i] = response;
+                *p = 1;
+                break;
+            }
+            else if (response == 'n')
+            {
+                responses[i] = response;
+                *p = 0;
+                break;
+            }
+            else
+            {
+                printf("Invalid input. Please enter 'y' or 'n'.\n");
+            }
+
+        } while (1);
+        p++;
+    }
+}
+
+int confirmAction()
+{
+    char response;
+    do
+    {
+        printf("\n");
+        printf("-----Do you want to confirm these responses? (y/n): ");
+        scanf(" %c", &response); 
+        response = tolower(response);
+
+        if (response == 'y')
+        {
+            return 1; 
+        }
+        else if (response == 'n')
+        {
+            printf("Restarting...\n");
+            return 0; 
+        }
+        else
+        {
+            printf("Invalid input. Please enter 'y' or 'n'.\n");
+        }
+    } while (1);
 }
