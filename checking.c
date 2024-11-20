@@ -3,20 +3,22 @@
 #include <string.h>
 #include <stdlib.h>
 float checking(int yourcal);
+void displaySummary(const char responses[], const char *diseases[], int count);
 
 void collectResponses(char responses[], const char *diseases[], int count, int *p);
 int confirmAction();
 struct mlc
 {
     char name[20];
-    int min_cal, max_cal, Sugar, Car, Sodium, Fats, Chol, Pota, Phos, Purine, Fruc, spicy;
+    int min_cal, max_cal; /*Sugar, Car, Sodium, Fats, Chol, Pota, Phos, Purine, Fruc, spicy;*/
     int lim[10];
 };
-struct mlc food[50];
+struct mlc food[75];
 struct seven7
 {
     char name[50];
-    int min_cal, max_cal, price; 
+    int min_cal, max_cal, price; /*,Sugar,Car,Sodium,Fats,Chol,Pota,Phos,Purine,Fruc,spicy;*/
+    int lim[10];
 };
 struct seven7 food7[50];
 void readFilemlc()
@@ -33,7 +35,7 @@ void readFilemlc()
     else
     {
         int i = 0;
-        while (i < 34)
+        while (i < 75)
         {
             int h;
             h = fscanf(fp, "%30[^,],%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", food[i].name, &food[i].min_cal, &food[i].lim[0], &food[i].lim[1], &food[i].lim[2], &food[i].lim[3], &food[i].lim[4], &food[i].lim[5], &food[i].lim[6], &food[i].lim[7], &food[i].lim[8], &food[i].lim[9]);
@@ -70,8 +72,8 @@ void readFile7()
         while (i < 32)
         {
             int h;
-            h = fscanf(fp2, "%30[^,],%d,%d\n", food7[i].name, &food7[i].min_cal, &food7[i].price);
-            if (h == 3)
+            h = fscanf(fp2, "%30[^,],%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", food7[i].name, &food7[i].min_cal, &food7[i].price, &food7[i].lim[0], &food7[i].lim[1], &food7[i].lim[2], &food7[i].lim[3], &food7[i].lim[4], &food7[i].lim[5], &food7[i].lim[6], &food7[i].lim[7], &food7[i].lim[8], &food7[i].lim[9]);
+            if (h == 13)
             {
 
                 i++;
@@ -92,7 +94,7 @@ float checking(int yourcal)
     typedef struct
     {
         int state;
-       
+        /*int Sugar, Car, Sodium, Fats, Chol, Pota, Phos, Purine, Fruc,spicy;*/
         int lim[10];
 
     } nutrie;
@@ -128,6 +130,8 @@ float checking(int yourcal)
     do
     {
         collectResponses(responses, diseases, numDiseases, pt);
+        system("cls");
+        displaySummary(responses, diseases, numDiseases);
     } while (confirmAction() != 1);
     Dia.state = check[0];
     Hyper.state = check[1];
@@ -208,26 +212,27 @@ float checking(int yourcal)
     }
     readFilemlc();
     readFile7();
-    for (i = 0; i < 32; i++)
+    for (i = 0; i < 75; i++)
         food7[i].max_cal = food7[i].min_cal + 50;
     for (i = 0; i < 34; i++)
         food[i].max_cal = food[i].min_cal + 50;
 
     int h, j;
+    system("cls");
     printf("---recommended food in MLC---");
     printf("\n\n");
-    for (i = 0; i < 34; i++)
+    for (i = 0; i < 75; i++)
     {
         h = 0;
 
-       
+        // Check calorie range
         if (food[i].min_cal <= yourcal && yourcal <= food[i].max_cal)
         {
         }
         else
             h++;
 
-        
+        // Check limitations for all conditions in one loop
         for (j = 0; j < 10; j++)
         {
             if (food[i].lim[j] == 1)
@@ -244,12 +249,12 @@ float checking(int yourcal)
                     food[i].lim[j] == Peptic.lim[j])
                 {
                     h++;
-                    
+                    // Exit loop early if any condition matches
                 }
                 
             }
             
-            
+            // Skip the current food if any limitation applies
             
         }
         if (h != 0)
@@ -266,27 +271,63 @@ float checking(int yourcal)
 
     printf("---recommended food in 7-11---");
     printf("\n\n");
-    for (i = 0; i < 32; i++)
+    for (i = 0; i < 31; i++)
     {
-        if ((food7[i].min_cal < yourcal) && (yourcal < food7[i].max_cal))
-        {
-            printf("%-30s", food7[i].name);
-            printf(" min = %d , max = %d", food7[i].min_cal, food7[i].max_cal);
-            printf("\n");
-        }
+        h = 0;
 
+        // Check calorie range
+        if (food7[i].min_cal <= yourcal && yourcal <= food7[i].max_cal)
+        {
+        }
         else
-            continue;
+            h++;
+
+        // Check limitations for all conditions in one loop
+        for (j = 0; j < 10; j++)
+        {
+            if (food7[i].lim[j] == 1)
+            {
+                if (food7[i].lim[j] == Dia.lim[j] ||
+                    food7[i].lim[j] == Hyper.lim[j] ||
+                    food7[i].lim[j] == Card.lim[j] ||
+                    food7[i].lim[j] == Kidney.lim[j] ||
+                    food7[i].lim[j] == GERD.lim[j] ||
+                    food7[i].lim[j] == Gout.lim[j] ||
+                    food7[i].lim[j] == Obesity.lim[j] ||
+                    food7[i].lim[j] == Liver.lim[j] ||
+                    food7[i].lim[j] == Allergies.lim[j] ||
+                    food7[i].lim[j] == Peptic.lim[j])
+                {
+                    h++;
+                    // Exit loop early if any condition matches
+                }
+                
+            }
+            
+            // Skip the current food if any limitation applies
+            
+        }
+        if (h != 0)
+            {
+                
+            }
+
+            else
+            { // Output the valid food
+                printf("%-30s ", food7[i].name);
+                printf(" min = %d , max = %d\n", food7[i].min_cal, food7[i].max_cal);
+            }
     }
-}
+    }
+
 void collectResponses(char responses[], const char *diseases[], int count, int *p)
 {
     int i;
     char response;
     printf("\n");
 
-    printf("----Answer the following questions with 'y' (yes) or 'n' (no):\n");
-
+    printf("-----Answer the following questions with----- \n'y' (yes) or 'n' (no)");
+    printf("\n");
     for (i = 0; i < count; i++)
     {
 
@@ -321,25 +362,34 @@ void collectResponses(char responses[], const char *diseases[], int count, int *
 int confirmAction()
 {
     char response;
+    
     do
-    {
+    {  
         printf("\n");
-        printf("-----Do you want to confirm these responses? (y/n): ");
-        scanf(" %c", &response); 
+        printf("-----Do you want to confirm these responses?-----\n(y/n): ");
+        printf("\n");
+        scanf(" %c", &response); // Space before %c to handle input buffer
         response = tolower(response);
 
         if (response == 'y')
         {
-            return 1; 
+            return 1; // Confirm
         }
         else if (response == 'n')
         {
             printf("Restarting...\n");
-            return 0; 
+            system("cls");
+            return 0; // Restart
         }
         else
         {
             printf("Invalid input. Please enter 'y' or 'n'.\n");
         }
     } while (1);
+}
+void displaySummary(const char responses[], const char *diseases[], int count) {
+    printf("\n-----Summary of Responses-----\n");
+    for (int i = 0; i < count; i++) {
+        printf("%s: %s\n", diseases[i], (responses[i] == 'y' ? "Yes" : "No"));
+    }
 }
