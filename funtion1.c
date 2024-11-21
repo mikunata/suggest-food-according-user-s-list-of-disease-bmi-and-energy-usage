@@ -1,11 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-char op_data[50], op_disease[50][50], decision[10];
-int op_age;
-
-float op_height, op_weight;
-// c=count
 FILE *f, *p;
 void hpassword(char *h_p);
 int goback();
@@ -17,7 +12,7 @@ int resetpassword(char passname[50], char[100]);
 int verify_resetpass(char[50]);
 int startresetpass(char[50]);
 int forgetpass(char[50]);
-int forgetpass(char forget_user[50])
+int forgetpass(char forget_user[50]) //ลืมรหัสผ่าน
 {
     char i[10];
     int v = 0;
@@ -66,7 +61,7 @@ int user_register()
 {
     char name[50], surname[50], name2[50], data_age[50], data_sur[50], data_name[50], data_weight[50], data_height[50],
         data_disease[50], sex[10], password[50] = "\0", data_password[50], data_exercise[50], disease[50][50], data_verify_qa[50], data_verify_ans[50];
-    char verify_qa[100], verify_ans[100], comfirm_pass[50] = "\0", data_sex[50];
+    char verify_qa[100], verify_ans[100], comfirm_pass[50] = "\0", data_sex[50], decision[10];
     int age, num_disease, ex, a = 0, nd;
     float w = 0, h = 0;
     do
@@ -202,7 +197,6 @@ int user_register()
 int main()
 {
     char choice[10];
-    // system("cls");
     printf("********************\n");
     printf("*  1.register      *\n");
     printf("*  2.login         *\n");
@@ -314,7 +308,7 @@ int login()
             do
             { // do 236 รับรหัสผ่าน
                 char *us_pw;
-                us_pw=&password[0];
+                us_pw = &password[0];
                 printf("..............\n");
                 printf("password: ");
                 fflush(stdin);
@@ -399,8 +393,8 @@ int login()
     // ตรวจสอบรหัสผ่าน
 }
 
-int resetpassword(char passname[50], char verify_ans[100])
-{
+int resetpassword(char passname[50], char verify_ans[100]) //รีเซ็ตรหัสผ่าน
+    {
     char question[100], passans[50], passqa[50];
     FILE *p;
     strcpy(passqa, passname);
@@ -424,7 +418,7 @@ int resetpassword(char passname[50], char verify_ans[100])
     fgets(verify_ans, 100, p);
     fclose(p);
 }
-void select_function(char user[50]) // เอาฟังก์ชั่นที่เสร็จแล้วมาใส่ในนี้
+void select_function(char user[50]) // เอาparameter user ไปต่อด้วยเพื่อกำหนดให้ไฟล์ที่จะสร้างรู้ว่าเป็นของผู้ใช้คนไหน แล้วก็เพื่อให้สามารถกลับมาหน้าเมนูเรียกใช้ฟังก์ชั่นได้
 {
     char f_c[10];
     printf("1.calculate BMI\n");
@@ -458,7 +452,7 @@ void select_function(char user[50]) // เอาฟังก์ชั่นท�
         select_function(user);
     }
 }
-int goback()
+int goback() //ย้อนกลับไป
 {
     int l = 1;
     char second_time[10];
@@ -473,11 +467,13 @@ int goback()
         if (strcmp(second_time, "1") == 0)
         {
             l = 0;
+            system("cls");
             login();
         }
         else if (strcmp(second_time, "2") == 0)
         {
             l = 0;
+            system("cls");
             main();
         }
         else
@@ -487,7 +483,7 @@ int goback()
         }
     }
 }
-int verify_resetpass(char username_verify[50])
+int verify_resetpass(char username_verify[50]) //ยืนยันตัวตนเพื่อรีเซตรหัสผ่าน
 {
     char ansreset[100], ansuser[100];
     printf("////////////////////////\n");
@@ -503,7 +499,7 @@ int verify_resetpass(char username_verify[50])
     else
         return 10;
 }
-int startresetpass(char user[50])
+int startresetpass(char user[50]) //รีเซตรหัส
 {
     char resetpass[50], newpass[50], comfirm_newpass[50];
     strcpy(resetpass, user);
@@ -529,14 +525,14 @@ int startresetpass(char user[50])
     printf("complete reseting your password!\n");
     printf("''''''''''''''''''''''''''''''''\n");
 }
-void hpassword(char *h_p)
+void hpassword(char *h_p) //ซ่อนรหัสไม่ให้แสดงออกจอ
 {
     while (1)
     {
         *h_p = getch();
         if (*h_p == '\r')
         {
-            *h_p='\0';
+            *h_p = '\0';
             break;
         }
         else
