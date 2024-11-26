@@ -1,346 +1,1505 @@
 #include <stdio.h>
 #include <string.h>
-#include"checking.c"
-#include"function3_incomplete.c"
-char op_data[50], op_disease[50][50], decision[10];
-int op_age;
-float weight, height, w, h;
-float op_height, op_weight;
-int a, nd, n, c, i; // c=count
+#include <ctype.h>
+#include <stdlib.h>
+#define MAX_RECORDS 100
+#define MAX_LINE_LENGTH 256
+struct mlc
+{
+    char name[20];
+    int min_cal, max_cal; /*Sugar, Car, Sodium, Fats, Chol, Pota, Phos, Purine, Fruc, spicy;*/
+    int lim[10];
+};
+struct mlc food[75];
+struct seven7
+{
+    char name[50];
+    int min_cal, max_cal, price; /*,Sugar,Car,Sodium,Fats,Chol,Pota,Phos,Purine,Fruc,spicy;*/
+    int lim[10];
+};
+struct seven7 food7[50];
+
+typedef struct
+{
+    char foodName[50];
+    char time[10];
+    int protein;
+    int carbs;
+    int fat;
+    int fiber;
+    char date[11];
+    int calories;
+} FoodRecord;
+
 FILE *f, *p;
+void hpassword(char *h_p);
 int goback();
-void user_register();
+void duser();
+int user_register();
 void read_file();
 int login();
+// function2
+float calculate_bmi(float weight, float height, char uname[50]);
+float calculate_bmr(float weight, float height, int age, char bmrname[50]);
+float calculate_tdee(float bmr, char exname[50]);
+int callfunction2(char name[50]);
+//
+// function3
+void calculate_calories(char user[50]);
+int readFile(FoodRecord data[], const char *fileName, char user[50]);
+void writeFile(FoodRecord data[], int count, const char *fileName, char user[50]);
+void displayData(FoodRecord data[], int count);
+void editRecord(FoodRecord *record);
+void edit_data(char user[50]);
+void edit_data_calculate_calories(char user[50]);
+//
+// function4
+float checking(int yourcal);
+void displaySummary(const char responses[], const char *diseases[], int count);
+void collectResponses(char responses[], const char *diseases[], int count, int *p);
+int confirmAction();
+//
 void select_function(char user[50]);
-int resetpassword(char passname[50],char [100]);
-void user_register()
+int resetpassword(char passname[50], char[100]);
+int verify_resetpass(char[50]);
+int startresetpass(char[50]);
+int forgetpass(char[50]);
+int forgetpass(char forget_user[50]) // ลืมรหัสผ่าน
 {
-    char name[50], surname[50], name2[50], data_age[50], data_sur[50], data_name[50], data_weight[50], data_height[50],
-        data_disease[50], sex[10], password[50], data_password[50], data_exercise[50],disease[50][50],data_verify_qa[50],data_verify_ans[50];
-    char verify_qa[100],verify_ans[100];
-    int age, num_disease, ex;
+    char i[10];
+    int v = 0;
     do
     {
-        //รับข้อมูล
-        system("clear");
-        a = age, nd = num_disease, w = weight, h = height;
+        system("cls");
+        v = verify_resetpass(forget_user);
+        if (v == 15)
+        {
+            startresetpass(forget_user);
+            login();
+        }
+        else
+        {
+            system("cls");
+            do
+            {
+                printf("pls check your answer again!!\n");
+                printf("******************************\n");
+                printf("1.register again\n");
+                printf("2.relogin\n");
+                printf("3.check again\n");
+                printf("******************************\n");
+                printf("choose:");
+                scanf("%s", i);
+                if (strcmp(i, "1") == 0)
+                {
+                    user_register();
+                }
+                if (strcmp(i, "2") == 0)
+                {
+                    system("cls");
+                    login();
+                }
+                if (strcmp(i, "1") != 0 && strcmp(i, "2") != 0 && strcmp(i, "3") != 0)
+                {
+                    system("cls");
+                    printf("pls select num in menu!\n");
+                }
+            } while (strcmp(i, "1") != 0 && strcmp(i, "2") != 0 && strcmp(i, "3") != 0);
+        }
+
+    } while (v != 15);
+}
+int user_register()
+{
+    char name[50], surname[50], name2[50], data_age[50], data_sur[50], data_name[50], data_weight[50], data_height[50],
+        data_disease[50], sex[10], password[50] = "\0", data_password[50], data_exercise[50], disease[50][50], data_verify_qa[50], data_verify_ans[50];
+    char verify_qa[100], verify_ans[100], comfirm_pass[50] = "\0", data_sex[50], decision[10];
+    int age, num_disease, ex, a, nd;
+    float w, h;
+    do
+    {
+        // รับข้อมูล
+        system("cls");
         printf("\n*********************\n");
         printf("Name      : ");
         scanf("%s", name);
         printf("Surname   : ");
         scanf("%s", surname);
-        printf("Sex       : ");
-        scanf("%s", sex);
-        printf("Age       : ");
-        scanf("%d", &a);
-        printf("Weight(kg)   : ");
-        scanf("%f", &w);
-        printf("Height(meter): ");
-        scanf("%f", &h);
-        printf("Num of Disease  :");
-        scanf("%d", &nd);
-        for (i = 0; i < nd; i++)
+        do
         {
-            printf("%d. ", i + 1);
-            scanf("%s", disease[i]);
+            printf("Sex(male/female): ");
+            scanf("%s", sex);
+            if (strcmp(sex, "male") != 0 && strcmp(decision, "female") != 0)
+                printf("pls select from bracklet!!\n");
+        } while (strcmp(sex, "male") != 0 && strcmp(sex, "female") != 0);
+        while (1)
+        {
+            printf("Age       : ");
+            scanf("%d", &a);
+            if (a <= 0)
+                printf("pls enter real information!\n");
+            if (a > 0)
+                break;
         }
-        printf("Exercise per week: ");
-        scanf("%d", &ex);
-        printf("Create your password: ");
-        scanf("%s", password);
+        while (1)
+        {
+            printf("Weight(kg)   : ");
+            scanf("%f", &w);
+            if (w <= 0)
+                printf("pls enter real information!\n");
+            if (w > 0)
+                break;
+        }
+        while (1)
+        {
+            printf("Height(meter): ");
+            scanf("%f", &h);
+            if (h > 2 || h <= 0)
+                printf("pls enter real information!\n");
+            if ((h <= 2) && (h > 0))
+                break;
+        }
+        while (1)
+        {
+            printf("Exercise per week(max is 5): ");
+            scanf("%d", &ex);
+            if (ex <= 5 && ex > 0)
+                break;
+            else
+                printf("pls select from bracklet!!\n");
+        }
+        do
+        {
+            char *p, *cp;
+            p = password, cp = comfirm_pass;
+            fflush(stdin);
+            printf("Create your password:");
+            hpassword(p);
+            fflush(stdin);
+            printf("comfirm your password:");
+            hpassword(cp);
+            if (strcmp(password, comfirm_pass) != 0)
+                printf("check your password!\n");
+        } while (strcmp(password, comfirm_pass) != 0);
         printf("create your verify question for forgeting password: ");
-        scanf(" %[^\n]",verify_qa);
+        scanf(" %[^\n]", verify_qa);
         printf("correct answer for your verify: ");
-        scanf(" %[^\n]",verify_ans);
+        scanf(" %[^\n]", verify_ans);
         printf("*********************\n");
-          if (a == 0 || w == 0 || h == 0)
+        do
         {
-            printf("Error pls enter your right information!!");
-            continue;
-        }
-        printf("Confirm your information(yes/no): ");
-        scanf("%s", decision);
-    } while (a == 0 || w == 0 || h == 0 || strcmp(decision, "No") == 0 || strcmp(decision, "NO") == 0 || strcmp(decision, "no") == 0 || strcmp(decision, "nO") == 0 ||
-             strcmp(decision, "N") == 0 || strcmp(decision, "n") == 0);
-        //เริ่มสร้างไฟล์เก็บข้อมูล
-        strcpy(name2, name);
-        strcat(name, surname);
-        f = fopen(name, "w");
-        fprintf(f, "%s", name);
-        fclose(f);
-        strcpy(data_name, name);
-        strcat(data_name, "_name");
-        f = fopen(data_name, "w");
-        fprintf(f, "%s", name2);
-        fclose(f);
-        strcpy(data_sur, name);
-        strcat(data_sur, "_surname");
-        f = fopen(data_sur, "w");
-        fprintf(f, "%s", surname);
-        fclose(f);
-        strcpy(data_age, name);
-        strcat(data_age, "_age");
-        f = fopen(data_age, "w");
-        fprintf(f, "%d", a);
-        fclose(f);
-        strcpy(data_weight, name);
-        strcat(data_weight, "_weight");
-        f = fopen(data_weight, "w");
-        fprintf(f, "%.2f", w);
-        fclose(f);
-        strcpy(data_height, name);
-        strcat(data_height, "_height");
-        f = fopen(data_height, "w");
-        fprintf(f, "%.2f", h);
-        fclose(f);
-        strcpy(data_disease, name);
-        strcat(data_disease, "_disease");
-        f = fopen(data_disease, "w");
-        for (i = 0; i < nd; i++)
-            fprintf(f, "%s ", disease[i]);
-        fclose(f);
-        strcpy(data_password, name);
-        strcat(data_password, "_password");
-        f = fopen(data_password, "w");
-        fprintf(f, "%s", password);
-        fclose(f);
-        strcpy(data_exercise, name);
-        strcat(data_exercise, "_exercise");
-        f = fopen(data_exercise, "w");
-        fprintf(f, "%d", ex);
-        fclose(f);
-        strcpy(data_verify_qa,name);
-        strcat(data_verify_qa,"_verify_qa");
-        f=fopen(data_verify_qa,"w");
-        fprintf(f, "%s", verify_qa);
-        fclose(f);
-        strcpy(data_verify_ans,name);
-        strcat(data_verify_ans,"_verify_ans");
-        f=fopen(data_verify_ans,"w");
-        fprintf(f, "%s", verify_ans);
-        fclose(f);
-        if (strcmp(decision, "Y") == 0 ||strcmp(decision, "y") == 0 ||strcmp(decision, "yes") == 0 || strcmp(decision, "YES") == 0 || strcmp(decision, "Yes") == 0 || strcmp(decision, "YeS") == 0 ||
-            strcmp(decision, "YEs") == 0 || strcmp(decision, "yES") == 0 || strcmp(decision, "yEs") == 0 || strcmp(decision, "yeS") == 0)
-            {
-                goback();
-            }
+            printf("Confirm your information(yes/no): ");
+            scanf("%s", decision);
+            strlwr(decision);
+            if (strcmp(decision, "yes") != 0 && strcmp(decision, "no") != 0)
+                printf("pls select from backlet!!\n");
+        } while (strcmp(decision, "yes") != 0 && strcmp(decision, "no") != 0);
+    } while (a == 0 || w == 0 || h == 0 || strcmp(decision, "no") == 0);
+    // เริ่มสร้างไฟล์เก็บข้อมูล
+    strcpy(name2, name);
+    strcat(name, surname);
+    strcpy(data_name, name);
+    f = fopen(data_name, "w");
+    fprintf(f, "%s", name);
+    fclose(f);
+    strcpy(data_age, name);
+    strcat(data_age, "_age");
+    f = fopen(data_age, "w");
+    fprintf(f, "%d", a);
+    fclose(f);
+    strcpy(data_sex, name);
+    strcat(data_sex, "_sex");
+    f = fopen(data_sex, "w");
+    fprintf(f, "%s", sex);
+    fclose(f);
+    strcpy(data_weight, name);
+    strcat(data_weight, "_weight");
+    f = fopen(data_weight, "w");
+    fprintf(f, "%.2f", w);
+    fclose(f);
+    strcpy(data_height, name);
+    strcat(data_height, "_height");
+    f = fopen(data_height, "w");
+    fprintf(f, "%.2f", h);
+    fclose(f);
+    strcpy(data_password, name);
+    strcat(data_password, "_password");
+    f = fopen(data_password, "w");
+    fprintf(f, "%s", password);
+    fclose(f);
+    strcpy(data_exercise, name);
+    strcat(data_exercise, "_exercise");
+    f = fopen(data_exercise, "w");
+    fprintf(f, "%d", ex);
+    fclose(f);
+    strcpy(data_verify_qa, name);
+    strcat(data_verify_qa, "_verify_qa");
+    f = fopen(data_verify_qa, "w");
+    fprintf(f, "%s", verify_qa);
+    fclose(f);
+    strcpy(data_verify_ans, name);
+    strcat(data_verify_ans, "_verify_ans");
+    f = fopen(data_verify_ans, "w");
+    fprintf(f, "%s", verify_ans);
+    fclose(f);
+    if (strcmp(decision, "yes") == 0)
+    {
+        system("cls");
+        goback();
+    }
 }
 int main()
 {
-    int choice;
-        system("clear");
-        printf("\n********************\n");
-        printf("*  1.register      *\n");
-        printf("*  2.login         *\n");
-        printf("*  3.Exit program  *\n");
-        printf("********************\n");
-        printf("choose:");
-        scanf("%d", &choice);
-        switch (choice)
-        {
-        case (1):
-            user_register();
-            break;
-        case (2):
-            login();
-            break;
-        }
-       /* if (choice == 3)
-            return (0);*/
+    char choice[10];
+    printf("********************\n");
+    printf("*  1.register      *\n");
+    printf("*  2.login         *\n");
+    printf("*  3.Exit program  *\n");
+    printf("********************\n");
+    printf("choose:");
+    scanf(" %s", choice);
+    if (strcmp(choice, "1") == 0)
+    {
+        user_register();
+    }
+    else if (strcmp(choice, "2") == 0)
+    {
+        system("cls");
+        login();
+    }
+    else if (strcmp(choice, "3") == 0)
+        return (0);
+    else
+    {
+        printf(" \n");
+        system("cls");
+        printf("pls select num in menu!\n");
+        main();
+    }
 }
 int login()
 {
-    char name[50], sur[50], data[50], username[50], data_password[50], password[50]="\0", user_password[50], ans[1], real_password[50]="\0";
-    char ansreset[100],ansuser[100],resetpass[50],newpass[50]; 
-    int op;
-    do
+    char name[50], sur[50], dataname[50], username[50], data_password[50], password[50] = "\0", user_password[50], ans[1], real_password[50] = "\0";
+    int count = 0;
+    char op[10], cmp[10];
+    // กรอกข้อมูลเพื่อเข้าใช้
+    printf("Name :");
+    scanf("%s", name);
+    printf("Surname :");
+    scanf("%s", sur);
+    strcpy(username, name);
+    strcat(username, sur);
+    strcpy(data_password, username);
+    strcat(data_password, "_password");
+    printf("%s",username);
+    if ((f = fopen(username, "r")) == NULL)
+        duser();
+    fscanf(f,"%s",dataname);
+    fclose(f);
+    if(strcmp(username,dataname)!=0)
+        duser();
+    if ((f = fopen(data_password, "r")) == NULL)
     {
-        system("clear");
-        //ถ้ารหัสผิด
-        if(strcmp(password,real_password)!=0)
-        { 
-            char D[1];
-            do{
-            printf("Your password is wrong!\nPls check your password\n");
-                //ต้องไปทำลืมรหัสผ่าน
-            printf("accept(y/n): ");
-            scanf("%s",D);
-            }while(strcmp(D, "N") == 0 || strcmp(D, "n") == 0);
-            if(strcmp(D, "Y") == 0 || strcmp(D, "y") == 0)
-                system("clear");
-        }
-        //กรอกข้อมูลเพื่อเข้าใช้
-        printf("Name :");
-        scanf(" %s", name);
-        printf("Surname :");
-        scanf(" %s", sur);
-        strcpy(username, name);
-        strcat(username, sur);
-        strcpy(data_password, username);
-        strcat(data_password, "_password");
-        if ((f = fopen(username, "r")) == NULL)
+        printf("pls register again!");
+        user_register();
+    }
+    else
+    {
+        fscanf(f, "%s", real_password);
+        fclose(f);
+    }
+    int p = 1;
+    while (p == 1)
+    {
+        printf("********************\n");
+        printf("*1.Enter password  *\n");
+        printf("*2.Forgot password *\n");
+        printf("********************\n");
+        printf("choose: ");
+        scanf(" %s", op);
+        if (strcmp(op, "1") == 0)
         {
+            p = 0;
             do
-            {
-                system("clear");
-                printf("pls register first or check your username\n");
-                printf("accept(y/n): ");
-                scanf(" %s", ans);
-            } while (strcmp(ans, "N") == 0 || strcmp(ans, "n") == 0);
-            if(strcmp(ans,"y")==0||strcmp(ans,"Y")==0)
+            { // do 236 รับรหัสผ่าน
+                char *us_pw;
+                us_pw = &password[0];
+                printf("..............\n");
+                printf("password: ");
+                fflush(stdin);
+                hpassword(us_pw);
+                if (strcmp(password, real_password) != 0)
                 {
-                    int c;
-                    printf("/////////////////////");
-                    printf("\\1.register         \\\n ");
-                    printf("\\2.Recheck again    \\\n");
-                    printf("/////////////////////");
-                    printf("choose : ");
-                    scanf("%d",&c);
-                    if(c==1)user_register();
-                    else continue; 
+                    char D[5];
+                    while (1)
+                    {
+                        printf("Your password is wrong!\nPls check your password\n");
+                        printf("accept(y/n): ");
+                        scanf("%s", D);
+                        strlwr(D);
+                        system("cls");
+                        if (strcmp(D, "y") == 0)
+                            break;
+                    }
+                    if (strcmp(D, "y") == 0)
+                    {
+                        int i = 1;
+                        while (i == 1)
+                        {
+                            system("cls");
+                            printf("---------------------------\n");
+                            printf("1.check your password again!\n");
+                            printf("2.forgot password\n");
+                            printf("---------------------------\n");
+                            printf("choose:");
+                            scanf(" %s", cmp);
+                            if (strcmp(cmp, "1") == 0)
+                            {
+                                i = 0;
+                            }
+                            else if (strcmp(cmp, "2") == 0)
+                            {
+                                i = 0;
+                                forgetpass(username);
+                            }
+                            else
+                            {
+                                system("cls");
+                                printf("pls select num in menu!\n");
+                            }
+                        }
+                    }
                 }
+                else
+                    count = 1;
+            } while (count == 0);
+            // do 236
+        }
+        else if (strcmp(op, "2") == 0)
+        {
+            p = 0;
+            forgetpass(username);
         }
         else
         {
-            if (f = fopen(data_password, "r") == NULL)
-             { 
-                  printf("Error");
-                  break;
-             }
-            else
-            {
-                //ตรวจสอบรหัสผ่าน
-                f=fopen(data_password,"r");
-                fscanf(f, "%s", real_password);
-                fclose(f);
-                printf("********************\n");
-                printf("*1.Enter password  *\n");
-                printf("*2.Forgot password *\n");
-                printf("********************\n");
-                printf("choose: ");
-                scanf("%d",&op);
-                switch (op)
-                {
-                case (1) :
-                          printf("password: ");
-                          scanf("%s", password);
-                    break;
-                case (2) :
-                    printf("////////////////////////\n");
-                    printf("//verify your identity//\n");
-                    printf("////////////////////////\n");
-                    resetpassword(username,ansreset);
-                    printf("Ans verify question : ");
-                    scanf("%s",ansuser);
-                    if(strcmp(ansreset,ansuser)==0)
-                        {
-                            strcpy(resetpass,username);
-                            strcat(resetpass,"_password");
-                            f=fopen(resetpass,"w");
-                            printf("Your new password :");
-                            scanf("%s",newpass);
-                            fprintf(f,"%s",newpass);
-                            fclose(f);
-                            login();
-                        }
-                    else{
-                        int i;
-                        printf("pls check your answer again!!\n");
-                        printf("******************************\n");
-                        printf("1.register again\n");
-                        printf("2.relogin\n");
-                        printf("******************************\n");
-                        scanf("%d",&i);
-                        switch (i)
-                        {
-                        case (1): user_register();
-                        break;
-                        case(2): login();
-                        break;
-                        }
-                    }
-                    break; 
-                }
-                if (strcmp(password, real_password) == 0)
-                {
-                    system("clear");
-                    printf("login successful\n");
-                }
-            }
+            system("cls");
+            printf("pls select num in menu!\n");
         }
-    } while (strcmp(password, real_password) != 0);
-    select_function(username);
+    }
+    // เอาค่ารหัสใหม่ที่รีเซ็ตแล้วมาเทียบ
+    if ((f = fopen(data_password, "r")) == NULL)
+    {
+        printf("pls register again!");
+        user_register();
+    }
+    else
+    {
+        fscanf(f, "%s", real_password);
+        fclose(f);
+    }
+
+    // เช็ครหัสเข้าใช้เพื่อแสดงผล
+    if (strcmp(password, real_password) == 0)
+    {
+        system("cls");
+        printf("login successful\n");
+        select_function(username);
+    }
+    // ตรวจสอบรหัสผ่าน
 }
-int resetpassword(char passname[50],char verify_ans[100])
+
+int resetpassword(char passname[50], char verify_ans[100]) // รีเซ็ตรหัสผ่าน
 {
-    char question[100],passans[50],passqa[50];
+    char question[100], passans[50], passqa[50];
     FILE *p;
-    strcpy(passqa,passname);
-    strcpy(passans,passname);
-    strcat(passqa,"_verify_qa");
-    if((p=fopen(passqa,"r"))==NULL)
+    strcpy(passqa, passname);
+    strcpy(passans, passname);
+    strcat(passqa, "_verify_qa");
+    if ((p = fopen(passqa, "r")) == NULL)
     {
-        printf("ERROR");
-        return 15;
+        printf("pls register again!\n");
+        user_register();
     }
-    fgets(question,100,p);
+    fgets(question, 100, p);
     fclose(p);
-    printf("%s\n",question);
-    strcat(passans,"_verify_ans");
-     if((p=fopen(passans,"r"))==NULL)
+    printf("%s\n", question);
+    strcat(passans, "_verify_ans");
+    if ((p = fopen(passans, "r")) == NULL)
     {
-        printf("ERROR");
-        return 10;
+        system("cls");
+        printf("Pls register again!!\n");
+        user_register();
     }
-    fgets(verify_ans,100,p);
+    fgets(verify_ans, 100, p);
     fclose(p);
 }
-void select_function(char user[50]) //เอาฟังก์ชั่นที่เสร็จแล้วมาใส่ในนี้
+void select_function(char user[50]) // เอาparameter user ไปต่อด้วยเพื่อกำหนดให้ไฟล์ที่จะสร้างรู้ว่าเป็นของผู้ใช้คนไหน แล้วก็เพื่อให้สามารถกลับมาหน้าเมนูเรียกใช้ฟังก์ชั่นได้
 {
-    int f_c;
-    printf("1....\n");
-    printf("2.calculating calories\n");
+    char f_c[10];
+    printf("1.calculate BMI\n");
+    printf("2.calculate calaries\n");
     printf("3....\n");
     printf("4.logout\n");
     printf("choose : ");
-    scanf("%d",&f_c);
-    switch (f_c)
+    scanf("%s", f_c);
+    if (strcmp(f_c, "1") == 0)
     {
-    case(1) :
-        //funtion ใดๆๆ
-        break;
-    case(2):
-        edit_data_calculate_calories();
-        break;
-    case(3):
-        //functionใดๆๆ
-        break;  
-    case(4):
+        callfunction2(user);
+    }
+    else if (strcmp(f_c, "2") == 0)
+    {
+        edit_data_calculate_calories(user);
+    }
+    else if (strcmp(f_c, "3") == 0)
+    {
+        // functionใดๆๆ
+    }
+    else if (strcmp(f_c, "4") == 0)
+    {
+        // char password[50] = "\0", real_password[50] = "\0";
+        system("cls");
         main();
-        break;  
+    }
+    else
+    {
+        system("cls");
+        printf("pls select num in menu!\n");
+        select_function(user);
     }
 }
-int goback(){
-    int second_time=0;
-    while(second_time!=1||second_time!=2){
-                system("clear");
-                printf("\n****/select/****\n");
-                printf("1.login\n");
-                printf("2.first page\n");
-                printf("****************\n");
-                printf("select:");
-                scanf("%d",&second_time);
-                switch (second_time)
-                {
-                case (1):
-                    return login();
-                    break;
-                case(2):
-                    return main();
-                break;
-                } 
-            if(second_time!=1||second_time!=2)    
+int goback() // ย้อนกลับไป
+{
+    int l = 1;
+    char second_time[10];
+    while (l == 1)
+    {
+        printf("\n****/select/****\n");
+        printf("1.login\n");
+        printf("2.first page\n");
+        printf("****************\n");
+        printf("select:");
+        scanf("%s", second_time);
+        if (strcmp(second_time, "1") == 0)
+        {
+            l = 0;
+            system("cls");
+            login();
+        }
+        else if (strcmp(second_time, "2") == 0)
+        {
+            l = 0;
+            system("cls");
+            main();
+        }
+        else
+        {
+            system("cls");
             printf("\npls select the num on menu");
+        }
+    }
+}
+int verify_resetpass(char username_verify[50]) // ยืนยันตัวตนเพื่อรีเซตรหัสผ่าน
+{
+    char ansreset[100], ansuser[100];
+    printf("////////////////////////\n");
+    printf("//verify your identity//\n");
+    printf("////////////////////////\n");
+    resetpassword(username_verify, ansreset);
+    printf("Ans verify question : ");
+    scanf("%s", ansuser);
+    if (strcmp(ansreset, ansuser) == 0)
+    {
+        return 15;
+    }
+    else
+        return 10;
+}
+int startresetpass(char user[50]) // รีเซตรหัส
+{
+    char resetpass[50], newpass[50], comfirm_newpass[50];
+    strcpy(resetpass, user);
+    strcat(resetpass, "_password");
+    f = fopen(resetpass, "w");
+    do
+    {
+        printf("Your new password :");
+        scanf("%s", newpass);
+        printf("comfirm your new password :");
+        scanf("%s", comfirm_newpass);
+        if (strcmp(newpass, comfirm_newpass) != 0)
+        {
+            system("cls");
+            printf("-----------------------\n");
+            printf("recheck your new pass!\n");
+            printf("-----------------------\n");
+        }
+    } while (strcmp(newpass, comfirm_newpass) != 0);
+    fprintf(f, "%s", newpass);
+    fclose(f);
+    system("cls");
+    printf("complete reseting your password!\n");
+    printf("''''''''''''''''''''''''''''''''\n");
+}
+void hpassword(char *h_p) // ซ่อนรหัสไม่ให้แสดงออกจอ
+{
+    while (1)
+    {
+        *h_p = getch();
+        if (*h_p == '\b')
+        {
+            h_p--;
+            printf("\b \b");
+        }
+        else if (*h_p == '\r')
+        {
+            *h_p = '\0';
+            break;
+        }
+        else
+        {
+            printf("*");
+            h_p++;
+        }
+    }
+    printf("\n");
+}
+
+// Function to calculate BMI
+float calculate_bmi(float weight, float height, char uname[50])
+{
+
+    // Open the weight file
+    char bminame[50];
+    float bmi;
+
+    bmi = weight / (height * height);
+    strcpy(bminame, uname);
+    strcat(bminame, "_bmi");
+    // Open the output file to write the BMI result
+    p = fopen(bminame, "w");
+    fprintf(p, "%.2f\n", bmi); // Write the BMI value to the file
+    fclose(p);
+
+    return bmi;
+}
+
+// Function to calculate BMR
+float calculate_bmr(float weight, float height, int age, char bmrname[50])
+{
+    float bmr;
+    char gender[10];
+    char bmrsex[50], bmrresult[50];
+    strcpy(bmrsex, bmrname);
+    strcat(bmrsex, "_sex");
+    p = fopen(bmrsex, "r");
+    if (p == NULL)
+    {
+        printf("Error opening sex data file\n");
+        return -1;
+    }
+    fscanf(p, "%s", gender);
+    fclose(p);
+    strlwr(gender);
+    // Mifflin-St Jeor equation for BMR calculation
+    if (strcmp(gender, "male") == 0)
+    {
+        bmr = 10 * weight + 6.25 * height - 5 * age + 5; // For men
+    }
+    else if (strcmp(gender, "female") == 0)
+    {
+        bmr = 10 * weight + 6.25 * height - 5 * age - 161; // For women
+    }
+    else
+    {
+        printf("Invalid gender input\n");
+        return -1; // Error if gender is invalid
+    }
+
+    // Write the BMR result to a file
+    strcpy(bmrresult, bmrname);
+    strcat(bmrresult, "_bmrresult");
+    p = fopen(bmrresult, "w");
+    if (p != NULL)
+    {
+        fprintf(p, "%.2f\n", bmr); // Write the BMR value to the file
+        fclose(p);
+    }
+    else
+    {
+        printf("Error opening BMR result file\n");
+    }
+    return bmr;
+}
+
+// Function to calculate TDEE (Total Daily Energy Expenditure)
+float calculate_tdee(float bmr, char exname[50])
+{
+    float tdee;
+    int activity_level;
+    char nameex[50], nametd[50];
+    strcpy(nameex, exname);
+    strcat(nameex, "_exercise");
+    p = fopen(nameex, "r");
+    fscanf(p, "%d", &activity_level);
+    fclose(p);
+
+    // Activity factor based on activity level
+    switch (activity_level)
+    {
+    case 1:
+        tdee = bmr * 1.2; // Sedentary
+        break;
+    case 2:
+        tdee = bmr * 1.375; // Lightly active
+        break;
+    case 3:
+        tdee = bmr * 1.55; // Moderately active
+        break;
+    case 4:
+        tdee = bmr * 1.725; // Very active
+        break;
+    case 5:
+        tdee = bmr * 1.9; // Super active
+        break;
+    default:
+        printf("Invalid activity level\n");
+        return -1; // Error if activity level is invalid
+    }
+
+    // Write the TDEE result to a file
+    strcpy(nametd, exname);
+    strcat(nametd, "_tdee");
+    p = fopen(nametd, "w");
+    fprintf(p, "%.2f\n", tdee); // Write the TDEE value to the file
+    fclose(p);
+    return tdee;
+}
+
+int callfunction2(char name[50])
+{
+    float weight, height, bmi, bmr, tdee;
+
+    char wnoname[50], hnoname[50], agename[50];
+    int age;
+    // First, calculate BMI
+    strcpy(wnoname, name);
+    strcat(wnoname, "_weight");
+    p = fopen(wnoname, "r");
+    if (p == NULL)
+    {
+        printf("Error opening weight file\n");
+        return -1;
+    }
+    if (fscanf(p, "%f", &weight) != 1)
+    {
+        printf("Error reading weight value\n");
+        fclose(p);
+        return -1;
+    }
+    fclose(p);
+    strcpy(hnoname, name);
+    strcat(hnoname, "_height");
+    // Open the height file
+    p = fopen(hnoname, "r");
+    if (p == NULL)
+    {
+        printf("Error opening height file\n");
+        return -1;
+    }
+    if (fscanf(p, "%f", &height) != 1)
+    {
+        printf("Error reading height value\n");
+        fclose(p);
+        return -1;
+    }
+    fclose(p);
+    strcpy(agename, name);
+    strcat(agename, "_age");
+    p = fopen(agename, "r");
+    if (p == NULL)
+    {
+        printf("Error opening height file\n");
+        return -1;
+    }
+    if (fscanf(p, "%d", &age) != 1)
+    {
+        printf("Error reading age value\n");
+        fclose(p);
+        return -1;
+    }
+    fclose(p);
+    bmi = calculate_bmi(weight, height, name);
+    if (bmi != -1)
+    {
+        printf("BMI calculated: %.2f\n", bmi);
+    }
+
+    // Calculate BMR
+    bmr = calculate_bmr(weight, height, age, name);
+    if (bmr != -1)
+    {
+        printf("BMR calculated: %.2f\n", bmr);
+    }
+
+    // Calculate TDEE (Calories needed per day)
+    tdee = calculate_tdee(bmr, name);
+    if (tdee != -1)
+    {
+        printf("Calories needed per day (TDEE): %.2f\n", tdee);
+        printf("Calories needed per meal : %.2f\n", tdee / 3);
+    }
+
+    checking(tdee / 3);
+    char c[5];
+    while (1)
+    {
+    printf("accept:");
+    scanf("%s",c);
+    if(strcmp(c,"yes")==0||strcmp(c,"y")==0)
+        {
+            select_function(name);
+            break;
+        }
+    }
+}
+
+void calculate_calories(char user[50])
+{
+    int Prot, Car, Fat, Fit, Fi, Cal, Mo, Da, Ye, T1, T2, REC, LOUIS, Crown, knowncal, date_mont_correct, Time_correct;
+    char MN[20];
+    system("cls");
+    printf("Record and calculate calories from nutrients(gram)\n");
+    printf("Meal's name/ Manu (English Only and Don't have space) :");
+    scanf("%s", MN);
+    date_mont_correct = 0;
+    Time_correct = 0;
+    do
+    {
+        if (date_mont_correct == 0)
+        {
+            printf("Date/Mont/Year(eg. 01/02/2024) :");
+            scanf("%d/%d/%d", &Da, &Mo, &Ye);
+            date_mont_correct = 1;
+        }
+        else if (date_mont_correct == 1)
+        {
+            printf("   Date/Mont/year is incorrect.\nTry again.\n");
+            printf("Date/Mont/Year(eg. 01/02/2024) :");
+            scanf("%d/%d/%d", &Da, &Mo, &Ye);
+        }
+    } while (Da <= 0 || Da >= 32 || Mo <= 0 || Mo >= 13);
+
+    do
+    {
+        if (Time_correct == 0)
+        {
+            printf("Time (eg. 15:24) >>"); // ให้พิมพ์เองเพราะจะได้ระบุเวลาตามความต้องการของผู้ใช้ เช่น กินตั้งแต่เที่ยงแต่จะมาพิมพ์ตอนเวลาบ่ายเป็นต้น
+            scanf("%d:%d", &T1, &T2);
+            Time_correct = 1;
+        }
+        else if (Time_correct == 1)
+        {
+            printf("   Time is incorrect.\nTry again.\n");
+            printf("Time (eg. 15:24) >>"); // ให้พิมพ์เองเพราะจะได้ระบุเวลาตามความต้องการของผู้ใช้ เช่น กินตั้งแต่เที่ยงแต่จะมาพิมพ์ตอนเวลาบ่ายเป็นต้น
+            scanf("%d:%d", &T1, &T2);
+            Time_correct = 1;
+        }
+    } while (T1 < 0 || T1 >= 24 || T2 < 0 || T2 >= 60);
+
+    printf("%02d/%02d/%d\n", Da, Mo, Ye);
+    printf("%02d:%02d \n", T1, T2);
+    do
+    {
+        system("cls");
+        printf("Do you know the calories? \n If you know, you will type 1 ,but if you don't know, you will type 0.\n ,Or if you want to back, you will type 3\n :");
+        scanf("%d", &knowncal);
+        if (knowncal == 1)
+        {
+            system("cls");
+            Crown = 1;
+            printf("Meal's name/ Menu = %s\n", MN);
+            printf("%02d/%02d/%d\n", Da, Mo, Ye);
+            printf("%02d:%02d \n", T1, T2);
+            printf("You know your meal's calories.\n");
+            printf("Please, enter your meal's calories.\n");
+            scanf("%d", &Cal);
+            printf("*****|| Calories in this meal is %d kilocalories ||***** \n", Cal);
+            Prot = 0;
+            Car = 0;
+            Fat = 0;
+            Fi = 0;
+        }
+        else if (knowncal == 0)
+        {
+            system("cls");
+            Crown = 1;
+            printf("Meal's name/ Menu = %s\n", MN);
+            printf("%02d/%02d/%d\n", Da, Mo, Ye);
+            printf("%02d:%02d \n", T1, T2);
+            printf("You want to calculate your meal's calories.\n");
+            printf("Please, enter the number of grams of protein, carbohydrate, fat and dietary fiber.\n");
+            printf("Protein(gram) :");
+            scanf("%d", &Prot);
+            printf("Carbohydrate(gram) :");
+            scanf("%d", &Car);
+            printf("Fat(gram) :");
+            scanf("%d", &Fat);
+            printf("Dietary fiber(gram) :");
+            scanf("%d", &Fi);
+            printf("Protein = %d g,Carbohydrate = %d g, Fat = %d g, Dietary fiber = %d g\n", Prot, Car, Fat, Fi);
+            Cal = Prot * 4 + Car * 4 + Fat * 9 + Fi * 0;
+            printf("*****|| Calories in this meal is %d kilocalories ||***** \n", Cal);
+        }
+        else if (knowncal == 3)
+        {
+            system("cls");
+            printf("Already back\n");
+            Crown = 1;
+            calculate_calories(user);
+        }
+        else if (knowncal != 0 && knowncal != 1 && knowncal != 3)
+        {
+            system("cls");
+            printf("incorrect");
+            Crown = 0;
+
+            ;
+        }
+    } while (Crown == 0);
+
+    do
+    {
+        printf("Do you want to record this calories? \n If you want to do, you will type 1 ,but if you don't want to record, you will type 0.\n ,Or if you want to back to the homepage and don't record this data, you will type 3\n :");
+        scanf("%d", &REC);
+        if (REC == 1)
+        {
+            char filename[] = "User_dietary_information1.txt";
+
+            FILE *CLR = fopen(filename, "a+");
+            LOUIS = 1;
+            printf("You want to record this data.\n");
+            fprintf(CLR, "%s ", MN);
+            fprintf(CLR, "%02d:%02d ", T1, T2);
+            fprintf(CLR, "%d ", Prot);
+            fprintf(CLR, "%d ", Car);
+            fprintf(CLR, "%d ", Fat);
+            fprintf(CLR, "%d\n", Fi);
+            fprintf(CLR, "%02d/%02d/%d\n", Da, Mo, Ye);
+            fprintf(CLR, "%d\n", Cal);
+
+            fclose(CLR);
+            system("cls");
+            printf("Write data to file %s complete.\n", filename);
+            printf("Go to the homepage.");
+            edit_data_calculate_calories(user); // อย่าลืมเชื่อมไปหน้ารวมฟังก์ชั่น;
+        }
+        else if (REC == 3)
+        {
+            system("cls");
+            printf("You want to back to the homepage.\n");
+            printf("Go to the homepage.");
+            edit_data_calculate_calories(user); // อย่าลืมเชื่อมไปหน้ารวมฟังก์ชั่น;
+        }
+        else if (REC == 0)
+        {
+            system("cls");
+            LOUIS = 1;
+            printf("You don't want to record this data.\n");
+            printf("And you want to calculate calories again.\n");
+            calculate_calories(user);
+        }
+        else if (REC != 0 && REC != 1 && REC != 3)
+        {
+            system("cls");
+            LOUIS = 0;
+            printf("You are incorrect.\n You must type again.\n");
+        }
+    } while (LOUIS == 0);
+}
+
+// ฟังก์ชันสำหรับอ่านข้อมูลจากไฟล์
+int readFile(FoodRecord data[], const char *fileName, char user[50])
+{
+    FILE *file = fopen(fileName, "r");
+    if (file == NULL)
+    {
+        printf("Unable to open file. Record your calories first.\n");
+        edit_data_calculate_calories(user);
+    }
+
+    int count = 0;
+    while (count < MAX_RECORDS &&
+           fscanf(file, "%s %s %d %d %d %d %s %d",
+                  data[count].foodName, data[count].time,
+                  &data[count].protein, &data[count].carbs,
+                  &data[count].fat, &data[count].fiber,
+                  data[count].date, &data[count].calories) == 8)
+    {
+        count++;
+    }
+    fclose(file);
+    return count;
+}
+
+// ฟังก์ชันสำหรับเขียนข้อมูลกลับไปยังไฟล์
+void writeFile(FoodRecord data[], int count, const char *fileName, char user[50])
+{
+    FILE *file = fopen(fileName, "w");
+    if (file == NULL)
+    {
+        printf("Unable to write file\n BACK TO THE HOMEPAGE\n");
+        edit_data_calculate_calories(user); // เชื่อมไปhomepage
+    }
+
+    for (int i = 0; i < count; i++)
+    {
+        fprintf(file, "%s %s %d %d %d %d %s %d\n",
+                data[i].foodName, data[i].time,
+                data[i].protein, data[i].carbs,
+                data[i].fat, data[i].fiber,
+                data[i].date, data[i].calories);
+    }
+    fclose(file);
+}
+
+// ฟังก์ชันสำหรับแสดงข้อมูลทั้งหมด
+void displayData(FoodRecord data[], int count)
+{
+    printf("\nYour data:\n");
+    for (int i = 0; i < count; i++)
+    {
+        printf("Item number %d:\n", i + 1);
+        printf("Menu/meal: %s, Time: %s\n", data[i].foodName, data[i].time);
+        printf("Protein: %d g, Carbohydrate: %d g, Fat: %d g,Dietary fiber : %d g\n",
+               data[i].protein, data[i].carbs, data[i].fat, data[i].fiber);
+        printf("Date: %s, Calories: %d\n", data[i].date, data[i].calories);
+        printf("----------------------------------\n");
+    }
+}
+
+// ฟังก์ชันสำหรับแก้ไขข้อมูล
+void editRecord(FoodRecord *record)
+{
+    int Quay;
+    do
+    {
+        int choice;
+        Quay = 0;
+        printf("\nSelect the information you want to edit.:\n");
+        printf("1. Menu/meal\n");
+        printf("2. Time\n");
+        printf("3. Protein\n");
+        printf("4. Carbohydrate\n");
+        printf("5. Fat\n");
+        printf("6. Dietary fiber\n");
+        printf("7. Date\n");
+        printf("8. Calories\n");
+        printf("Your options: ");
+        scanf("%d", &choice);
+        getchar(); // อ่าน newline เพื่อป้องกันปัญหา
+
+        switch (choice)
+        {
+        case 1:
+            printf("New food name: ");
+            scanf("%49s", record->foodName);
+            break;
+        case 2:
+            printf("New time (15:24): ");
+            scanf("%9s", record->time);
+            break;
+        case 3:
+            printf("New proteins (g): ");
+            scanf("%d", &record->protein);
+            break;
+        case 4:
+            printf("New carbohydrates (g): ");
+            scanf("%d", &record->carbs);
+            break;
+        case 5:
+            printf("New fat (g): ");
+            scanf("%d", &record->fat);
+            break;
+        case 6:
+            printf("New dietary fiber (g): ");
+            scanf("%d", &record->fiber);
+            break;
+        case 7:
+            printf("New Date (dd/mm/yyyy): ");
+            scanf("%10s", record->date);
+            break;
+        case 8:
+            printf("New Calories: ");
+            scanf("%d", &record->calories);
+            break;
+        default:
+        {
+            printf("Incorrect option\n");
+            Quay = 1;
+        }
+        }
+    } while (Quay == 1);
+}
+
+void edit_data(char user[50])
+{
+    system("cls");
+    printf("Edit your recorded data\n");
+    FoodRecord data[MAX_RECORDS];
+    int count;
+    const char *fileName = "User_dietary_information1.txt";
+
+    // อ่านข้อมูลจากไฟล์
+    count = readFile(data, fileName, user);
+    if (count == 0)
+    {
+        printf("There is no data in the file.\n Record your calories first.\n");
+        edit_data_calculate_calories(user);
+    }
+
+    // แสดงข้อมูลทั้งหมด
+    displayData(data, count);
+
+    // ให้ผู้ใช้เลือกแก้ไข
+    int recordIndex;
+    int Emperor;
+    do
+    {
+        Emperor = 0;
+        printf("\nEnter the item number you want to edit.(1-%d): ", count);
+        scanf("%d", &recordIndex);
+        if (recordIndex < 1 || recordIndex > count)
+        {
+            printf("Item number is invalid.\n");
+            Emperor = 1;
+        }
+    } while (Emperor == 1);
+    // แก้ไขข้อมูล
+    editRecord(&data[recordIndex - 1]);
+
+    // บันทึกข้อมูลกลับไปที่ไฟล์
+    writeFile(data, count, fileName, user);
+
+    printf("Data has been edited successfully.\n");
+    int I_want_to_Sleep;
+    int Puvit_Sleep_at_6_am;
+    do
+    {
+        Puvit_Sleep_at_6_am = 0;
+        printf("Will you continue to make corrections? (1.Yes/2.No)\n(1 or 2):");
+        scanf("%d", &I_want_to_Sleep);
+        if (I_want_to_Sleep == 1)
+        {
+            Puvit_Sleep_at_6_am = 1;
+            edit_data(user);
+        }
+        else if (I_want_to_Sleep == 2)
+        {
+            Puvit_Sleep_at_6_am = 1;
+            edit_data_calculate_calories(user);
+        } // ไปhomepage
+    } while (Puvit_Sleep_at_6_am == 0);
+}
+// ยังไม่เสร็จจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจ****************************************************************************************************************
+
+void edit_data_calculate_calories(char user[50])
+{
+    int Prot, Car, Fat, Fit, Fi, Cal, Mo, Da, Ye, T1, T2, Ans, io;
+    printf("What do you want to ...? \n 1.record and calculate calories from nutrients(gram) \n 2.edit your recorded data \n 3.back to the homepage \n**Your answer is 1,2 or 3** \n :");
+    scanf("%d", &Ans);
+    do
+    {
+        io = 0;
+        switch (Ans)
+        {
+        case (1):
+            io = 1;
+            calculate_calories(user);
+            break;
+        case (2):
+            io = 1;
+            edit_data(user);
+            break;
+        case (3):
+            io = 1;
+            system("cls");
+            select_function(user); // อย่าลืมเชื่อมไปหน้าแรก main();
+            break;
+        default:
+        {
+            io = 0;
+            printf("That is not correct.");
+            system("cls");
+            select_function(user); // อย่าลืมเชื่อมไปหน้าแรก main();
+        }
+        }
+    } while (io == 0);
+}
+void readFilemlc()
+{
+    FILE *fp;
+
+    fp = fopen("mlcfoodlist.txt", "r");
+
+    if (fp == NULL)
+    {
+        printf("file not found\n");
+        exit(0);
+    }
+    else
+    {
+        int i = 0;
+        while (i < 75)
+        {
+            int h;
+            h = fscanf(fp, "%30[^,],%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", food[i].name, &food[i].min_cal, &food[i].lim[0], &food[i].lim[1], &food[i].lim[2], &food[i].lim[3], &food[i].lim[4], &food[i].lim[5], &food[i].lim[6], &food[i].lim[7], &food[i].lim[8], &food[i].lim[9]);
+            if (h == 12)
+            {
+
+                i++;
             }
+            else
+            {
+
+                break;
+            }
+        }
+    }
+
+    fclose(fp);
+}
+
+void readFile7()
+{
+    FILE *fp2;
+
+    fp2 = fopen("sevenfoodlist.txt", "r");
+
+    if (fp2 == NULL)
+    {
+        printf("file not found\n");
+        exit(0);
+    }
+    else
+    {
+        int i = 0;
+        while (i < 32)
+        {
+            int h;
+            h = fscanf(fp2, "%30[^,],%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", food7[i].name, &food7[i].min_cal, &food7[i].price, &food7[i].lim[0], &food7[i].lim[1], &food7[i].lim[2], &food7[i].lim[3], &food7[i].lim[4], &food7[i].lim[5], &food7[i].lim[6], &food7[i].lim[7], &food7[i].lim[8], &food7[i].lim[9]);
+            if (h == 13)
+            {
+
+                i++;
+            }
+            else
+            {
+
+                break;
+            }
+        }
+    }
+
+    fclose(fp2);
+}
+
+float checking(int yourcal)
+{
+    typedef struct
+    {
+        int state;
+        /*int Sugar, Car, Sodium, Fats, Chol, Pota, Phos, Purine, Fruc,spicy;*/
+        int lim[10];
+
+    } nutrie;
+    nutrie Dia = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    nutrie Hyper = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    nutrie Card = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    nutrie Kidney = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    nutrie GERD = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    nutrie Gout = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    nutrie Obesity = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    nutrie Liver = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    nutrie Allergies = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    nutrie Peptic = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    // Array of disease names
+    int *pt, i = 0;
+    int check[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    const char *diseases[] = {
+        "Diabetes Mellitus",
+        "Hypertension",
+        "Cardiovascular Diseases",
+        "Kidney Diseases",
+        "GERD",
+        "Gout",
+        "Obesity",
+        "Liver Diseases",
+        "Allergies",
+        "Peptic Ulcer"};
+
+    const int numDiseases = 10;
+    char responses[10];
+    pt = &check[0];
+
+    do
+    {
+        collectResponses(responses, diseases, numDiseases, pt);
+        system("cls");
+        displaySummary(responses, diseases, numDiseases);
+    } while (confirmAction() != 1);
+    Dia.state = check[0];
+    Hyper.state = check[1];
+    Card.state = check[2];
+    Kidney.state = check[3];
+    GERD.state = check[4];
+    Gout.state = check[5];
+    Obesity.state = check[6];
+    Liver.state = check[7];
+    Allergies.state = check[8];
+    Peptic.state = check[9];
+    if ((Dia.state) == 1)
+    {
+
+        Dia.lim[0] = 1;
+        Dia.lim[1] = 1;
+        Dia.lim[3] = 1;
+    }
+
+    if (Hyper.state == 1)
+    {
+        Hyper.lim[0] = 1;
+        Hyper.lim[2] = 1;
+        Hyper.lim[3] = 1;
+    }
+
+    if (Card.state == 1)
+    {
+
+        Card.lim[2] = 1;
+        Card.lim[3] = 1;
+        Card.lim[4] = 1;
+    }
+
+    if (Kidney.state == 1)
+    {
+
+        Kidney.lim[2] = 1;
+        Kidney.lim[5] = 1;
+        Kidney.lim[6] = 1;
+    }
+
+    if (GERD.state == 1)
+    {
+
+        GERD.lim[3] = 1;
+        GERD.lim[9] = 1;
+    }
+
+    if (Gout.state == 1)
+    {
+        Gout.lim[7] = 1;
+        Gout.lim[8] = 1;
+    }
+
+    if (Obesity.state == 1)
+    {
+        Obesity.lim[0] = 1;
+        Obesity.lim[3] = 1;
+    }
+
+    if (Liver.state == 1)
+    {
+
+        Liver.lim[3] = 1;
+        Liver.lim[8] = 1;
+    }
+
+    if (Allergies.state == 1)
+    {
+        Allergies.lim[9] = 1;
+    }
+
+    if (Peptic.state == 1)
+    {
+
+        Peptic.lim[9] = 1;
+    }
+    readFilemlc();
+    readFile7();
+    for (i = 0; i < 75; i++)
+        food7[i].max_cal = food7[i].min_cal + 50;
+    for (i = 0; i < 34; i++)
+        food[i].max_cal = food[i].min_cal + 50;
+
+    int h, j;
+    system("cls");
+    printf("---recommended food in MLC---");
+    printf("\n\n");
+    for (i = 0; i < 75; i++)
+    {
+        h = 0;
+
+        // Check calorie range
+        if (food[i].min_cal <= yourcal && yourcal <= food[i].max_cal)
+        {
+        }
+        else
+            h++;
+
+        // Check limitations for all conditions in one loop
+        for (j = 0; j < 10; j++)
+        {
+            if (food[i].lim[j] == 1)
+            {
+                if (food[i].lim[j] == Dia.lim[j] ||
+                    food[i].lim[j] == Hyper.lim[j] ||
+                    food[i].lim[j] == Card.lim[j] ||
+                    food[i].lim[j] == Kidney.lim[j] ||
+                    food[i].lim[j] == GERD.lim[j] ||
+                    food[i].lim[j] == Gout.lim[j] ||
+                    food[i].lim[j] == Obesity.lim[j] ||
+                    food[i].lim[j] == Liver.lim[j] ||
+                    food[i].lim[j] == Allergies.lim[j] ||
+                    food[i].lim[j] == Peptic.lim[j])
+                {
+                    h++;
+                    // Exit loop early if any condition matches
+                }
+            }
+
+            // Skip the current food if any limitation applies
+        }
+        if (h != 0)
+        {
+        }
+
+        else
+        { // Output the valid food
+            printf("%-30s ", food[i].name);
+            printf(" min = %d , max = %d\n", food[i].min_cal, food[i].max_cal);
+        }
+    }
+
+    printf("---recommended food in 7-11---");
+    printf("\n\n");
+    for (i = 0; i < 31; i++)
+    {
+        h = 0;
+
+        // Check calorie range
+        if (food7[i].min_cal <= yourcal && yourcal <= food7[i].max_cal)
+        {
+        }
+        else
+            h++;
+
+        // Check limitations for all conditions in one loop
+        for (j = 0; j < 10; j++)
+        {
+            if (food7[i].lim[j] == 1)
+            {
+                if (food7[i].lim[j] == Dia.lim[j] ||
+                    food7[i].lim[j] == Hyper.lim[j] ||
+                    food7[i].lim[j] == Card.lim[j] ||
+                    food7[i].lim[j] == Kidney.lim[j] ||
+                    food7[i].lim[j] == GERD.lim[j] ||
+                    food7[i].lim[j] == Gout.lim[j] ||
+                    food7[i].lim[j] == Obesity.lim[j] ||
+                    food7[i].lim[j] == Liver.lim[j] ||
+                    food7[i].lim[j] == Allergies.lim[j] ||
+                    food7[i].lim[j] == Peptic.lim[j])
+                {
+                    h++;
+                    // Exit loop early if any condition matches
+                }
+            }
+
+            // Skip the current food if any limitation applies
+        }
+        if (h != 0)
+        {
+        }
+
+        else
+        { // Output the valid food
+            printf("%-30s ", food7[i].name);
+            printf(" min = %d , max = %d\n", food7[i].min_cal, food7[i].max_cal);
+        }
+    }
+}
+
+void collectResponses(char responses[], const char *diseases[], int count, int *p)
+{
+    int i;
+    char response;
+    printf("\n");
+
+    printf("-----Answer the following questions with----- \n'y' (yes) or 'n' (no)");
+    printf("\n");
+    for (i = 0; i < count; i++)
+    {
+
+        do
+        {
+            printf("%d.)Do you have %s? (y/n): ", i + 1, diseases[i]);
+            scanf(" %c", &response);
+            response = tolower(response);
+
+            if (response == 'y')
+            {
+                responses[i] = response;
+                *p = 1;
+                break;
+            }
+            else if (response == 'n')
+            {
+                responses[i] = response;
+                *p = 0;
+                break;
+            }
+            else
+            {
+                printf("Invalid input. Please enter 'y' or 'n'.\n");
+            }
+
+        } while (1);
+        p++;
+    }
+}
+
+int confirmAction()
+{
+    char response;
+
+    do
+    {
+        printf("\n");
+        printf("-----Do you want to confirm these responses?-----\n(y/n): ");
+        printf("\n");
+        scanf(" %c", &response); // Space before %c to handle input buffer
+        response = tolower(response);
+
+        if (response == 'y')
+        {
+            return 1; // Confirm
+        }
+        else if (response == 'n')
+        {
+            printf("Restarting...\n");
+            system("cls");
+            return 0; // Restart
+        }
+        else
+        {
+            printf("Invalid input. Please enter 'y' or 'n'.\n");
+        }
+    } while (1);
+}
+void displaySummary(const char responses[], const char *diseases[], int count)
+{
+    printf("\n-----Summary of Responses-----\n");
+    for (int i = 0; i < count; i++)
+    {
+        printf("%s: %s\n", diseases[i], (responses[i] == 'y' ? "Yes" : "No"));
+    }
 }
