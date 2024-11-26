@@ -12,6 +12,7 @@ int resetpassword(char passname[50], char[100]);
 int verify_resetpass(char[50]);
 int startresetpass(char[50]);
 int forgetpass(char[50]);
+void duser();
 int forgetpass(char forget_user[50]) //ลืมรหัสผ่าน
 {
     char i[10];
@@ -225,7 +226,7 @@ int main()
 }
 int login()
 {
-    char name[50], sur[50], data[50], username[50], data_password[50], password[50] = "\0", user_password[50], ans[1], real_password[50] = "\0";
+    char name[50], sur[50], dataname[50], username[50], data_password[50], password[50] = "\0", user_password[50], real_password[50] = "\0";
     int count = 0;
     char op[10], cmp[10];
     // กรอกข้อมูลเพื่อเข้าใช้
@@ -235,54 +236,14 @@ int login()
     scanf("%s", sur);
     strcpy(username, name);
     strcat(username, sur);
-    strcpy(data, username);
-    strcat(data, "");
     strcpy(data_password, username);
     strcat(data_password, "_password");
     if ((f = fopen(username, "r")) == NULL)
-    {
-        int t = 1;
-        while (t == 1)
-        { // do186
-            char c[10];
-            printf("pls register first or check your username\n");
-            printf("accept(y/n): ");
-            scanf(" %s", ans);
-            strlwr(ans);
-            if (strcmp(ans, "y") == 0)
-            {
-                do
-                {
-                    system("cls");
-                    printf("/////////////////////\n");
-                    printf("\\1.register         \\ \n");
-                    printf("\\2.Recheck again    \\ \n");
-                    printf("/////////////////////\n");
-                    printf("choose : ");
-                    scanf(" %s", c);
-                    if (strcmp(c, "1") == 0)
-                    {
-                        t = 0;
-                        user_register();
-                    }
-                    else if (strcmp(c, "2") == 0)
-                    {
-                        t = 0;
-                        system("cls");
-                        login();
-                    }
-                } while (strcmp(c, "1") != 0 && strcmp(c, "2") != 0);
-            }
-            if (strcmp(ans, "y") != 0 && strcmp(ans, "n") != 0)
-            {
-                system("cls");
-                printf("--------------------------------\n");
-                printf("Pls select choice in bracket!\n");
-                printf("--------------------------------\n");
-            }
-        }
-        //} do 186
-    }
+      duser();
+    fscanf(f,"%s",dataname);
+    fclose(f);
+    if(strcmp(username,dataname)!=0)
+        duser();
     if ((f = fopen(data_password, "r")) == NULL)
     {
         printf("pls register again!");
@@ -542,4 +503,48 @@ void hpassword(char *h_p) //ซ่อนรหัสไม่ให้แสด�
         }
     }
     printf("\n");
+}
+void duser()
+{
+    char ans[1];
+        while (1)
+        { // do512
+            char c[10];
+            printf("pls register first or check your username\n");
+            printf("accept(y/n): ");
+            scanf(" %s", ans);
+            strlwr(ans);
+            if (strcmp(ans, "y") == 0)
+            {
+                do
+                {
+                    system("cls");
+                    printf("/////////////////////\n");
+                    printf("\\1.register         \\ \n");
+                    printf("\\2.Recheck again    \\ \n");
+                    printf("/////////////////////\n");
+                    printf("choose : ");
+                    scanf(" %s", c);
+                    if (strcmp(c, "1") == 0)
+                    {
+                        user_register();
+                        break;
+                    }
+                    else if (strcmp(c, "2") == 0)
+                    {
+                        system("cls");
+                        login();
+                        break;
+                    }
+                } while (strcmp(c, "1") != 0 && strcmp(c, "2") != 0);
+            }
+            if (strcmp(ans, "y") != 0 && strcmp(ans, "n") != 0)
+            {
+                system("cls");
+                printf("--------------------------------\n");
+                printf("Pls select choice in bracket!\n");
+                printf("--------------------------------\n");
+            }
+        }
+        //do 512
 }
