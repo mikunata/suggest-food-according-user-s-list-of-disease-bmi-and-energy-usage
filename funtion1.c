@@ -491,7 +491,12 @@ void hpassword(char *h_p) //ซ่อนรหัสไม่ให้แสด�
     while (1)
     {
         *h_p = getch();
-        if (*h_p == '\r')
+        if(*h_p=='\b')
+        {
+            h_p--;
+            printf("\b \b");
+        }
+        else if (*h_p == '\r')
         {
             *h_p = '\0';
             break;
