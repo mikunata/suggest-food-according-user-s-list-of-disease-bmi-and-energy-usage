@@ -1,0 +1,105 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+void drawgraph(FILE *dietaryinfo);
+int finddate(FILE *dietaryinfo);
+char monthname[12][15] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+char inputdate[15];
+
+int main() {
+    FILE *dietaryinfo;
+    dietaryinfo = fopen("User_dietary_information1.txt", "r");
+    if (!dietaryinfo) {
+        printf("Error opening file\n");
+        return 1;
+    }
+    int found = finddate(dietaryinfo);
+    if (found == 1) {
+        drawgraph(dietaryinfo);
+    }
+    fclose(dietaryinfo);
+    return 0;
+}
+
+int finddate(FILE *dietaryinfo) {
+    printf("Input date (dd/mm/yyyy): ");
+    scanf("%s", inputdate);
+    char line[15];
+    int found = 0;
+    rewind(dietaryinfo); // Ensure we start from the beginning of the file
+    while (fgets(line, 15, dietaryinfo)) {
+        line[strcspn(line, "\n")] = '\0'; // Remove newline character
+        if (strcmp(line, inputdate) == 0) {
+            found = 1;
+            break;
+        }
+    }
+
+    if (found == 0) {
+        printf("No match found. Please try again.\n");
+    }
+    return found;
+}
+
+void drawgraph(FILE *dietaryinfo) {
+    int day, month, year;
+    sscanf(inputdate, "%d/%d/%d", &day, &month, &year);
+    int daily_calories[31] = {0}; // Array to store total calories for each day of the month
+    int bars[7] = {0}; // Calories for the selected week
+    char line[15];
+    int line_number = 0;
+    int current_day, current_month, current_year, calories;
+
+    rewind(dietaryinfo); // Start reading the file from the beginning
+
+    while (fgets(line, 15, dietaryinfo)) {
+        line_number++;
+        line[strcspn(line, "\n")] = '\0'; // Remove newline character
+
+        if (line_number % 3 == 2) { // Date line
+            sscanf(line, "%d/%d/%d", &current_day, &current_month, &current_year);
+        }
+        if (line_number % 3 == 0) { // Calorie line
+            calories = atoi(line); // Convert calorie string to integer
+            if (current_month == month && current_year == year) {
+                daily_calories[current_day - 1] += calories; // Combine calories for the same day
+            }
+        }
+    }
+
+    // Determine the week to display based on the input date
+    int start_day = (day - 1) / 7 * 7 + 1; // Calculate start day of the week
+    for (int i = 0; i < 7; i++) {
+        if (start_day + i <= 31) {
+            bars[i] = daily_calories[start_day + i - 1];
+        }
+    }
+
+    // Print the graph
+    printf("\n\n");
+    for (int i = 0; i < 30; i++) printf(" ");
+    printf("%s %d\n  kcal\n    |\n", monthname[month - 1], year);
+
+    for (int i = 30; i > 0; i--) {
+        if (i % 5 == 0) {
+            printf("%4d+    ", i * 100);
+        } else {
+            printf("    |    ");
+        }
+        for (int j = 0; j < 7; j++) {
+            if (bars[j] >= i * 100) {
+                printf("####    ");
+            } else {
+                printf("        ");
+            }
+        }
+        printf("\n");
+    }
+    printf("   0-------------------------------------------------------------day\n     ");
+    for (int i = 0; i < 7; i++) {
+        if (start_day + i <= 31) {
+            printf("%8d", start_day + i);
+        }
+    }
+    printf("\n\n");
+}
