@@ -39,7 +39,7 @@ int function5(char one[50])
         }
         fclose(f);
     }
-    int day[count], difday,mo[count];
+    /*int day[count], difday,mo[count];
     for (int i = 0; i < count; i++)
     {
         for (t = 0, d = data[i].date; t < 2; d++, t++)
@@ -51,7 +51,7 @@ int function5(char one[50])
             mpw[t]=*m;
         mo[i]=atoi(mpw);
         printf("%d %d ",day[i],mo[i]);
-    }
+    }*/
     /* for ( int i = 0; i < count ; i++)
     {
         for(int j=i+1;j<count;j++)
