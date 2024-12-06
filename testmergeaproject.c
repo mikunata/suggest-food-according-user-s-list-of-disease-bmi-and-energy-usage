@@ -296,7 +296,6 @@ int login()
     strcat(username, sur);
     strcpy(data_password, username);
     strcat(data_password, "_password");
-    printf("%s", username);
     if ((f = fopen(username, "r")) == NULL)
         duser();
     fscanf(f, "%s", dataname);
@@ -449,10 +448,12 @@ void select_function(char user[50]) // เอาparameter user ไปต่อ�
     scanf("%s", f_c);
     if (strcmp(f_c, "1") == 0)
     {
+        system("cls");
         callfunction2(user);
     }
     else if (strcmp(f_c, "2") == 0)
     {
+        system("cls");
         edit_data_calculate_calories(user);
     }
     else if (strcmp(f_c, "3") == 0)
@@ -758,7 +759,7 @@ int callfunction2(char name[50])
     char c[5];
     while (1)
     {
-        printf("accept:");
+        printf("accept(y/n):");
         scanf("%s", c);
         if (strcmp(c, "yes") == 0 || strcmp(c, "y") == 0)
         {
@@ -1956,21 +1957,21 @@ void edit_data(char user[50])
         writeFile(data, count, fileName, user);
 
         printf("Data has been edited successfully.\n");
-        int I_want_to_Sleep;
+        char I_want_to_Sleep[10];
         int Puvit_Sleep_at_6_am;
         do
         {
             Puvit_Sleep_at_6_am = 0;
             printf("Will you continue to make corrections? (1.Yes/2.No)\n(1 or 2):");
-            scanf("%d", &I_want_to_Sleep);
+            scanf("%s", I_want_to_Sleep);
             getchar(); // อ่าน newline เพื่อป้องกันปัญหา
-            if (I_want_to_Sleep == 1)
+            if (strcmp(I_want_to_Sleep,"1") == 0)
             {
                 Puvit_Sleep_at_6_am = 1;
                 system("cls");
                 edit_data(user);
             }
-            else if (I_want_to_Sleep == 2)
+            else if (strcmp(I_want_to_Sleep,"2") == 0)
             {
                 Puvit_Sleep_at_6_am = 1;
                 system("cls");
