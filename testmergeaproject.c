@@ -824,8 +824,6 @@ int convertToAD(int year)
     return (year - 543); // แปลงจาก พ.ศ. เป็น ค.ศ.
 }
 
-
-
 void calculate_calories(char user[50])
 {
     int Qin, Neg, A, Prot, Car, Fat, Fit, Fi, Cal, Mo, Da, Ye, T1, T2, REC, LOUIS, Crown, knowncal, date_mont_correct, Time_correct, result1, result2, result3, result4, result5, result6, result7, result8, result9;
@@ -1153,8 +1151,8 @@ void calculate_calories(char user[50])
         if (REC == 1)
         {
             char filename[50];
-            strcpy(filename,user);
-            strcat(filename,"_dietary_information");
+            strcpy(filename, user);
+            strcat(filename, "_dietary_information");
             FILE *CLR = fopen(filename, "a+");
             LOUIS = 1;
             printf("You want to record this data.\n");
@@ -1199,7 +1197,7 @@ void calculate_calories(char user[50])
 }
 
 // ฟังก์ชันสำหรับอ่านข้อมูลจากไฟล์
-int readFile(FoodRecord data[],char Name[50], char user[50])
+int readFile(FoodRecord data[], char Name[50], char user[50])
 {
     FILE *file = fopen(Name, "r");
     if (file == NULL)
@@ -1207,20 +1205,21 @@ int readFile(FoodRecord data[],char Name[50], char user[50])
         printf("/*/*/Unable to open file.\\*\\*\\ \n***Record your calories first.***\n");
         edit_data_calculate_calories(user);
     }
-    else{
-    int count = 0;
-    while (count < MAX_RECORDS &&
-           fscanf(file, "%s %s %d %d %d %d %s %d",
-                  data[count].foodName, data[count].time,
-                  &data[count].protein, &data[count].carbs,
-                  &data[count].fat, &data[count].fiber,
-                  data[count].date, &data[count].calories) == 8)
+    else
     {
-        replaceUnderscoreWithSpace(data[count].foodName);
-        count++;
-    }
-    fclose(file);
-    return count;
+        int count = 0;
+        while (count < MAX_RECORDS &&
+               fscanf(file, "%s %s %d %d %d %d %s %d",
+                      data[count].foodName, data[count].time,
+                      &data[count].protein, &data[count].carbs,
+                      &data[count].fat, &data[count].fiber,
+                      data[count].date, &data[count].calories) == 8)
+        {
+            replaceUnderscoreWithSpace(data[count].foodName);
+            count++;
+        }
+        fclose(file);
+        return count;
     }
 }
 
@@ -1312,14 +1311,16 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
         getchar(); // อ่าน newline เพื่อป้องกันปัญหา
         if (data->protein == 0 && data->carbs == 0 && data->fat == 0 && data->fiber == 0 && data->calories != 0)
         {
-            if(strcmp(choice,"1")==0)
-            {   printf("New food name: ");
+            if (strcmp(choice, "1") == 0)
+            {
+                printf("New food name: ");
                 fflush(stdin);
                 gets(record->foodName);
                 replaceSpacesWithUnderscore(record->foodName);
             }
-            else if(strcmp(choice,"2")==0)
-                {B = 0;
+            else if (strcmp(choice, "2") == 0)
+            {
+                B = 0;
                 while (B == 0)
                 {
                     B = 1;
@@ -1374,8 +1375,8 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
         else if(Time_correct==1){printf("   Time is incorrect.\nTry again.\n");
         printf("Time (eg. 15:24) >>"); //ให้พิมพ์เองเพราะจะได้ระบุเวลาตามความต้องการของผู้ใช้ เช่น กินตั้งแต่เที่ยงแต่จะมาพิมพ์ตอนเวลาบ่ายเป็นต้น
         scanf("%d:%d",&T1,&T2);Time_correct=1;}}while(T1<0||T1>=24||T2<0||T2>=60);*/
-                }
-            else if(strcmp(choice,"3")==0)
+            }
+            else if (strcmp(choice, "3") == 0)
             {
                 B = 0;
                 while (B == 0)
@@ -1521,8 +1522,9 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                 gets(record->date);
                 n=strlen(record->date);*/
             }
-            else if(strcmp(choice,"4")==0)
-            {    B = 0;
+            else if (strcmp(choice, "4") == 0)
+            {
+                B = 0;
                 while (B == 0)
                 {
                     B = 1;
@@ -1553,19 +1555,19 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                 printf("Incorrect option\n");
                 Quay = 1;
             }
-            
         }
         else
         {
-            if(strcmp(choice,"1")==0)
-             {
-                 printf("New food name: ");
+            if (strcmp(choice, "1") == 0)
+            {
+                printf("New food name: ");
                 fflush(stdin);
                 gets(record->foodName);
                 replaceSpacesWithUnderscore(record->foodName);
             }
-            else if(strcmp(choice,"2")==0)
-            {    B = 0;
+            else if (strcmp(choice, "2") == 0)
+            {
+                B = 0;
                 while (B == 0)
                 {
                     B = 1;
@@ -1618,8 +1620,9 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                 strcpy(record->time, Kung_Fu);
                 // scanf("%9s", record->time);
             }
-            else if(strcmp(choice,"3")==0)
-            {    B = 0;
+            else if (strcmp(choice, "3") == 0)
+            {
+                B = 0;
                 while (B == 0)
                 {
                     B = 1;
@@ -1651,8 +1654,9 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                 Real->calories = Real->calories - 4 * Mi_Bazi + 4 * record->protein;
                 printf("\nThis is the new calories: %d Kcal\n", Real->calories);
             }
-            else if(strcmp(choice,"4")==0)
-            {    B = 0;
+            else if (strcmp(choice, "4") == 0)
+            {
+                B = 0;
                 while (B == 0)
                 {
                     B = 1;
@@ -1684,7 +1688,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                 Real->calories = Real->calories - 4 * Mi_Bazi + 4 * record->carbs;
                 printf("\nThis is the new calories: %d Kcal\n", Real->calories);
             }
-            else if(strcmp(choice,"5")==0)
+            else if (strcmp(choice, "5") == 0)
             {
                 B = 0;
                 while (B == 0)
@@ -1717,9 +1721,8 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                 Real->calories;
                 Real->calories = Real->calories - 9 * Mi_Bazi + 9 * record->fat;
                 printf("\nThis is the new calories: %d Kcal\n", Real->calories);
-
             }
-            else if(strcmp(choice,"6")==0)
+            else if (strcmp(choice, "6") == 0)
             {
                 B = 0;
                 while (B == 0)
@@ -1752,8 +1755,9 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                 Real->calories = Real->calories - 0 * Mi_Bazi + 0 * record->fiber;
                 printf("\nThis is the new calories: %d Kcal\n", Real->calories);
             }
-            else if(strcmp(choice,"7")==0)
-            {    B = 0;
+            else if (strcmp(choice, "7") == 0)
+            {
+                B = 0;
                 while (B == 0)
                 {
                     B = 1;
@@ -1904,9 +1908,8 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                 printf("Incorrect option\n");
                 Quay = 1;
             }
-            
         }
-    } while (Quay == 1);//do 606
+    } while (Quay == 1); // do 606
 }
 
 void edit_data(char user[50])
@@ -1916,8 +1919,8 @@ void edit_data(char user[50])
     FoodRecord data[MAX_RECORDS];
     int count;
     char fileName[50];
-    strcpy(fileName,user);
-    strcat(fileName,"_dietary_information");
+    strcpy(fileName, user);
+    strcat(fileName, "_dietary_information");
     // อ่านข้อมูลจากไฟล์
     count = readFile(data, fileName, user);
     if (count == 0)
@@ -1925,60 +1928,61 @@ void edit_data(char user[50])
         printf("There is no data in the file.\n Record your calories first.\n");
         edit_data_calculate_calories(user);
     }
-    else{
-    // แสดงข้อมูลทั้งหมด
-    displayData(data, count);
-
-    // ให้ผู้ใช้เลือกแก้ไข
-    int recordIndex;
-    int Emperor;
-    do
+    else
     {
-        Emperor = 0;
-        printf("\nEnter the item number you want to edit.(choose In. 1-%d): ", count);
-        scanf("%d", &recordIndex);
-        getchar(); // อ่าน newline เพื่อป้องกันปัญหา
-        if (recordIndex < 1 || recordIndex > count)
-        {
-            printf("Item number is invalid.\n");
-            Emperor = 1;
-        }
-    } while (Emperor == 1);
+        // แสดงข้อมูลทั้งหมด
+        displayData(data, count);
 
-    // แก้ไขข้อมูล
-    editRecord(&data[recordIndex - 1], &data[recordIndex - 1], &data[recordIndex - 1]);
-
-    // บันทึกข้อมูลกลับไปที่ไฟล์
-    writeFile(data, count, fileName, user);
-
-    printf("Data has been edited successfully.\n");
-    int I_want_to_Sleep;
-    int Puvit_Sleep_at_6_am;
-    do
-    {
-        Puvit_Sleep_at_6_am = 0;
-        printf("Will you continue to make corrections? (1.Yes/2.No)\n(1 or 2):");
-        scanf("%d", &I_want_to_Sleep);
-        getchar(); // อ่าน newline เพื่อป้องกันปัญหา
-        if (I_want_to_Sleep == 1)
+        // ให้ผู้ใช้เลือกแก้ไข
+        int recordIndex;
+        int Emperor;
+        do
         {
-            Puvit_Sleep_at_6_am = 1;
-            system("cls");
-            edit_data(user);
-        }
-        else if (I_want_to_Sleep == 2)
+            Emperor = 0;
+            printf("\nEnter the item number you want to edit.(choose In. 1-%d): ", count);
+            scanf("%d", &recordIndex);
+            getchar(); // อ่าน newline เพื่อป้องกันปัญหา
+            if (recordIndex < 1 || recordIndex > count)
+            {
+                printf("Item number is invalid.\n");
+                Emperor = 1;
+            }
+        } while (Emperor == 1);
+
+        // แก้ไขข้อมูล
+        editRecord(&data[recordIndex - 1], &data[recordIndex - 1], &data[recordIndex - 1]);
+
+        // บันทึกข้อมูลกลับไปที่ไฟล์
+        writeFile(data, count, fileName, user);
+
+        printf("Data has been edited successfully.\n");
+        int I_want_to_Sleep;
+        int Puvit_Sleep_at_6_am;
+        do
         {
-            Puvit_Sleep_at_6_am = 1;
-            system("cls");
-            edit_data_calculate_calories(user);
-        } // ไปhomepage
-    } while (Puvit_Sleep_at_6_am == 0);
+            Puvit_Sleep_at_6_am = 0;
+            printf("Will you continue to make corrections? (1.Yes/2.No)\n(1 or 2):");
+            scanf("%d", &I_want_to_Sleep);
+            getchar(); // อ่าน newline เพื่อป้องกันปัญหา
+            if (I_want_to_Sleep == 1)
+            {
+                Puvit_Sleep_at_6_am = 1;
+                system("cls");
+                edit_data(user);
+            }
+            else if (I_want_to_Sleep == 2)
+            {
+                Puvit_Sleep_at_6_am = 1;
+                system("cls");
+                edit_data_calculate_calories(user);
+            } // ไปhomepage
+        } while (Puvit_Sleep_at_6_am == 0);
     }
 }
 
 void edit_data_calculate_calories(char user[50])
 {
-    int Prot, Car, Fat, Fit, Fi, Cal, Mo, Da, Ye, T1, T2,io;
+    int Prot, Car, Fat, Fit, Fi, Cal, Mo, Da, Ye, T1, T2, io;
     char Ans[10];
     printf("What do you want to ...? \n 1.Record or calculate calories from format recorded [ 1.calories(Kcal) or 2.nutrients(gram) ] \n 2.edit your recorded data \n 3.back to the homepage \n**Your answer is 1,2 or 3** \n :");
     scanf("%s", Ans);
@@ -1986,16 +1990,19 @@ void edit_data_calculate_calories(char user[50])
     do
     {
         io = 0;
-        if(strcmp(Ans,"1")==0)
-        {    io = 1;
+        if (strcmp(Ans, "1") == 0)
+        {
+            io = 1;
             calculate_calories(user);
         }
-        else if(strcmp(Ans,"2")==0)
-        {    io = 1;
+        else if (strcmp(Ans, "2") == 0)
+        {
+            io = 1;
             edit_data(user);
         }
-        else if(strcmp(Ans,"3")==0)
-        {    io = 1;
+        else if (strcmp(Ans, "3") == 0)
+        {
+            io = 1;
             system("cls");
             select_function(user); // อย่าลืมเชื่อมไปหน้าแรก main();
         }
@@ -2006,10 +2013,9 @@ void edit_data_calculate_calories(char user[50])
             system("cls");
             edit_data_calculate_calories(user); // อย่าลืมเชื่อมไปหน้าแรก main();
         }
-        
+
     } while (io == 0);
 }
-
 
 void readFilemlc()
 {
