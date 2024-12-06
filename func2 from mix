@@ -1,0 +1,203 @@
+#include <stdio.h>
+#include <string.h>
+#include "function4.c"
+FILE *p;
+
+// Function to calculate BMI
+float calculate_bmi(float weight, float height, char uname[50])
+{
+
+    // Open the weight file
+    char bminame[50];
+    float bmi;
+
+    bmi = weight / (height * height);
+    strcpy(bminame, uname);
+    strcat(bminame, "_bmi");
+    // Open the output file to write the BMI result
+    p = fopen(bminame, "w");
+    fprintf(p, "%.2f\n", bmi); // Write the BMI value to the file
+    fclose(p);
+
+    return bmi;
+}
+
+// Function to calculate BMR
+float calculate_bmr(float weight, float height, int age, char bmrname[50])
+{
+    float bmr;
+    char gender[10];
+    char bmrsex[50], bmrresult[50];
+    strcpy(bmrsex, bmrname);
+    strcat(bmrsex, "_sex");
+    p = fopen(bmrsex, "r");
+    if (p == NULL)
+    {
+        printf("Error opening sex data file\n");
+        return -1;
+    }
+    fscanf(p, "%s", gender);
+    fclose(p);
+    strlwr(gender);
+    // Mifflin-St Jeor equation for BMR calculation
+    if (strcmp(gender, "male") == 0)
+    {
+        bmr = 10 * weight + 6.25 * height - 5 * age + 5; // For men
+    }
+    else if (strcmp(gender, "female") == 0)
+    {
+        bmr = 10 * weight + 6.25 * height - 5 * age - 161; // For women
+    }
+    else
+    {
+        printf("Invalid gender input\n");
+        return -1; // Error if gender is invalid
+    }
+
+    // Write the BMR result to a file
+    strcpy(bmrresult, bmrname);
+    strcat(bmrresult, "_bmrresult");
+    p = fopen(bmrresult, "w");
+    if (p != NULL)
+    {
+        fprintf(p, "%.2f\n", bmr); // Write the BMR value to the file
+        fclose(p);
+    }
+    else
+    {
+        printf("Error opening BMR result file\n");
+    }
+    return bmr;
+}
+
+// Function to calculate TDEE (Total Daily Energy Expenditure)
+float calculate_tdee(float bmr, char exname[50])
+{
+    float tdee;
+    int activity_level;
+    char nameex[50], nametd[50];
+    strcpy(nameex, exname);
+    strcat(nameex, "_exercise");
+    p = fopen(nameex, "r");
+    fscanf(p, "%d", &activity_level);
+    fclose(p);
+
+    // Activity factor based on activity level
+    switch (activity_level)
+    {
+    case 1:
+        tdee = bmr * 1.2; // Sedentary
+        break;
+    case 2:
+        tdee = bmr * 1.375; // Lightly active
+        break;
+    case 3:
+        tdee = bmr * 1.55; // Moderately active
+        break;
+    case 4:
+        tdee = bmr * 1.725; // Very active
+        break;
+    case 5:
+        tdee = bmr * 1.9; // Super active
+        break;
+    default:
+        printf("Invalid activity level\n");
+        return -1; // Error if activity level is invalid
+    }
+
+    // Write the TDEE result to a file
+    strcpy(nametd, exname);
+    strcat(nametd, "_tdee");
+    p = fopen(nametd, "w");
+    fprintf(p, "%.2f\n", tdee); // Write the TDEE value to the file
+    fclose(p);
+    return tdee;
+}
+
+int callfunction2(char name[50])
+{
+    float weight, height, bmi, bmr, tdee;
+
+    char wnoname[50], hnoname[50], agename[50];
+    int age;
+    // First, calculate BMI
+    strcpy(wnoname, name);
+    strcat(wnoname, "_weight");
+    p = fopen(wnoname, "r");
+    if (p == NULL)
+    {
+        printf("Error opening weight file\n");
+        return -1;
+    }
+    if (fscanf(p, "%f", &weight) != 1)
+    {
+        printf("Error reading weight value\n");
+        fclose(p);
+        return -1;
+    }
+    fclose(p);
+    strcpy(hnoname, name);
+    strcat(hnoname, "_height");
+    // Open the height file
+    p = fopen(hnoname, "r");
+    if (p == NULL)
+    {
+        printf("Error opening height file\n");
+        return -1;
+    }
+    if (fscanf(p, "%f", &height) != 1)
+    {
+        printf("Error reading height value\n");
+        fclose(p);
+        return -1;
+    }
+    fclose(p);
+    strcpy(agename, name);
+    strcat(agename, "_age");
+    p = fopen(agename, "r");
+    if (p == NULL)
+    {
+        printf("Error opening height file\n");
+        return -1;
+    }
+    if (fscanf(p, "%d", &age) != 1)
+    {
+        printf("Error reading age value\n");
+        fclose(p);
+        return -1;
+    }
+    fclose(p);
+    bmi = calculate_bmi(weight, height, name);
+    if (bmi != -1)
+    {
+        printf("BMI calculated: %.2f\n", bmi);
+    }
+
+    // Calculate BMR
+    bmr = calculate_bmr(weight, height, age, name);
+    if (bmr != -1)
+    {
+        printf("BMR calculated: %.2f\n", bmr);
+    }
+
+    // Calculate TDEE (Calories needed per day)
+    tdee = calculate_tdee(bmr, name);
+    if (tdee != -1)
+    {
+        printf("Calories needed per day (TDEE): %.2f\n", tdee);
+        printf("Calories needed per meal : %.2f\n", tdee / 3);
+    }
+
+    checking(tdee / 3);
+    char c[5];
+    while (1)
+    {
+        printf("accept:");
+        scanf("%s", c);
+        if (strcmp(c, "yes") == 0 || strcmp(c, "y") == 0)
+        {
+            select_function(name);
+            break;
+        }
+    }
+}
