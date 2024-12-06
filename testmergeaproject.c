@@ -46,12 +46,17 @@ int callfunction2(char name[50]);
 //
 // function3
 void calculate_calories(char user[50]);
-int readFile(FoodRecord data[], const char *fileName, char user[50]);
+int readFile(FoodRecord data[], char *, char user[50]);
 void writeFile(FoodRecord data[], int count, const char *fileName, char user[50]);
 void displayData(FoodRecord data[], int count);
-void editRecord(FoodRecord *record);
+void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data);
 void edit_data(char user[50]);
 void edit_data_calculate_calories(char user[50]);
+void replaceSpacesWithUnderscore(char str[]);
+void replaceUnderscoreWithSpace(char str[]);
+int isLeapYear(int year);
+int isValidDate(int day, int month, int year);
+int convertToAD(int year);
 //
 // function4
 float checking(int yourcal);
@@ -152,11 +157,11 @@ int user_register()
         }
         while (1)
         {
-            printf("Height(meter): ");
+            printf("Height(centimeters): ");
             scanf("%f", &h);
-            if (h > 2 || h <= 0)
+            if (h > 2.5 || h <= 0)
                 printf("pls enter real information!\n");
-            if ((h <= 2) && (h > 0))
+            if ((h <= 2.5) && (h > 0))
                 break;
         }
         while (1)
@@ -291,12 +296,12 @@ int login()
     strcat(username, sur);
     strcpy(data_password, username);
     strcat(data_password, "_password");
-    printf("%s",username);
+    printf("%s", username);
     if ((f = fopen(username, "r")) == NULL)
         duser();
-    fscanf(f,"%s",dataname);
+    fscanf(f, "%s", dataname);
     fclose(f);
-    if(strcmp(username,dataname)!=0)
+    if (strcmp(username, dataname) != 0)
         duser();
     if ((f = fopen(data_password, "r")) == NULL)
     {
@@ -753,66 +758,230 @@ int callfunction2(char name[50])
     char c[5];
     while (1)
     {
-    printf("accept:");
-    scanf("%s",c);
-    if(strcmp(c,"yes")==0||strcmp(c,"y")==0)
+        printf("accept:");
+        scanf("%s", c);
+        if (strcmp(c, "yes") == 0 || strcmp(c, "y") == 0)
         {
+            system("cls");
             select_function(name);
             break;
         }
     }
 }
 
+// ฟังก์ชันเปลี่ยนเว้นวรรคเป็น "_"
+void replaceSpacesWithUnderscore(char str[])
+{
+    int i;
+    for (i = 0; str[i] != '\0'; i++)
+    {
+        if (str[i] == ' ')
+        {                 // ถ้าเจอเว้นวรรค
+            str[i] = '_'; // แทนที่ด้วย _
+        }
+    }
+}
+
+// ฟังก์ชันเปลี่ยน "_" เป็นเว้นวรรค
+void replaceUnderscoreWithSpace(char str[])
+{
+    int i;
+    for (i = 0; str[i] != '\0'; i++)
+    {
+        if (str[i] == '_')
+        {                 // ถ้าเจอ _
+            str[i] = ' '; // แทนที่ด้วยเว้นวรรค
+        }
+    }
+}
+
+// ตรวจว่าใช่ปีที่มีอธิกสุรทินหรือไม่ คืนค่า เป็น 1 กับ 0
+int isLeapYear(int year)
+{
+    return (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
+}
+
+int isValidDate(int day, int month, int year)
+{
+    if (month < 1 || month > 12 || day < 1)
+    {
+        return 0; // ไม่ถูกต้อง
+    }
+
+    int daysInMonth[] = {31, (isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+    if (day > daysInMonth[month - 1])
+    {
+        return 0; // ไม่ถูกต้อง
+    }
+
+    return 1; // ถูกต้อง
+}
+
+// แปลงปีจาก พ.ศ. เป็น ค.ศ.
+int convertToAD(int year)
+{
+    return (year - 543); // แปลงจาก พ.ศ. เป็น ค.ศ.
+}
+
+
+
 void calculate_calories(char user[50])
 {
-    int Prot, Car, Fat, Fit, Fi, Cal, Mo, Da, Ye, T1, T2, REC, LOUIS, Crown, knowncal, date_mont_correct, Time_correct;
+    int Qin, Neg, A, Prot, Car, Fat, Fit, Fi, Cal, Mo, Da, Ye, T1, T2, REC, LOUIS, Crown, knowncal, date_mont_correct, Time_correct, result1, result2, result3, result4, result5, result6, result7, result8, result9;
     char MN[20];
+    char Bud_ADom;
     system("cls");
-    printf("Record and calculate calories from nutrients(gram)\n");
-    printf("Meal's name/ Manu (English Only and Don't have space) :");
-    scanf("%s", MN);
+    printf("Record or calculate calories from format recorded 1.calories(Kcal) or 2.nutrients(gram)\n");
+    printf("Meal's name/ Menu (English Only ) :");
+    fflush(stdin);
+    gets(MN);
     date_mont_correct = 0;
     Time_correct = 0;
     do
     {
         if (date_mont_correct == 0)
         {
-            printf("Date/Mont/Year(eg. 01/02/2024) :");
-            scanf("%d/%d/%d", &Da, &Mo, &Ye);
+            A = 0;
+            while (A == 0)
+            {
+                A = 1;
+                printf("Date/Mont/Year(eg. 01/02/2024)\n ( **1. It is a real date according to the calendar.)\n ( **2. It is not a word or letter.)\n ( **3. Please check carefully whether it is B.E.(Buddhist Era) or A.D.(Anno Domini).(We can estimate roughly.))\n :");
+                result4 = scanf("%d/%d/%d", &Da, &Mo, &Ye);
+                if (result4 != 3)
+                {
+                    A = 0; // หากไม่ได้รับค่าจำนวนเต็ม 3 ค่า
+                    printf("Invalid input! Please enter three integers separated by slashes.\n");
+
+                    // เพื่อข้ามข้อมูลที่เหลือจากการป้อนผิด
+                    while (getchar() != '\n')
+                        ; // ข้ามจนกว่าจะถึงบรรทัดใหม่
+                }
+            }
             date_mont_correct = 1;
         }
         else if (date_mont_correct == 1)
         {
-            printf("   Date/Mont/year is incorrect.\nTry again.\n");
-            printf("Date/Mont/Year(eg. 01/02/2024) :");
-            scanf("%d/%d/%d", &Da, &Mo, &Ye);
+            A = 0;
+            while (A == 0)
+            {
+                A = 1;
+                printf("   Date/Mont/year is incorrect.\n ( **1. It is a real date according to the calendar.) \n ( **2. It is not a word or letter.) \n ( **3. Please check carefully whether it is B.E.(Buddhist Era) or A.D.(Anno Domini).(We can estimate roughly.)) \n !! Try again.\n");
+                printf("Date/Mont/Year(eg. 01/02/2024) :");
+                result3 = scanf("%d/%d/%d", &Da, &Mo, &Ye);
+                if (result3 != 3)
+                {
+                    A = 0; // หากไม่ได้รับค่าจำนวนเต็ม 3 ค่า
+                    printf("Invalid input! Please enter three integers separated by slashes.\n");
+
+                    // เพื่อข้ามข้อมูลที่เหลือจากการป้อนผิด
+                    while (getchar() != '\n')
+                        ; // ข้ามจนกว่าจะถึงบรรทัดใหม่
+                }
+            }
+        } /*เดาคร่าวๆ ว่าเป็น พ.ศ. หรือ คศ.โดยเทียบกับปี2500*/
+
+        if ((Ye > 543 && Ye > 2099) && A != 0)
+        {
+
+            fflush(stdin);
+            Qin = 0;
+            while (Qin == 0)
+            {
+                printf("           |--> Is this year in B.E.(Buddhist Era)?\n");
+                printf("B.E.:%d ?\n (Y/N):", Ye);
+                scanf(" %c", &Bud_ADom);
+                getchar();
+                Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
+                if (tolower(Bud_ADom) == 'y' && Qin == 1)
+                {
+                    Ye = convertToAD(Ye);
+                    printf("A.D(Anno Domini):%d\n", Ye);
+                }
+                else if (tolower(Bud_ADom) == 'n' && Qin == 1)
+                {
+                    printf("A.D(Anno Domini):%d\n", Ye);
+                }
+            }
         }
-    } while (Da <= 0 || Da >= 32 || Mo <= 0 || Mo >= 13);
+        else if ((Ye <= 2099 || Ye < 543) && A != 0)
+        {
+
+            fflush(stdin);
+            Qin = 0;
+            while (Qin == 0)
+            {
+                printf("           |--> Is this year in A.D(Anno Domini)?\n");
+                printf("A.D.:%d ?\n(Y/N):", Ye);
+                scanf(" %c", &Bud_ADom);
+                getchar();
+                Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
+                if (tolower(Bud_ADom) == 'n' && Qin == 1)
+                {
+                    Ye = convertToAD(Ye);
+                    printf("A.D.(Anno Domini):%d\n", Ye);
+                }
+                else if (tolower(Bud_ADom) == 'y' && Qin == 1)
+                {
+                    printf("A.D.(Anno Domini):%d\n", Ye);
+                }
+            }
+        }
+    } while (isValidDate(Da, Mo, Ye) == 0); /*Da<=0||Da>=32||Mo<=0||Mo>=13||*/
 
     do
     {
         if (Time_correct == 0)
         {
-            printf("Time (eg. 15:24) >>"); // ให้พิมพ์เองเพราะจะได้ระบุเวลาตามความต้องการของผู้ใช้ เช่น กินตั้งแต่เที่ยงแต่จะมาพิมพ์ตอนเวลาบ่ายเป็นต้น
-            scanf("%d:%d", &T1, &T2);
-            Time_correct = 1;
+            A = 0;
+            while (A == 0)
+            {
+                A = 1;
+                printf("Time (eg. 15:24) >>"); // ให้พิมพ์เองเพราะจะได้ระบุเวลาตามความต้องการของผู้ใช้ เช่น กินตั้งแต่เที่ยงแต่จะมาพิมพ์ตอนเวลาบ่ายเป็นต้น
+                result2 = scanf("%d:%d", &T1, &T2);
+                Time_correct = 1;
+                if (result2 != 2)
+                {
+                    A = 0; // หากไม่ได้รับค่าจำนวนเต็ม 2 ค่า
+                    printf("Invalid input! Please enter two integers separated by colon.\n");
+
+                    // เพื่อข้ามข้อมูลที่เหลือจากการป้อนผิด
+                    while (getchar() != '\n')
+                        ; // ข้ามจนกว่าจะถึงบรรทัดใหม่
+                }
+            }
         }
         else if (Time_correct == 1)
         {
-            printf("   Time is incorrect.\nTry again.\n");
-            printf("Time (eg. 15:24) >>"); // ให้พิมพ์เองเพราะจะได้ระบุเวลาตามความต้องการของผู้ใช้ เช่น กินตั้งแต่เที่ยงแต่จะมาพิมพ์ตอนเวลาบ่ายเป็นต้น
-            scanf("%d:%d", &T1, &T2);
-            Time_correct = 1;
+            A = 0;
+            while (A == 0)
+            {
+                A = 1;
+                printf("   Time is incorrect.\nTry again.\n");
+                printf("Time (eg. 15:24) >>"); // ให้พิมพ์เองเพราะจะได้ระบุเวลาตามความต้องการของผู้ใช้ เช่น กินตั้งแต่เที่ยงแต่จะมาพิมพ์ตอนเวลาบ่ายเป็นต้น
+                result1 = scanf("%d:%d", &T1, &T2);
+                Time_correct = 1;
+                if (result1 != 2)
+                {
+                    A = 0; // หากไม่ได้รับค่าจำนวนเต็ม 2 ค่า
+                    printf("Invalid input! Please enter two integers separated by colon.\n");
+
+                    // เพื่อข้ามข้อมูลที่เหลือจากการป้อนผิด
+                    while (getchar() != '\n')
+                        ; // ข้ามจนกว่าจะถึงบรรทัดใหม่
+                }
+            }
         }
-    } while (T1 < 0 || T1 >= 24 || T2 < 0 || T2 >= 60);
+    } while (T1 < 0 || T1 >= 24 || T2 < 0 || T2 >= 60); // อ่าน newline เพื่อป้องกันปัญหา
 
     printf("%02d/%02d/%d\n", Da, Mo, Ye);
     printf("%02d:%02d \n", T1, T2);
     do
     {
         system("cls");
-        printf("Do you know the calories? \n If you know, you will type 1 ,but if you don't know, you will type 0.\n ,Or if you want to back, you will type 3\n :");
+        printf("Do you know the calories? \n If you know, you will type 1 (Know your calories(format1)) ,but if you don't know, you will type 0.(calculate your calories(format2))\n ,Or if you want to back, you will type 3\n :");
         scanf("%d", &knowncal);
+        getchar(); // อ่าน newline เพื่อป้องกันปัญหา
         if (knowncal == 1)
         {
             system("cls");
@@ -820,9 +989,32 @@ void calculate_calories(char user[50])
             printf("Meal's name/ Menu = %s\n", MN);
             printf("%02d/%02d/%d\n", Da, Mo, Ye);
             printf("%02d:%02d \n", T1, T2);
-            printf("You know your meal's calories.\n");
-            printf("Please, enter your meal's calories.\n");
-            scanf("%d", &Cal);
+            printf("You know your meal's calories.(Format Recorded 1)\n");
+            A = 0;
+            while (A == 0)
+            {
+                A = 1;
+                Neg = 0;
+                do
+                {
+                    if (Neg == 1)
+                    {
+                        printf("Please, enter Positive Integer.\n");
+                    }
+                    printf("Please, enter your meal's calories(Kcal).\n:");
+                    /*Cal=getNumericInputWithComma();*/
+                    result9 = scanf("%d", &Cal);
+                    if (result9 != 1)
+                    {
+                        A = 0; // ถ้าไม่สามารถอ่านได้ 1 ค่า (ตัวเลข)
+                        printf("Invalid input! Please enter an integer.\n");
+
+                        while (getchar() != '\n')
+                            ; // ข้ามข้อมูลที่เหลืออยู่ในบัฟเฟอร์
+                    }
+                    Neg = 1;
+                } while (Cal < 0);
+            }
             printf("*****|| Calories in this meal is %d kilocalories ||***** \n", Cal);
             Prot = 0;
             Car = 0;
@@ -836,16 +1028,104 @@ void calculate_calories(char user[50])
             printf("Meal's name/ Menu = %s\n", MN);
             printf("%02d/%02d/%d\n", Da, Mo, Ye);
             printf("%02d:%02d \n", T1, T2);
-            printf("You want to calculate your meal's calories.\n");
+            printf("You want to calculate your meal's calories.(Format Recorded 2)\n");
             printf("Please, enter the number of grams of protein, carbohydrate, fat and dietary fiber.\n");
-            printf("Protein(gram) :");
-            scanf("%d", &Prot);
-            printf("Carbohydrate(gram) :");
-            scanf("%d", &Car);
-            printf("Fat(gram) :");
-            scanf("%d", &Fat);
-            printf("Dietary fiber(gram) :");
-            scanf("%d", &Fi);
+            A = 0;
+            while (A == 0)
+            {
+                A = 1;
+                Neg = 0;
+                do
+                {
+                    if (Neg == 1)
+                    {
+                        printf("Please, enter Positive Integer.\n");
+                    }
+                    printf("Protein(gram) :");
+                    result5 = scanf("%d", &Prot);
+                    if (result5 != 1)
+                    {
+                        A = 0; // ถ้าไม่สามารถอ่านได้ 1 ค่า (ตัวเลข)
+                        printf("Invalid input! Please enter an integer.\n");
+
+                        while (getchar() != '\n')
+                            ; // ข้ามข้อมูลที่เหลืออยู่ในบัฟเฟอร์
+                    }
+                    Neg = 1;
+                } while (Prot < 0);
+            }
+            A = 0;
+            while (A == 0)
+            {
+                A = 1;
+                Neg = 0;
+                do
+                {
+                    if (Neg == 1)
+                    {
+                        printf("Please, enter Positive Integer.\n");
+                    }
+                    printf("Carbohydrate(gram) :");
+                    result6 = scanf("%d", &Car);
+                    if (result6 != 1)
+                    {
+                        A = 0; // ถ้าไม่สามารถอ่านได้ 1 ค่า (ตัวเลข)
+                        printf("Invalid input! Please enter an integer.\n");
+
+                        while (getchar() != '\n')
+                            ; // ข้ามข้อมูลที่เหลืออยู่ในบัฟเฟอร์
+                    }
+                    Neg = 1;
+                } while (Car < 0);
+            }
+            A = 0;
+            while (A == 0)
+            {
+                A = 1;
+                Neg = 0;
+                do
+                {
+                    if (Neg == 1)
+                    {
+                        printf("Please, enter Positive Integer.\n");
+                    }
+                    printf("Fat(gram) :");
+                    result7 = scanf("%d", &Fat);
+                    if (result7 != 1)
+                    {
+                        A = 0; // ถ้าไม่สามารถอ่านได้ 1 ค่า (ตัวเลข)
+                        printf("Invalid input! Please enter an integer.\n");
+
+                        while (getchar() != '\n')
+                            ; // ข้ามข้อมูลที่เหลืออยู่ในบัฟเฟอร์
+                    }
+                    Neg = 1;
+                } while (Fat < 0);
+            }
+            A = 0;
+            while (A == 0)
+            {
+                A = 1;
+                Neg = 0;
+                do
+                {
+                    if (Neg == 1)
+                    {
+                        printf("Please, enter Positive Integer.\n");
+                    }
+                    printf("Dietary fiber(gram) :");
+                    result8 = scanf("%d", &Fi);
+                    if (result8 != 1)
+                    {
+                        A = 0; // ถ้าไม่สามารถอ่านได้ 1 ค่า (ตัวเลข)
+                        printf("Invalid input! Please enter an integer.\n");
+
+                        while (getchar() != '\n')
+                            ; // ข้ามข้อมูลที่เหลืออยู่ในบัฟเฟอร์
+                    }
+                    Neg = 1;
+                } while (Fi < 0);
+            }
             printf("Protein = %d g,Carbohydrate = %d g, Fat = %d g, Dietary fiber = %d g\n", Prot, Car, Fat, Fi);
             Cal = Prot * 4 + Car * 4 + Fat * 9 + Fi * 0;
             printf("*****|| Calories in this meal is %d kilocalories ||***** \n", Cal);
@@ -862,8 +1142,6 @@ void calculate_calories(char user[50])
             system("cls");
             printf("incorrect");
             Crown = 0;
-
-            ;
         }
     } while (Crown == 0);
 
@@ -871,20 +1149,23 @@ void calculate_calories(char user[50])
     {
         printf("Do you want to record this calories? \n If you want to do, you will type 1 ,but if you don't want to record, you will type 0.\n ,Or if you want to back to the homepage and don't record this data, you will type 3\n :");
         scanf("%d", &REC);
+        getchar(); // อ่าน newline เพื่อป้องกันปัญหา
         if (REC == 1)
         {
-            char filename[] = "User_dietary_information1.txt";
-
+            char filename[50];
+            strcpy(filename,user);
+            strcat(filename,"_dietary_information");
             FILE *CLR = fopen(filename, "a+");
             LOUIS = 1;
             printf("You want to record this data.\n");
+            replaceSpacesWithUnderscore(MN);
             fprintf(CLR, "%s ", MN);
             fprintf(CLR, "%02d:%02d ", T1, T2);
             fprintf(CLR, "%d ", Prot);
             fprintf(CLR, "%d ", Car);
             fprintf(CLR, "%d ", Fat);
-            fprintf(CLR, "%d\n", Fi);
-            fprintf(CLR, "%02d/%02d/%d\n", Da, Mo, Ye);
+            fprintf(CLR, "%d ", Fi);
+            fprintf(CLR, "%02d/%02d/%d ", Da, Mo, Ye);
             fprintf(CLR, "%d\n", Cal);
 
             fclose(CLR);
@@ -918,15 +1199,15 @@ void calculate_calories(char user[50])
 }
 
 // ฟังก์ชันสำหรับอ่านข้อมูลจากไฟล์
-int readFile(FoodRecord data[], const char *fileName, char user[50])
+int readFile(FoodRecord data[],char Name[50], char user[50])
 {
-    FILE *file = fopen(fileName, "r");
+    FILE *file = fopen(Name, "r");
     if (file == NULL)
     {
-        printf("Unable to open file. Record your calories first.\n");
+        printf("/*/*/Unable to open file.\\*\\*\\ \n***Record your calories first.***\n");
         edit_data_calculate_calories(user);
     }
-
+    else{
     int count = 0;
     while (count < MAX_RECORDS &&
            fscanf(file, "%s %s %d %d %d %d %s %d",
@@ -935,10 +1216,12 @@ int readFile(FoodRecord data[], const char *fileName, char user[50])
                   &data[count].fat, &data[count].fiber,
                   data[count].date, &data[count].calories) == 8)
     {
+        replaceUnderscoreWithSpace(data[count].foodName);
         count++;
     }
     fclose(file);
     return count;
+    }
 }
 
 // ฟังก์ชันสำหรับเขียนข้อมูลกลับไปยังไฟล์
@@ -953,6 +1236,7 @@ void writeFile(FoodRecord data[], int count, const char *fileName, char user[50]
 
     for (int i = 0; i < count; i++)
     {
+        replaceSpacesWithUnderscore(data[i].foodName);
         fprintf(file, "%s %s %d %d %d %d %s %d\n",
                 data[i].foodName, data[i].time,
                 data[i].protein, data[i].carbs,
@@ -966,79 +1250,663 @@ void writeFile(FoodRecord data[], int count, const char *fileName, char user[50]
 void displayData(FoodRecord data[], int count)
 {
     printf("\nYour data:\n");
+
     for (int i = 0; i < count; i++)
     {
-        printf("Item number %d:\n", i + 1);
-        printf("Menu/meal: %s, Time: %s\n", data[i].foodName, data[i].time);
-        printf("Protein: %d g, Carbohydrate: %d g, Fat: %d g,Dietary fiber : %d g\n",
-               data[i].protein, data[i].carbs, data[i].fat, data[i].fiber);
-        printf("Date: %s, Calories: %d\n", data[i].date, data[i].calories);
-        printf("----------------------------------\n");
+        if (data[i].protein == 0 && data[i].carbs == 0 && data[i].fat == 0 && data[i].fiber == 0 && data[i].calories != 0)
+        {
+            replaceUnderscoreWithSpace(data[i].foodName);
+            printf("\nItem number(In.) %d:\n", i + 1);
+            printf("***|Format-Recorded(FR.) : 1.\n   |-> You recorded your calories by entering the calories you knew,\n and you didn't enter grams of protein, carbohydrates, fat, dietary fiber.***\n\n");
+            printf("Menu/meal: %s\nTime: %s\n", data[i].foodName, data[i].time);
+            printf("Date: %s\nCalories: %d\n\n", data[i].date, data[i].calories);
+            printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< FR. 1 >>>>>>>>>>>>>>>> (*^_^*) <<<<<<<<<<<<<<<< In. %d >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n", i + 1);
+        }
+        else
+        {
+            replaceUnderscoreWithSpace(data[i].foodName);
+            printf("\nItem number(In.) %d:\n", i + 1);
+            printf("***|Format-Recorded(FR.) : 2.\n   |-> You recorded your calories by entering grams of protein, carbohydrates, fat, and dietary fiber\n, and then used the values you entered to calculate the calories.***\n\n");
+            printf("Menu/meal: %s \nTime: %s\n", data[i].foodName, data[i].time);
+            printf("Protein: %d g, \nCarbohydrate: %d g, \nFat: %d g,\nDietary fiber : %d g\n",
+                   data[i].protein, data[i].carbs, data[i].fat, data[i].fiber);
+            printf("Date: %s \nCalories: %d\n\n", data[i].date, data[i].calories);
+            printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< FR. 2 >>>>>>>>>>>>>>>> (*^o^*) <<<<<<<<<<<<<<<< In. %d >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n", i + 1);
+        }
     }
 }
 
 // ฟังก์ชันสำหรับแก้ไขข้อมูล
-void editRecord(FoodRecord *record)
+void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
 {
-    int Quay;
+    int Qin, Neg, Neg1, Quay, Mi_Bazi, i, n, date_mont_correct, Da = 0, Mo = 0, Ye = 0, T1 = 0, T2 = 0, Time_correct, result, result1, B;
+    char Kung_Fu[100];
+    char Bud_ADom;
     do
     {
-        int choice;
+        char choice[10];
         Quay = 0;
-        printf("\nSelect the information you want to edit.:\n");
-        printf("1. Menu/meal\n");
-        printf("2. Time\n");
-        printf("3. Protein\n");
-        printf("4. Carbohydrate\n");
-        printf("5. Fat\n");
-        printf("6. Dietary fiber\n");
-        printf("7. Date\n");
-        printf("8. Calories\n");
-        printf("Your options: ");
-        scanf("%d", &choice);
-        getchar(); // อ่าน newline เพื่อป้องกันปัญหา
+        if (data->protein == 0 && data->carbs == 0 && data->fat == 0 && data->fiber == 0 && data->calories != 0)
+        {
+            printf("\nSelect the information you want to edit.(Choose Number ONLY!):\n");
+            printf("1. Name of Menu/meal\n");
+            printf("2. Time\n");
+            printf("3. Date\n");
+            printf("4. Calories\n");
+            printf("Your options: ");
+        }
+        else
+        {
+            printf("\nSelect the information you want to edit.(Choose Number ONLY!):\n");
+            printf("1. Name of Menu/meal\n");
+            printf("2. Time\n");
+            printf("3. Protein\n");
+            printf("4. Carbohydrate\n");
+            printf("5. Fat\n");
+            printf("6. Dietary fiber\n");
+            printf("7. Date\n");
 
-        switch (choice)
-        {
-        case 1:
-            printf("New food name: ");
-            scanf("%49s", record->foodName);
-            break;
-        case 2:
-            printf("New time (15:24): ");
-            scanf("%9s", record->time);
-            break;
-        case 3:
-            printf("New proteins (g): ");
-            scanf("%d", &record->protein);
-            break;
-        case 4:
-            printf("New carbohydrates (g): ");
-            scanf("%d", &record->carbs);
-            break;
-        case 5:
-            printf("New fat (g): ");
-            scanf("%d", &record->fat);
-            break;
-        case 6:
-            printf("New dietary fiber (g): ");
-            scanf("%d", &record->fiber);
-            break;
-        case 7:
-            printf("New Date (dd/mm/yyyy): ");
-            scanf("%10s", record->date);
-            break;
-        case 8:
-            printf("New Calories: ");
-            scanf("%d", &record->calories);
-            break;
-        default:
-        {
-            printf("Incorrect option\n");
-            Quay = 1;
+            printf("Your options: ");
         }
+        scanf("%s", choice);
+        getchar(); // อ่าน newline เพื่อป้องกันปัญหา
+        if (data->protein == 0 && data->carbs == 0 && data->fat == 0 && data->fiber == 0 && data->calories != 0)
+        {
+            if(strcmp(choice,"1")==0)
+            {   printf("New food name: ");
+                fflush(stdin);
+                gets(record->foodName);
+                replaceSpacesWithUnderscore(record->foodName);
+            }
+            else if(strcmp(choice,"2")==0)
+                {B = 0;
+                while (B == 0)
+                {
+                    B = 1;
+                    printf("New time (15:24): ");
+                    Time_correct = 0;
+                    if (Time_correct == 0)
+                    {
+                        result = scanf("%d:%d", &T1, &T2);
+                        if (result != 2)
+                        {
+                            B = 0;
+                            printf("Invalid input! Please enter two integers separated by a colon.\n");
+                            while (getchar() != '\n')
+                                ;
+                        }
+                        Time_correct = 1;
+                    }
+                }
+                while (T1 < 0 || T1 >= 24 || T2 < 0 || T2 >= 60)
+                {
+                    if (Time_correct == 1)
+                    {
+                        printf("   Time is incorrect.\nTry again.\n");
+                        B = 0;
+                        while (B == 0)
+                        {
+                            B = 1;
+                            printf("Time (eg. 15:24) >>"); // ให้พิมพ์เองเพราะจะได้ระบุเวลาตามความต้องการของผู้ใช้ เช่น กินตั้งแต่เที่ยงแต่จะมาพิมพ์ตอนเวลาบ่ายเป็นต้น
+                            result1 = scanf("%d:%d", &T1, &T2);
+                            Time_correct = 1;
+                            if (result1 != 2)
+                            {
+                                B = 0; // หากไม่ได้รับค่าจำนวนเต็ม 2 ค่า
+                                printf("Invalid input! Please enter two integers separated by a colon.\n");
+
+                                // เพื่อข้ามข้อมูลที่เหลือจากการป้อนผิด
+                                while (getchar() != '\n')
+                                    ; // ข้ามจนกว่าจะถึงบรรทัดใหม่
+                            }
+                        }
+                    }
+                    else if (Time_correct == 0)
+                    {
+                    }
+                }
+                sprintf(Kung_Fu, "%d:%d", T1, T2);
+                printf("%s\n", Kung_Fu);
+                strcpy(record->time, Kung_Fu);
+                // scanf("%9s", record->time);
+                /*if(Time_correct==0){printf("Time (eg. 15:24) >>"); //ให้พิมพ์เองเพราะจะได้ระบุเวลาตามความต้องการของผู้ใช้ เช่น กินตั้งแต่เที่ยงแต่จะมาพิมพ์ตอนเวลาบ่ายเป็นต้น
+        scanf("%d:%d",&T1,&T2);Time_correct=1;}
+        else if(Time_correct==1){printf("   Time is incorrect.\nTry again.\n");
+        printf("Time (eg. 15:24) >>"); //ให้พิมพ์เองเพราะจะได้ระบุเวลาตามความต้องการของผู้ใช้ เช่น กินตั้งแต่เที่ยงแต่จะมาพิมพ์ตอนเวลาบ่ายเป็นต้น
+        scanf("%d:%d",&T1,&T2);Time_correct=1;}}while(T1<0||T1>=24||T2<0||T2>=60);*/
+                }
+            else if(strcmp(choice,"3")==0)
+            {
+                B = 0;
+                while (B == 0)
+                {
+                    B = 1;
+                    printf("New Date (dd/mm/yyyy)\n ( **1. It is a real date according to the calendar.)\n ( **2. It is not a word or letter.)\n ( **3. Please check carefully whether it is B.E.(Buddhist Era) or A.D.(Anno Domini).(We can estimate roughly.))\n : ");
+                    date_mont_correct = 0;
+                    if (date_mont_correct == 0)
+                    {
+                        result = scanf("%d/%d/%d", &Da, &Mo, &Ye);
+                        if (result != 3)
+                        {
+                            B = 0;
+                            printf("Invalid input! Please enter three integers seperated by slashes.\n ");
+                            while (getchar() != '\n')
+                                ;
+                        }
+                    }
+                    date_mont_correct = 1;
+                    if ((Ye > 543 && Ye > 2099) && B != 0)
+                    {
+
+                        fflush(stdin);
+                        Qin = 0;
+                        while (Qin == 0)
+                        {
+                            printf("           |--> Is this year in B.E.(Buddhist Era)?\n");
+                            printf("B.E.:%d ?\n(Y/N):", Ye);
+                            scanf(" %c", &Bud_ADom);
+                            getchar();
+                            Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
+                            if (tolower(Bud_ADom) == 'y' && Qin == 1)
+                            {
+                                Ye = convertToAD(Ye);
+                                printf("A.D(Anno Domini):%d\n", Ye);
+                            }
+                            else if (tolower(Bud_ADom) == 'n' && Qin == 1)
+                            {
+                                printf("A.D(Anno Domini):%d\n", Ye);
+                            }
+                        }
+                    }
+                    else if ((Ye <= 2099 || Ye < 543) && B != 0)
+                    {
+                        fflush(stdin);
+                        Qin = 0;
+                        while (Qin == 0)
+                        {
+                            printf("           |--> Is this year in A.D(Anno Domini)?\n");
+                            printf("A.D.:%d ?\n(Y/N):", Ye);
+                            scanf(" %c", &Bud_ADom);
+                            getchar();
+                            Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
+                            if (tolower(Bud_ADom) == 'n' && Qin == 1)
+                            {
+                                Ye = convertToAD(Ye);
+                                printf("A.D.(Anno Domini):%d\n", Ye);
+                            }
+                            else if (tolower(Bud_ADom) == 'y' && Qin == 1)
+                            {
+                                printf("A.D.(Anno Domini):%d\n", Ye);
+                            }
+                        }
+                    }
+                }
+                while (isValidDate(Da, Mo, Ye) == 0)
+                {
+                    if (date_mont_correct == 1)
+                    {
+                        printf("   Date/Mont/year is incorrect!!!.\n ( **1. It is a real date according to the calendar.)\n ( **2. It is not a word or letter.)\n ( **3. Please check carefully whether it is B.E.(Buddhist Era) or A.D.(Anno Domini).(We can estimate roughly.))\n !!!Try again.\n");
+                        B = 0;
+                        while (B == 0)
+                        {
+                            B = 1;
+                            printf("Date/Mont/Year(eg. 01/02/2024)\n ( **1. It is a real date according to the calendar.)\n ( **2. It is not a word or letter.)\n ( **3. Please check carefully whether it is B.E.(Buddhist Era) or A.D.(Anno Domini).(We can estimate roughly.))\n :");
+                            result1 = scanf("%d/%d/%d", &Da, &Mo, &Ye);
+                            if (result1 != 3)
+                            {
+                                B = 0; // หากไม่ได้รับค่าจำนวนเต็ม 3 ค่า
+                                printf("Invalid input! Please enter three integers separated by slashes.\n");
+
+                                //  เพื่อข้ามข้อมูลที่เหลือจากการป้อนผิด
+                                while (getchar() != '\n')
+                                    ; // ข้ามจนกว่าจะถึงบรรทัดใหม่
+                            }
+                        }
+                    }
+                    else if (date_mont_correct == 0)
+                    {
+                    }
+                    if ((Ye > 543 && Ye > 2099) && B != 0)
+                    {
+
+                        fflush(stdin);
+                        Qin = 0;
+                        while (Qin == 0)
+                        {
+                            printf("           |--> Is this year in B.E.(Buddhist Era)?\n");
+                            printf("B.E.:%d ?\n(Y/N):", Ye);
+                            scanf(" %c", &Bud_ADom);
+                            getchar();
+
+                            Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
+                            if (tolower(Bud_ADom) == 'y' && Qin == 1)
+                            {
+                                Ye = convertToAD(Ye);
+                                printf("A.D(Anno Domini):%d\n", Ye);
+                            }
+                            else if (tolower(Bud_ADom) == 'n' && Qin == 1)
+                            {
+                                printf("A.D(Anno Domini):%d\n", Ye);
+                            }
+                        }
+                    }
+                    else if ((Ye <= 2099 || Ye < 543) && B != 0)
+                    {
+                        fflush(stdin);
+                        Qin = 0;
+                        while (Qin == 0)
+                        {
+                            printf("           |--> Is this year in A.D(Anno Domini)?\n");
+                            printf("A.D.:%d?\n(Y/N):", Ye);
+                            scanf(" %c", &Bud_ADom);
+                            getchar();
+
+                            Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
+                            if (tolower(Bud_ADom) == 'n' && Qin == 1)
+                            {
+                                Ye = convertToAD(Ye);
+                                printf("A.D.(Anno Domini):%d\n", Ye);
+                            }
+                            else if (tolower(Bud_ADom) == 'y' && Qin == 1)
+                            {
+                                printf("A.D.(Anno Domini):%d\n", Ye);
+                            }
+                        }
+                    }
+                }
+                sprintf(Kung_Fu, "%d/%d/%d", Da, Mo, Ye);
+                printf("%s\n", Kung_Fu);
+                strcpy(record->date, Kung_Fu);
+                /*fflush(stdin);
+                gets(record->date);
+                n=strlen(record->date);*/
+            }
+            else if(strcmp(choice,"4")==0)
+            {    B = 0;
+                while (B == 0)
+                {
+                    B = 1;
+                    Neg = 0;
+                    do
+                    {
+                        if (Neg == 1)
+                        {
+                            printf("Please, enter Positive Integer.\n");
+                        }
+                        printf("New Calories: ");
+                        result1 = scanf("%d", &record->calories);
+                        if (result1 != 1)
+                        {
+                            B = 0; // หากไม่ได้รับค่าจำนวนเต็ม 3 ค่า
+                            printf("Invalid input! Please enter an integer\n");
+
+                            //  เพื่อข้ามข้อมูลที่เหลือจากการป้อนผิด
+                            while (getchar() != '\n')
+                                ; // ข้ามจนกว่าจะถึงบรรทัดใหม่
+                        }
+                        Neg = 1;
+                    } while (record->calories < 0);
+                }
+            }
+            else
+            {
+                printf("Incorrect option\n");
+                Quay = 1;
+            }
+            
         }
-    } while (Quay == 1);
+        else
+        {
+            if(strcmp(choice,"1")==0)
+             {
+                 printf("New food name: ");
+                fflush(stdin);
+                gets(record->foodName);
+                replaceSpacesWithUnderscore(record->foodName);
+            }
+            else if(strcmp(choice,"2")==0)
+            {    B = 0;
+                while (B == 0)
+                {
+                    B = 1;
+                    printf("New time (15:24): ");
+                    Time_correct = 0;
+                    if (Time_correct == 0)
+                    {
+                        result = scanf("%d:%d", &T1, &T2);
+                        if (result != 2)
+                        {
+                            B = 0; // หากไม่ได้รับค่าจำนวนเต็ม 2 ค่า
+                            printf("Invalid input! Please enter two integers separated by a colon.\n");
+
+                            //  เพื่อข้ามข้อมูลที่เหลือจากการป้อนผิด
+                            while (getchar() != '\n')
+                                ; // ข้ามจนกว่าจะถึงบรรทัดใหม่
+                        }
+                        Time_correct = 1;
+                    }
+                }
+                while (T1 < 0 || T1 >= 24 || T2 < 0 || T2 >= 60)
+                {
+                    if (Time_correct == 1)
+                    {
+                        printf("   Time is incorrect.\nTry again.\n");
+                        B = 0;
+                        while (B == 0)
+                        {
+                            B = 1;
+                            printf("Time (eg. 15:24) >>"); // ให้พิมพ์เองเพราะจะได้ระบุเวลาตามความต้องการของผู้ใช้ เช่น กินตั้งแต่เที่ยงแต่จะมาพิมพ์ตอนเวลาบ่ายเป็นต้น
+                            result1 = scanf("%d:%d", &T1, &T2);
+                            if (result1 != 2)
+                            {
+                                B = 0; // หากไม่ได้รับค่าจำนวนเต็ม 2 ค่า
+                                printf("Invalid input! Please enter two integers separated by a colon.\n");
+
+                                // เพื่อข้ามข้อมูลที่เหลือจากการป้อนผิด
+                                while (getchar() != '\n')
+                                    ; // ข้ามจนกว่าจะถึงบรรทัดใหม่
+                            }
+                            Time_correct = 1;
+                        }
+                    }
+                    else if (Time_correct == 0)
+                    {
+                    }
+                }
+                sprintf(Kung_Fu, "%d:%d", T1, T2);
+                printf("%s\n", Kung_Fu);
+                strcpy(record->time, Kung_Fu);
+                // scanf("%9s", record->time);
+            }
+            else if(strcmp(choice,"3")==0)
+            {    B = 0;
+                while (B == 0)
+                {
+                    B = 1;
+                    record->protein;
+                    Mi_Bazi = record->protein;
+                    Neg = 0;
+                    do
+                    {
+                        if (Neg == 1)
+                        {
+                            printf("Please, enter Positive Integer.\n");
+                        }
+                        printf("New proteins (g): ");
+
+                        result1 = scanf("%d", &record->protein);
+                        if (result1 != 1)
+                        {
+                            B = 0; // หากไม่ได้รับค่าจำนวนเต็ม 2 ค่า
+                            printf("Invalid input! Please enter an integer.\n");
+
+                            // เพื่อข้ามข้อมูลที่เหลือจากการป้อนผิด
+                            while (getchar() != '\n')
+                                ; // ข้ามจนกว่าจะถึงบรรทัดใหม่
+                        }
+                        Neg = 1;
+                    } while (record->protein < 0);
+                }
+                Real->calories;
+                Real->calories = Real->calories - 4 * Mi_Bazi + 4 * record->protein;
+                printf("\nThis is the new calories: %d Kcal\n", Real->calories);
+            }
+            else if(strcmp(choice,"4")==0)
+            {    B = 0;
+                while (B == 0)
+                {
+                    B = 1;
+                    record->carbs;
+                    Mi_Bazi = record->carbs;
+                    Neg = 0;
+                    do
+                    {
+                        if (Neg == 1)
+                        {
+                            printf("Please, enter Positive Integer.\n");
+                        }
+                        printf("New carbohydrates (g): ");
+
+                        result1 = scanf("%d", &record->carbs);
+                        if (result1 != 1)
+                        {
+                            B = 0; // หากไม่ได้รับค่าจำนวนเต็ม 2 ค่า
+                            printf("Invalid input! Please enter an integer.\n");
+
+                            // เพื่อข้ามข้อมูลที่เหลือจากการป้อนผิด
+                            while (getchar() != '\n')
+                                ; // ข้ามจนกว่าจะถึงบรรทัดใหม่
+                        }
+                        Neg = 1;
+                    } while (record->carbs < 0);
+                } // อ่าน newline เพื่อป้องกันปัญหา
+                Real->calories;
+                Real->calories = Real->calories - 4 * Mi_Bazi + 4 * record->carbs;
+                printf("\nThis is the new calories: %d Kcal\n", Real->calories);
+            }
+            else if(strcmp(choice,"5")==0)
+            {
+                B = 0;
+                while (B == 0)
+                {
+                    B = 1;
+                    record->fat;
+                    Mi_Bazi = record->fat;
+                    Neg = 0;
+                    do
+                    {
+                        if (Neg == 1)
+                        {
+                            printf("Please, enter Positive Integer.\n");
+                        }
+                        printf("New fat (g): ");
+
+                        result1 = scanf("%d", &record->fat);
+                        if (result1 != 1)
+                        {
+                            B = 0; // หากไม่ได้รับค่าจำนวนเต็ม 2 ค่า
+                            printf("Invalid input! Please enter an integer.\n");
+
+                            // เพื่อข้ามข้อมูลที่เหลือจากการป้อนผิด
+                            while (getchar() != '\n')
+                                ; // ข้ามจนกว่าจะถึงบรรทัดใหม่
+                        }
+                        Neg = 1;
+                    } while (record->fat < 0);
+                } // อ่าน newline เพื่อป้องกันปัญหา
+                Real->calories;
+                Real->calories = Real->calories - 9 * Mi_Bazi + 9 * record->fat;
+                printf("\nThis is the new calories: %d Kcal\n", Real->calories);
+
+            }
+            else if(strcmp(choice,"6")==0)
+            {
+                B = 0;
+                while (B == 0)
+                {
+                    B = 1;
+                    record->fiber;
+                    Mi_Bazi = record->fiber;
+                    Neg = 0;
+                    do
+                    {
+                        if (Neg == 1)
+                        {
+                            printf("Please, enter Positive Integer.\n");
+                        }
+                        printf("New dietary fiber (g): ");
+                        result1 = scanf("%d", &record->fiber);
+                        if (result1 != 1)
+                        {
+                            B = 0; // หากไม่ได้รับค่าจำนวนเต็ม 2 ค่า
+                            printf("Invalid input! Please enter an integer.\n");
+
+                            // เพื่อข้ามข้อมูลที่เหลือจากการป้อนผิด
+                            while (getchar() != '\n')
+                                ; // ข้ามจนกว่าจะถึงบรรทัดใหม่
+                        }
+                        Neg = 1;
+                    } while (record->fiber < 0);
+                } // อ่าน newline เพื่อป้องกันปัญหา
+                Real->calories;
+                Real->calories = Real->calories - 0 * Mi_Bazi + 0 * record->fiber;
+                printf("\nThis is the new calories: %d Kcal\n", Real->calories);
+            }
+            else if(strcmp(choice,"7")==0)
+            {    B = 0;
+                while (B == 0)
+                {
+                    B = 1;
+                    printf("New Date (dd/mm/yyyy)\n ( **1. It is a real date according to the calendar.)\n ( **2. It is not a word or letter.)\n ( **3. Please check carefully whether it is B.E.(Buddhist Era) or A.D.(Anno Domini).(We can estimate roughly.))\n : ");
+                    date_mont_correct = 0;
+                    if (date_mont_correct == 0)
+                    {
+                        result = scanf("%d/%d/%d", &Da, &Mo, &Ye);
+                        if (result != 3)
+                        {
+                            B = 0; // หากไม่ได้รับค่าจำนวนเต็ม 3 ค่า
+                            printf("Invalid input! Please enter three integers separated by slashes.\n");
+
+                            // เพื่อข้ามข้อมูลที่เหลือจากการป้อนผิด
+                            while (getchar() != '\n')
+                                ;
+                        } // ข้ามจนกว่าจะถึงบรรทัดใหม่
+                        date_mont_correct = 1;
+                    }
+                    if ((Ye > 543 && Ye > 2099) && B != 0)
+                    {
+
+                        fflush(stdin);
+                        Qin = 0;
+                        while (Qin == 0)
+                        {
+                            printf("           |--> Is this year in B.E.(Buddhist Era)?\n");
+                            printf("B.E.:%d ?\n(Y/N):", Ye);
+                            scanf(" %c", &Bud_ADom);
+                            getchar();
+
+                            Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
+                            if (tolower(Bud_ADom) == 'y' && Qin == 1)
+                            {
+                                Ye = convertToAD(Ye);
+                                printf("A.D(Anno Domini):%d\n", Ye);
+                            }
+                            else if (tolower(Bud_ADom) == 'n' && Qin == 1)
+                            {
+                                printf("A.D(Anno Domini):%d\n", Ye);
+                            }
+                        }
+                    }
+                    else if ((Ye <= 2099 || Ye < 543) && B != 0)
+                    {
+                        fflush(stdin);
+                        Qin = 0;
+                        while (Qin == 0)
+                        {
+                            printf("           |--> Is this year in A.D(Anno Domini)?\n");
+                            printf("A.D.:%d ?\n(Y/N):", Ye);
+                            scanf(" %c", &Bud_ADom);
+                            getchar();
+
+                            Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
+                            if (tolower(Bud_ADom) == 'n' && Qin == 1)
+                            {
+                                Ye = convertToAD(Ye);
+                                printf("A.D.(Anno Domini):%d\n", Ye);
+                            }
+                            else if (tolower(Bud_ADom) == 'y' && Qin == 1)
+                            {
+                                printf("A.D.(Anno Domini):%d\n", Ye);
+                            }
+                        }
+                    }
+                }
+                while (isValidDate(Da, Mo, Ye) == 0)
+                {
+                    if (date_mont_correct == 1)
+                    {
+                        printf("   Date/Mont/year is incorrect!!!.\n ( **1. It is a real date according to the calendar.)\n ( **2. It is not a word or letter.)\n ( **3. Please check carefully whether it is B.E.(Buddhist Era) or A.D.(Anno Domini).(We can estimate roughly.))\n !!!Try again.\n");
+                        B = 0;
+                        while (B == 0)
+                        {
+                            B = 1;
+                            printf("Date/Mont/Year(eg. 01/02/2024)\n ( **1. It is a real date according to the calendar.)\n ( **2. It is not a word or letter.)\n ( **3. Please check carefully whether it is B.E.(Buddhist Era) or A.D.(Anno Domini).(We can estimate roughly.))\n  :");
+                            result1 = scanf("%d/%d/%d", &Da, &Mo, &Ye);
+                            if (result1 != 3)
+                            {
+                                B = 0; // หากไม่ได้รับค่าจำนวนเต็ม 3 ค่า
+                                printf("Invalid input! Please enter three integers separated by slashes.\n");
+
+                                //  เพื่อข้ามข้อมูลที่เหลือจากการป้อนผิด
+                                while (getchar() != '\n')
+                                    ; // ข้ามจนกว่าจะถึงบรรทัดใหม่
+                            }
+                        }
+                    }
+                    else if (date_mont_correct == 0)
+                    {
+                    }
+                    if ((Ye > 543 && Ye > 2099) && B != 0)
+                    {
+
+                        fflush(stdin);
+                        Qin = 0;
+                        while (Qin == 0)
+                        {
+                            printf("           |--> Is this year in B.E.(Buddhist Era)?\n");
+                            printf("B.E.:%d ?\n(Y/N):", Ye);
+                            scanf(" %c", &Bud_ADom);
+                            getchar();
+
+                            Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
+                            if (tolower(Bud_ADom) == 'y' && Qin == 1)
+                            {
+                                Ye = convertToAD(Ye);
+                                printf("A.D(Anno Domini):%d\n", Ye);
+                            }
+                            else if (tolower(Bud_ADom) == 'n' && Qin == 1)
+                            {
+                                printf("A.D(Anno Domini):%d\n", Ye);
+                            }
+                        }
+                    }
+                    else if ((Ye <= 2099 || Ye < 543) && B != 0)
+                    {
+                        fflush(stdin);
+                        Qin = 0;
+                        while (Qin == 0)
+                        {
+                            printf("           |--> Is this year in A.D(Anno Domini)?\n");
+                            printf("A.D.:%d ?\n(Y/N):", Ye);
+                            scanf(" %c", &Bud_ADom);
+                            getchar();
+
+                            Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
+                            if (tolower(Bud_ADom) == 'n' && Qin == 1)
+                            {
+                                Ye = convertToAD(Ye);
+                                printf("A.D.(Anno Domini):%d\n", Ye);
+                            }
+                            else if (tolower(Bud_ADom) == 'y' && Qin == 1)
+                            {
+                                printf("A.D.(Anno Domini):%d\n", Ye);
+                            }
+                        }
+                    }
+                }
+                sprintf(Kung_Fu, "%d/%d/%d", Da, Mo, Ye);
+                printf("%s\n", Kung_Fu);
+                strcpy(record->date, Kung_Fu);
+                // scanf("%10s", record->date);
+            }
+            else
+            {
+                printf("Incorrect option\n");
+                Quay = 1;
+            }
+            
+        }
+    } while (Quay == 1);//do 606
 }
 
 void edit_data(char user[50])
@@ -1047,8 +1915,9 @@ void edit_data(char user[50])
     printf("Edit your recorded data\n");
     FoodRecord data[MAX_RECORDS];
     int count;
-    const char *fileName = "User_dietary_information1.txt";
-
+    char fileName[50];
+    strcpy(fileName,user);
+    strcat(fileName,"_dietary_information");
     // อ่านข้อมูลจากไฟล์
     count = readFile(data, fileName, user);
     if (count == 0)
@@ -1056,7 +1925,7 @@ void edit_data(char user[50])
         printf("There is no data in the file.\n Record your calories first.\n");
         edit_data_calculate_calories(user);
     }
-
+    else{
     // แสดงข้อมูลทั้งหมด
     displayData(data, count);
 
@@ -1066,16 +1935,18 @@ void edit_data(char user[50])
     do
     {
         Emperor = 0;
-        printf("\nEnter the item number you want to edit.(1-%d): ", count);
+        printf("\nEnter the item number you want to edit.(choose In. 1-%d): ", count);
         scanf("%d", &recordIndex);
+        getchar(); // อ่าน newline เพื่อป้องกันปัญหา
         if (recordIndex < 1 || recordIndex > count)
         {
             printf("Item number is invalid.\n");
             Emperor = 1;
         }
     } while (Emperor == 1);
+
     // แก้ไขข้อมูล
-    editRecord(&data[recordIndex - 1]);
+    editRecord(&data[recordIndex - 1], &data[recordIndex - 1], &data[recordIndex - 1]);
 
     // บันทึกข้อมูลกลับไปที่ไฟล์
     writeFile(data, count, fileName, user);
@@ -1088,53 +1959,58 @@ void edit_data(char user[50])
         Puvit_Sleep_at_6_am = 0;
         printf("Will you continue to make corrections? (1.Yes/2.No)\n(1 or 2):");
         scanf("%d", &I_want_to_Sleep);
+        getchar(); // อ่าน newline เพื่อป้องกันปัญหา
         if (I_want_to_Sleep == 1)
         {
             Puvit_Sleep_at_6_am = 1;
+            system("cls");
             edit_data(user);
         }
         else if (I_want_to_Sleep == 2)
         {
             Puvit_Sleep_at_6_am = 1;
+            system("cls");
             edit_data_calculate_calories(user);
         } // ไปhomepage
     } while (Puvit_Sleep_at_6_am == 0);
+    }
 }
-// ยังไม่เสร็จจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจจ****************************************************************************************************************
 
 void edit_data_calculate_calories(char user[50])
 {
-    int Prot, Car, Fat, Fit, Fi, Cal, Mo, Da, Ye, T1, T2, Ans, io;
-    printf("What do you want to ...? \n 1.record and calculate calories from nutrients(gram) \n 2.edit your recorded data \n 3.back to the homepage \n**Your answer is 1,2 or 3** \n :");
-    scanf("%d", &Ans);
+    int Prot, Car, Fat, Fit, Fi, Cal, Mo, Da, Ye, T1, T2,io;
+    char Ans[10];
+    printf("What do you want to ...? \n 1.Record or calculate calories from format recorded [ 1.calories(Kcal) or 2.nutrients(gram) ] \n 2.edit your recorded data \n 3.back to the homepage \n**Your answer is 1,2 or 3** \n :");
+    scanf("%s", Ans);
+    getchar(); // อ่าน newline เพื่อป้องกันปัญหา
     do
     {
         io = 0;
-        switch (Ans)
-        {
-        case (1):
-            io = 1;
+        if(strcmp(Ans,"1")==0)
+        {    io = 1;
             calculate_calories(user);
-            break;
-        case (2):
-            io = 1;
+        }
+        else if(strcmp(Ans,"2")==0)
+        {    io = 1;
             edit_data(user);
-            break;
-        case (3):
-            io = 1;
+        }
+        else if(strcmp(Ans,"3")==0)
+        {    io = 1;
             system("cls");
             select_function(user); // อย่าลืมเชื่อมไปหน้าแรก main();
-            break;
-        default:
+        }
+        else
         {
             io = 0;
             printf("That is not correct.");
             system("cls");
-            select_function(user); // อย่าลืมเชื่อมไปหน้าแรก main();
+            edit_data_calculate_calories(user); // อย่าลืมเชื่อมไปหน้าแรก main();
         }
-        }
+        
     } while (io == 0);
 }
+
+
 void readFilemlc()
 {
     FILE *fp;
@@ -1502,4 +2378,48 @@ void displaySummary(const char responses[], const char *diseases[], int count)
     {
         printf("%s: %s\n", diseases[i], (responses[i] == 'y' ? "Yes" : "No"));
     }
+}
+void duser() // เช็คผู้ใช้ว่ามีอยู่จริงไหม
+{
+    char ans[1];
+    while (1)
+    { // do512
+        char c[10];
+        printf("pls register first or check your username\n");
+        printf("accept(y/n): ");
+        scanf(" %s", ans);
+        strlwr(ans);
+        if (strcmp(ans, "y") == 0)
+        {
+            do
+            {
+                system("cls");
+                printf("/////////////////////\n");
+                printf("\\1.register         \\ \n");
+                printf("\\2.Recheck again    \\ \n");
+                printf("/////////////////////\n");
+                printf("choose : ");
+                scanf(" %s", c);
+                if (strcmp(c, "1") == 0)
+                {
+                    user_register();
+                    break;
+                }
+                else if (strcmp(c, "2") == 0)
+                {
+                    system("cls");
+                    login();
+                    break;
+                }
+            } while (strcmp(c, "1") != 0 && strcmp(c, "2") != 0);
+        }
+        if (strcmp(ans, "y") != 0 && strcmp(ans, "n") != 0)
+        {
+            system("cls");
+            printf("--------------------------------\n");
+            printf("Pls select choice in bracket!\n");
+            printf("--------------------------------\n");
+        }
+    }
+    // do 512
 }
