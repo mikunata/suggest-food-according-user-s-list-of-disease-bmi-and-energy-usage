@@ -34,6 +34,7 @@ typedef struct
 FILE *f, *p;
 void hpassword(char *h_p);
 int goback();
+int main();
 void duser();
 int user_register();
 void read_file();
@@ -70,7 +71,6 @@ int resetpassword(char passname[50], char[100]);
 int verify_resetpass(char[50]);
 int startresetpass(char[50]);
 int forgetpass(char[50]);
-int main();
 //function 1
 int forgetpass(char forget_user[50]) // ลืมรหัสผ่าน
 {
@@ -476,10 +476,12 @@ void select_function(char user[50]) // เอาparameter user ไปต่อ�
     scanf("%s", f_c);
     if (strcmp(f_c, "1") == 0)
     {
+        system("cls");
          callfunction2(user);
     }
     else if (strcmp(f_c, "2") == 0)
     {
+        system("cls");
         edit_data_calculate_calories(user);
     }
     else if (strcmp(f_c, "3") == 0)
