@@ -468,10 +468,12 @@ int resetpassword(char passname[50], char verify_ans[100]) // รีเซ็ต
 void select_function(char user[50]) // เอาparameter user ไปต่อด้วยเพื่อกำหนดให้ไฟล์ที่จะสร้างรู้ว่าเป็นของผู้ใช้คนไหน แล้วก็เพื่อให้สามารถกลับมาหน้าเมนูเรียกใช้ฟังก์ชั่นได้
 {
     char f_c[10];
+    printf("----select function-----------\n");
     printf("1.calculate BMI\n");
     printf("2.calculate calaries\n");
     printf("3....\n");
     printf("4.logout\n");
+    printf("------------------------------\n");
     printf("choose : ");
     scanf("%s", f_c);
     if (strcmp(f_c, "1") == 0)
