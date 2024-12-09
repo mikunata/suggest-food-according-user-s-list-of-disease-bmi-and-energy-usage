@@ -70,6 +70,7 @@ int resetpassword(char passname[50], char[100]);
 int verify_resetpass(char[50]);
 int startresetpass(char[50]);
 int forgetpass(char[50]);
+int main();
 //function 1
 int forgetpass(char forget_user[50]) // ลืมรหัสผ่าน
 {
