@@ -64,7 +64,7 @@ int user_register()
 {
     char name[50], surname[50], name2[50], data_age[50], data_sur[50], data_name[50], data_weight[50], data_height[50],
         data_disease[50], sex[10], password[50] = "\0", data_password[50], data_exercise[50], disease[50][50], data_verify_qa[50], data_verify_ans[50];
-    char verify_qa[100], verify_ans[100], comfirm_pass[50] = "\0", data_sex[50], decision[10], *c, *su;
+    char verify_qa[100], verify_ans[100], comfirm_pass[50] = "\0", data_sex[50], decision[10], *c, *su,*va;
     int age, num_disease, ex, a = 0, nd;
     float w = 0, h = 0;
     while (a == 0 || w == 0 || h == 0 || strcmp(decision, "no") == 0)
@@ -149,7 +149,8 @@ int user_register()
         printf("create your verify question for forgeting password: ");
         scanf(" %[^\n]", verify_qa);
         printf("correct answer for your verify: ");
-        scanf(" %[^\n]", verify_ans);
+        va=verify_ans;
+        hpassword(va);
         printf("---------------------------------------\n");
         do
         {
@@ -470,13 +471,14 @@ int goback() // ย้อนกลับไป
 }
 int verify_resetpass(char username_verify[50]) // ยืนยันตัวตนเพื่อรีเซตรหัสผ่าน
 {
-    char ansreset[100], ansuser[100];
+    char ansreset[100], ansuser[100],*as;
     printf("////////////////////////\n");
     printf("//verify your identity//\n");
     printf("////////////////////////\n");
     resetpassword(username_verify, ansreset);
     printf("Ans verify question : ");
-    scanf("%s", ansuser);
+    as=ansuser;
+    hpassword(as);
     if (strcmp(ansreset, ansuser) == 0)
     {
         return 15;
