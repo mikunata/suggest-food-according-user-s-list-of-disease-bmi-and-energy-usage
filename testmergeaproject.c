@@ -64,11 +64,13 @@ void displaySummary(const char responses[], const char *diseases[], int count);
 void collectResponses(char responses[], const char *diseases[], int count, int *p);
 int confirmAction();
 //
+void clearspace(char *);
 void select_function(char user[50]);
 int resetpassword(char passname[50], char[100]);
 int verify_resetpass(char[50]);
 int startresetpass(char[50]);
 int forgetpass(char[50]);
+//function 1
 int forgetpass(char forget_user[50]) // ลืมรหัสผ่าน
 {
     char i[10];
@@ -118,7 +120,7 @@ int user_register()
 {
     char name[50], surname[50], name2[50], data_age[50], data_sur[50], data_name[50], data_weight[50], data_height[50],
         data_disease[50], sex[10], password[50] = "\0", data_password[50], data_exercise[50], disease[50][50], data_verify_qa[50], data_verify_ans[50];
-    char verify_qa[100], verify_ans[100], comfirm_pass[50] = "\0", data_sex[50], decision[10], *c, *su;
+    char verify_qa[100], verify_ans[100], comfirm_pass[50] = "\0", data_sex[50], decision[10], *c, *su,*va;
     int age, num_disease, ex, a = 0, nd;
     float w = 0, h = 0;
     while (a == 0 || w == 0 || h == 0 || strcmp(decision, "no") == 0)
@@ -203,7 +205,8 @@ int user_register()
         printf("create your verify question for forgeting password: ");
         scanf(" %[^\n]", verify_qa);
         printf("correct answer for your verify: ");
-        scanf(" %[^\n]", verify_ans);
+        va=verify_ans;
+        hpassword(va);
         printf("---------------------------------------\n");
         do
         {
@@ -527,13 +530,14 @@ int goback() // ย้อนกลับไป
 }
 int verify_resetpass(char username_verify[50]) // ยืนยันตัวตนเพื่อรีเซตรหัสผ่าน
 {
-    char ansreset[100], ansuser[100];
+    char ansreset[100], ansuser[100],*as;
     printf("////////////////////////\n");
     printf("//verify your identity//\n");
     printf("////////////////////////\n");
     resetpassword(username_verify, ansreset);
     printf("Ans verify question : ");
-    scanf("%s", ansuser);
+    as=ansuser;
+    hpassword(as);
     if (strcmp(ansreset, ansuser) == 0)
     {
         return 15;
@@ -643,6 +647,8 @@ void clearspace(char *s)
         if (*s == ' ')
             *s = '\0';
 }
+//end function1
+//function2
 // Function to calculate BMI
 float calculate_bmi(float weight, float height, char uname[50])
 {
@@ -842,7 +848,8 @@ int callfunction2(char name[50])
         }
     }
 }
-
+//end function2
+//function3
 // ฟังก์ชันเปลี่ยนเว้นวรรคเป็น "_"
 void replaceSpacesWithUnderscore(char str[])
 {
@@ -2090,7 +2097,8 @@ void edit_data_calculate_calories(char user[50])
 
     } while (io == 0);
 }
-
+//end function3
+//function4
 void readFilemlc()
 {
     FILE *fp;
@@ -2459,3 +2467,4 @@ void displaySummary(const char responses[], const char *diseases[], int count)
         printf("%s: %s\n", diseases[i], (responses[i] == 'y' ? "Yes" : "No"));
     }
 }
+//end function4
