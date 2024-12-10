@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <conio.h>
 #include <ctype.h>
 #include <stdlib.h>
 #define MAX_RECORDS 100
