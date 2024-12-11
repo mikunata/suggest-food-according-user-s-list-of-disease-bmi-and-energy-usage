@@ -14,10 +14,6 @@ float calculate_bmi(float weight, float height, char uname[50])
     bmi = weight / (height * height);
     strcpy(bminame, uname);
     strcat(bminame, "_bmi");
-    // Open the output file to write the BMI result
-    p = fopen(bminame, "w");
-    fprintf(p, "%.2f\n", bmi); // Write the BMI value to the file
-    fclose(p);
 
     return bmi;
 }
@@ -54,19 +50,6 @@ float calculate_bmr(float weight, float height, int age, char bmrname[50])
         return -1; // Error if gender is invalid
     }
 
-    // Write the BMR result to a file
-    strcpy(bmrresult, bmrname);
-    strcat(bmrresult, "_bmrresult");
-    p = fopen(bmrresult, "w");
-    if (p != NULL)
-    {
-        fprintf(p, "%.2f\n", bmr); // Write the BMR value to the file
-        fclose(p);
-    }
-    else
-    {
-        printf("Error opening BMR result file\n");
-    }
     return bmr;
 }
 
@@ -105,12 +88,6 @@ float calculate_tdee(float bmr, char exname[50])
         return -1; // Error if activity level is invalid
     }
 
-    // Write the TDEE result to a file
-    strcpy(nametd, exname);
-    strcat(nametd, "_tdee");
-    p = fopen(nametd, "w");
-    fprintf(p, "%.2f\n", tdee); // Write the TDEE value to the file
-    fclose(p);
     return tdee;
 }
 
@@ -120,7 +97,7 @@ int callfunction2(char name[50])
 
     char wnoname[50], hnoname[50], agename[50];
     int age;
-    // First, calculate BMI
+    //calculate BMI
     strcpy(wnoname, name);
     strcat(wnoname, "_weight");
     p = fopen(wnoname, "r");
