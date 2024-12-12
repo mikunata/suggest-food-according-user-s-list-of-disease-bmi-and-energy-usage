@@ -2605,9 +2605,9 @@ int function5(char u[50])
                 if (strcmp(choice,"y")!=0&&strcmp(choice,"Y")!=0 && strcmp(choice,"N")!=0&&strcmp(choice,"n")!=0)
                     continue;
             }
-            if (choice[0] == 'Y' || choice[0] == 'y')
+            if (strcmp(choice,"y")==0||strcmp(choice,"Y")==0)
                 continue;
-            if (choice[0] == 'N' || choice[0] == 'n')
+            if (strcmp(choice,"n")==0||strcmp(choice,"N")==0)
             {
                 v=1;
                 system("cls");
