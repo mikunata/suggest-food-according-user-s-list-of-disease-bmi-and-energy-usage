@@ -5,6 +5,7 @@ void drawgraph(FILE *dietaryinfo);
 int finddate(FILE *dietaryinfo);
 char monthname[12][15]= {"January","February","March","April","May","June","July","August","September","October","November","December"};
 char inputdate[15];
+void green ();
 void black();
 void reset();
 void BGgreen();
