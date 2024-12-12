@@ -11,57 +11,104 @@ void reset();
 void BGgreen();
 void BGreset();
 
-main()
+// function 5
+int function5(char u[50])
 {
     FILE *dietaryinfo;
-    dietaryinfo=fopen("User_dietary_information1.txt","r");
+    char nus[50];
+    strcpy(nus, u);
+    strcat(nus, "_dietary_information");
+    dietaryinfo = fopen(nus, "r");
     char choice[100];
-    while(1)
+    int v = 0;
+    while (1)
     {
-        if(!dietaryinfo)
+        if (!dietaryinfo)
         {
-            printf("Error opening file");
-            return 1;
+            char es[10];
+            while (1)
+            {
+                system("cls");
+                printf("Error opening file\n");
+                printf("pls enter data first\n");
+                printf("--------------------\n");
+                printf("1.select fuction\n");
+                printf("2.enter data\n");
+                printf("--------------------\n");
+                printf("select: ");
+                fflush(stdin);
+                gets(es);
+                if (strcmp(es, "1") == 0)
+                {
+                    system("cls");
+                    v = 1;
+                    select_function(u);
+                }
+                else if (strcmp(es, "2") == 0)
+                {
+                    system("cls");
+                    v = 1;
+                    edit_data_calculate_calories(u);
+                }
+                else
+                    printf("pls select one in choice\n");
+                if (v == 1)
+                    break;
+            }
         }
-        int found;
-        found=finddate(dietaryinfo);
-        if(found==1)
+        else
         {
-            drawgraph(dietaryinfo);
+            int found;
+            found = finddate(dietaryinfo);
+            if (found == 1)
+            {
+                drawgraph(dietaryinfo);
+            }
+            while (1)
+            {
+                printf("Would you like another graph? (Y/N) : ");
+                fflush(stdin);
+                scanf("%s", choice);
+                if (strcmp(choice,"y")==0||strcmp(choice,"Y")==0)
+                    break;
+                if (strcmp(choice,"N")==0||strcmp(choice,"n")==0)
+                    break;
+                if (strcmp(choice,"y")!=0&&strcmp(choice,"Y")!=0 && strcmp(choice,"N")!=0&&strcmp(choice,"n")!=0)
+                    continue;
+            }
+            if (strcmp(choice,"y")==0||strcmp(choice,"Y")==0)
+                continue;
+            if (strcmp(choice,"n")==0||strcmp(choice,"N")==0)
+            {
+                v=1;
+                system("cls");
+                select_function(u);
+            }
+        fclose(dietaryinfo);
         }
-        while(1)
-        {
-            printf("Would you like another graph? (Y/N) : ");
-            fflush(stdin);
-            scanf("%s",choice);
-            if(choice[0]=='Y'||choice[0]=='y') break;
-            if(choice[0]=='N'||choice[0]=='n') break;
-            if(choice[0]=='Y'&&choice[0]=='y'&&choice[0]=='N'&&choice[0]=='n') continue;
-        }
-        if(choice[0]=='Y'||choice[0]=='y') continue;
-        if(choice[0]=='N'||choice[0]=='n') break;
+        if(v==1)
+            break;
     }
-    fclose(dietaryinfo);
-    return 0;
 }
 
 int finddate(FILE *dietaryinfo)
 {
     printf("Input date (dd/mm/yyyy): ");
-    scanf("%s",inputdate);
+    scanf("%s", inputdate);
     rewind(dietaryinfo);
-    char line[256],date[15];
-    int found=0;
-    while(fgets(line,256,dietaryinfo))
+    char line[256], date[15];
+    int found = 0;
+    while (fgets(line, 256, dietaryinfo))
     {
         sscanf(line, "%*s %*s %*d %*d %*d %*d %s %*d", date);
-        if (strcmp(date,inputdate)==0)
+        if (strcmp(date, inputdate) == 0)
         {
-            found=1;
+            found = 1;
             break;
         }
     }
-    if(found==0) printf("No match found. Please try again.\n");
+    if (found == 0)
+        printf("No match found. Please try again.\n");
     return found;
 }
 void drawgraph(FILE *dietaryinfo)
@@ -171,7 +218,6 @@ void drawgraph(FILE *dietaryinfo)
         if(month==2&&(year%4)==0) printf("%8d",29);
     }
     printf("\n");
-    return 0;
 }
 
 void black ()
