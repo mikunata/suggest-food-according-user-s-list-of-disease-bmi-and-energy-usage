@@ -67,12 +67,20 @@ void collectResponses(char responses[], const char *diseases[], int count, int *
 int confirmAction();
 void flush_input();
 //
+//function5
+void drawgraph(FILE *dietaryinfo);
+int finddate(FILE *dietaryinfo);
+int function5(char u[50]);
+char monthname[12][15] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+char inputdate[15];
+//
 void clearspace(char *);
 void select_function(char user[50]);
 int resetpassword(char passname[50], char[100]);
 int verify_resetpass(char[50]);
 int startresetpass(char[50]);
 int forgetpass(char[50]);
+int showdatatous(char n[50]);
 // function 1
 int forgetpass(char forget_user[50]) // ลืมรหัสผ่าน
 {
@@ -483,8 +491,9 @@ void select_function(char user[50]) // เอาparameter user ไปต่อ�
     printf("----select function-----------\n");
     printf("1.calculate BMI\n");
     printf("2.calculate calaries\n");
-    printf("3....\n");
-    printf("4.logout\n");
+    printf("3.display your data\n");
+    printf("4.summary in graph\n");
+    printf("5.logout\n");
     printf("------------------------------\n");
     printf("choose : ");
     scanf("%s", f_c);
@@ -500,9 +509,14 @@ void select_function(char user[50]) // เอาparameter user ไปต่อ�
     }
     else if (strcmp(f_c, "3") == 0)
     {
-        // arm
+        system("cls");
+        showdatatous(user);
     }
     else if (strcmp(f_c, "4") == 0)
+    {
+        function5(user);
+    }
+    else if (strcmp(f_c, "5") == 0)
     {
         system("cls");
         main();
@@ -2512,3 +2526,202 @@ void displaySummary(const char responses[], const char *diseases[], int count)
     }
 }
 // end function4
+
+int showdatatous(char n[50])
+{
+    FoodRecord data[MAX_RECORDS];
+    char filename[50];
+    int num;
+    strcpy(filename, n);
+    strcat(filename, "_dietary_information");
+    num = readFile(data, filename, n);
+    displayData(data, num);
+    printf("Tap any botton to go select function page\n");
+    getch();
+    select_function(n);
+}
+// function 5
+int function5(char u[50])
+{
+    FILE *dietaryinfo;
+    char nus[50];
+    strcpy(nus, u);
+    strcat(nus, "_dietary_information");
+    dietaryinfo = fopen(nus, "r");
+    char choice[100];
+    int v = 0;
+    while (1)
+    {
+        if (!dietaryinfo)
+        {
+            char es[10];
+            while (1)
+            {
+                system("cls");
+                printf("Error opening file\n");
+                printf("pls enter data first\n");
+                printf("--------------------\n");
+                printf("1.select fuction\n");
+                printf("2.enter data\n");
+                printf("--------------------\n");
+                printf("select: ");
+                fflush(stdin);
+                gets(es);
+                if (strcmp(es, "1") == 0)
+                {
+                    system("cls");
+                    v = 1;
+                    select_function(u);
+                }
+                else if (strcmp(es, "2") == 0)
+                {
+                    system("cls");
+                    v = 1;
+                    edit_data_calculate_calories(u);
+                }
+                else
+                    printf("pls select one in choice\n");
+                if (v == 1)
+                    break;
+            }
+        }
+        else
+        {
+            int found;
+            found = finddate(dietaryinfo);
+            if (found == 1)
+            {
+                drawgraph(dietaryinfo);
+            }
+            while (1)
+            {
+                printf("Would you like another graph? (Y/N) : ");
+                fflush(stdin);
+                scanf("%s", choice);
+                if (choice[0] == 'Y' || choice[0] == 'y')
+                    break;
+                if (choice[0] == 'N' || choice[0] == 'n')
+                    break;
+                if (choice[0] == 'Y' && choice[0] == 'y' && choice[0] == 'N' && choice[0] == 'n')
+                    continue;
+            }
+            if (choice[0] == 'Y' || choice[0] == 'y')
+                continue;
+            if (choice[0] == 'N' || choice[0] == 'n')
+            {
+                v=1;
+                system("cls");
+                select_function(u);
+            }
+        fclose(dietaryinfo);
+        }
+        if(v==1)
+            break;
+    }
+}
+
+int finddate(FILE *dietaryinfo)
+{
+    printf("Input date (dd/mm/yyyy): ");
+    scanf("%s", inputdate);
+    rewind(dietaryinfo);
+    char line[256], date[15];
+    int found = 0;
+    while (fgets(line, 256, dietaryinfo))
+    {
+        sscanf(line, "%*s %*s %*d %*d %*d %*d %s %*d", date);
+        if (strcmp(date, inputdate) == 0)
+        {
+            found = 1;
+            break;
+        }
+    }
+    if (found == 0)
+        printf("No match found. Please try again.\n");
+    return found;
+}
+void drawgraph(FILE *dietaryinfo)
+{
+    system("cls");
+    int day, month, year;
+    sscanf(inputdate, "%d/%d/%d", &day, &month, &year);
+    int i, j, bars[7] = {0};
+    rewind(dietaryinfo);
+    char line[256], date[15];
+    int calories, meal_day, meal_month, meal_year;
+    while (fgets(line, 256, dietaryinfo))
+    {
+        if (sscanf(line, "%*s %*s %*d %*d %*d %*d %s %d", date, &calories) == 2)
+        {
+            sscanf(date, "%d/%d/%d", &meal_day, &meal_month, &meal_year);
+            if (meal_month == month && meal_year == year)
+            {
+                int week_index = (meal_day - 1) % 7;
+                bars[week_index] += calories;
+            }
+        }
+    }
+    for (i = 0; i < 30; i++)
+        printf(" ");
+    printf("%s %d\n  kcal\n    |\n", monthname[month - 1], year);
+    for (i = 30; i > 0; i--)
+    {
+        if (i % 5 == 0)
+        {
+            printf("%4d+    ", i * 100);
+            for (j = 0; j < 7; j++)
+            {
+                if (bars[j] >= i * 100)
+                    printf("####    ");
+                else
+                    printf("        ");
+            }
+            printf("\n");
+        }
+        else
+        {
+            printf("    |    ");
+            for (j = 0; j < 7; j++)
+            {
+                if (bars[j] >= i * 100)
+                    printf("####    ");
+                else
+                    printf("        ");
+            }
+            printf("\n");
+        }
+    }
+    printf("   0-------------------------------------------------------------day\n     ");
+    if (day <= 7)
+    {
+        for (i = 0; i < 7; i++)
+            printf("%8d", i + 1);
+    }
+    if (day > 7 && day <= 14)
+    {
+        for (i = 0; i < 7; i++)
+            printf("%8d", i + 8);
+    }
+    if (day > 14 && day <= 21)
+    {
+        for (i = 0; i < 7; i++)
+            printf("%8d", i + 15);
+    }
+    if (day > 21 && day <= 28)
+    {
+        for (i = 0; i < 7; i++)
+            printf("%8d", i + 22);
+    }
+    if (day > 28)
+    {
+        if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
+            for (i = 0; i < 3; i++)
+                printf("%8d", i + 29);
+        if (month == 4 || month == 6 || month == 9 || month == 11)
+            for (i = 0; i < 2; i++)
+                printf("%8d", i + 29);
+        if (month == 2 && (year % 4) == 0)
+            printf("%8d", 29);
+    }
+    printf("\n");
+}
