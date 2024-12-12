@@ -73,6 +73,11 @@ int finddate(FILE *dietaryinfo);
 int function5(char u[50]);
 char monthname[12][15] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 char inputdate[15];
+void black();
+void green();
+void reset();
+void BGgreen();
+void BGreset();
 //
 void clearspace(char *);
 void select_function(char user[50]);
@@ -2538,6 +2543,7 @@ int showdatatous(char n[50])
     displayData(data, num);
     printf("Tap any botton to go select function page\n");
     getch();
+    system("cls");
     select_function(n);
 }
 // function 5
@@ -2552,6 +2558,7 @@ int function5(char u[50])
     int v = 0;
     while (1)
     {
+        system("cls");
         if (!dietaryinfo)
         {
             char es[10];
@@ -2643,85 +2650,133 @@ int finddate(FILE *dietaryinfo)
 void drawgraph(FILE *dietaryinfo)
 {
     system("cls");
-    int day, month, year;
-    sscanf(inputdate, "%d/%d/%d", &day, &month, &year);
+    int day,month,year;
+    sscanf(inputdate,"%d/%d/%d",&day,&month,&year);
     int i, j, bars[7] = {0};
     rewind(dietaryinfo);
-    char line[256], date[15];
-    int calories, meal_day, meal_month, meal_year;
-    while (fgets(line, 256, dietaryinfo))
+    char line[256],date[15];
+    int calories,meal_day,meal_month,meal_year;
+    while(fgets(line,256,dietaryinfo))
     {
-        if (sscanf(line, "%*s %*s %*d %*d %*d %*d %s %d", date, &calories) == 2)
+        if (sscanf(line,"%*s %*s %*d %*d %*d %*d %s %d",date,&calories)==2)
         {
-            sscanf(date, "%d/%d/%d", &meal_day, &meal_month, &meal_year);
-            if (meal_month == month && meal_year == year)
+            sscanf(date,"%d/%d/%d",&meal_day,&meal_month,&meal_year);
+            if (meal_month==month&&meal_year==year)
             {
-                int week_index = (meal_day - 1) % 7;
-                bars[week_index] += calories;
+                int week_index=(meal_day-1)%7;
+                bars[week_index]+=calories;
             }
         }
     }
-    for (i = 0; i < 30; i++)
-        printf(" ");
-    printf("%s %d\n  kcal\n    |\n", monthname[month - 1], year);
-    for (i = 30; i > 0; i--)
+    for(i=0; i<30; i++) printf(" ");
+    printf("%s %d\n  kcal\n    |\n",monthname[month-1],year);
+    for(i=30; i>0; i--)
     {
-        if (i % 5 == 0)
+        if(i%5==0)
         {
-            printf("%4d+    ", i * 100);
-            for (j = 0; j < 7; j++)
+            printf("%4d+    ",i*100);
+            for(j=0; j<7; j++)
             {
-                if (bars[j] >= i * 100)
-                    printf("####    ");
-                else
-                    printf("        ");
+                if(bars[j]>=i*100)
+                {
+                    BGgreen();
+                    green();
+                    printf("####");
+                    BGreset();
+                    black();
+                    printf("####");
+                    reset();
+                }
+                else printf("        ");
+            }
+            printf("\n");
+        }
+        else if(i%5!=0&&i!=1)
+        {
+            printf("    |    ");
+            for(j=0; j<7; j++)
+            {
+                if(bars[j]>=i*100)
+                {
+                    BGgreen();
+                    green();
+                    printf("####");
+                    BGreset();
+                    black();
+                    printf("####");;
+                    reset();
+                }
+                else printf("        ");
             }
             printf("\n");
         }
         else
         {
             printf("    |    ");
-            for (j = 0; j < 7; j++)
+            for(j=0; j<7; j++)
             {
-                if (bars[j] >= i * 100)
-                    printf("####    ");
-                else
-                    printf("        ");
+                if(bars[j]>=i*100)
+                {
+                    BGgreen();
+                    black();
+                    printf("%4d",bars[j]);
+                    BGreset();
+                    black();
+                    printf("####");
+                    reset();
+                }
+                else printf("        ");
             }
             printf("\n");
         }
     }
     printf("   0-------------------------------------------------------------day\n     ");
-    if (day <= 7)
+    if(day<=7)
     {
-        for (i = 0; i < 7; i++)
-            printf("%8d", i + 1);
+        for(i=0; i<7; i++) printf("%8d",i+1);
     }
-    if (day > 7 && day <= 14)
+    if(day>7&&day<=14)
     {
-        for (i = 0; i < 7; i++)
-            printf("%8d", i + 8);
+        for(i=0; i<7; i++) printf("%8d",i+8);
     }
-    if (day > 14 && day <= 21)
+    if(day>14&&day<=21)
     {
-        for (i = 0; i < 7; i++)
-            printf("%8d", i + 15);
+        for(i=0; i<7; i++) printf("%8d",i+15);
     }
-    if (day > 21 && day <= 28)
+    if(day>21&&day<=28)
     {
-        for (i = 0; i < 7; i++)
-            printf("%8d", i + 22);
+        for(i=0; i<7; i++) printf("%8d",i+22);
     }
-    if (day > 28)
+    if(day>28)
     {
-        if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
-            for (i = 0; i < 3; i++)
-                printf("%8d", i + 29);
-        if (month == 4 || month == 6 || month == 9 || month == 11)
-            for (i = 0; i < 2; i++)
-                printf("%8d", i + 29);
-        if (month == 2 && (year % 4) == 0)
-            printf("%8d", 29);
+        if(month==1||month==3||month==5||month==7||month==8||month==10||month==12) for(i=0; i<3; i++) printf("%8d",i+29);
+        if(month==4||month==6||month==9||month==11) for(i=0; i<2; i++) printf("%8d",i+29);
+        if(month==2&&(year%4)==0) printf("%8d",29);
     }
     printf("\n");
+}
+
+void black ()
+{
+    printf("\x1b[30m");
+}
+
+void green ()
+{
+    printf("\x1b[32m");
+}
+
+void reset ()
+{
+    printf("\033[0m");
+}
+
+void BGgreen ()
+{
+    printf("\x1b[42m");
+}
+
+void BGreset ()
+{
+    printf("\x1b[40m");
 }
