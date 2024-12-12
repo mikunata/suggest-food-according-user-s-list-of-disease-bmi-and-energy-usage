@@ -1,3 +1,6 @@
+//BROKEN WHEN RESOLUTION CHANGES!!!!!!!!!!!!!!!!!
+//พังเมื่อขนาดวินโดว์เปลี่ยน
+//ไม่เชื่อลองดู
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
