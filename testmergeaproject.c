@@ -162,7 +162,7 @@ int user_register()
             printf("Age       : ");
             scanf("%d", &a);
             gets(agi);
-            if (a > 0&&agi[0]=='\0')
+            if (a > 0 && agi[0] == '\0')
                 break;
             else
                 printf("pls enter real information!\n");
@@ -173,11 +173,10 @@ int user_register()
             printf("Weight(kg)   : ");
             scanf("%f", &w);
             gets(wei);
-            if (w > 0&&wei[0]=='\0')
+            if (w > 0 && wei[0] == '\0')
                 break;
             else
                 printf("pls enter real information!\n");
-            
         }
         while (1)
         {
@@ -185,7 +184,7 @@ int user_register()
             printf("Height(meter): ");
             scanf("%f", &h);
             gets(hei);
-            if ((h <= 2) && (h > 0)&&hei[0]=='\0')
+            if ((h <= 2) && (h > 0) && hei[0] == '\0')
                 break;
             else
                 printf("pls enter real information!\n");
@@ -196,7 +195,7 @@ int user_register()
             printf("Exercise per week(max is 5): ");
             scanf("%d", &ex);
             gets(exe);
-            if (ex <= 5 && ex >= 0&&exe[0]=='\0')
+            if (ex <= 5 && ex >= 0 && exe[0] == '\0')
                 break;
             else
                 printf("pls select from bracklet!!\n");
@@ -228,7 +227,7 @@ int user_register()
             if (strcmp(decision, "yes") != 0 && strcmp(decision, "no") != 0)
                 printf("pls select from backlet!!\n");
         } while (strcmp(decision, "yes") != 0 && strcmp(decision, "no") != 0);
-        if(strcmp(decision,"yes")==0)
+        if (strcmp(decision, "yes") == 0)
             break;
     }
     // เริ่มสร้างไฟล์เก็บข้อมูล
@@ -678,7 +677,6 @@ float calculate_bmi(float weight, float height, char uname[50])
     bmi = weight / (height * height);
     strcpy(bminame, uname);
     strcat(bminame, "_bmi");
-    
 
     return bmi;
 }
@@ -715,7 +713,6 @@ float calculate_bmr(float weight, float height, int age, char bmrname[50])
         return -1; // Error if gender is invalid
     }
 
-    
     return bmr;
 }
 
@@ -2220,7 +2217,7 @@ float checking(int yourcal)
     Liver.state = check[7];
     Allergies.state = check[8];
     Peptic.state = check[9];
-    if ((Dia.state) == 1)
+    if (Dia.state == 1)
     {
 
         Dia.lim[0] = 1;
@@ -2406,12 +2403,15 @@ float checking(int yourcal)
     if (counter == 2)
     {
         system("cls");
-        printf("         !!!!There are no match food in this area!!!!\n");
-        printf("!!!!But you can calculate calories and cook your own food!!!!\n");
-        printf("                  !!!!By using function 2!!!!\n");
+        printf("****************************************************\n");
+        printf("*   \033[1;31mNo matching food found in this area!\033[0m           *\n");
+        printf("*   \033[1;31mBut don't worry, you can create your own\033[0m       *\n");
+        printf("*   \033[1;31mdelicious meals and calculate calories using\033[0m   *\n");
+        printf("*   \033[1;31mFunction 2.\033[0m                                    *\n");
+        printf("****************************************************\n");
     }
 
-    printf("      Tap anything Back to select function page?\n");
+    printf("      \033[0;36m Tap anything Back to select function page\033[0m\n");
 }
 
 void collectResponses(char responses[], const char *diseases[], int count, int *p)
@@ -2434,7 +2434,7 @@ void collectResponses(char responses[], const char *diseases[], int count, int *
 
             if (fgets(input, sizeof(input), stdin) == NULL)
             {
-                printf("Error reading input. Please try again.\n");
+                printf("\033[1;31mError reading input. Please try again.\033[0m\n");
                 continue;
             }
 
@@ -2442,7 +2442,7 @@ void collectResponses(char responses[], const char *diseases[], int count, int *
 
             if (strlen(input) != 1)
             {
-                printf("Invalid input. Please enter 'y' or 'nnn'.\n");
+                printf("\033[1;31mInvalid input. Please enter 'y' or 'n'.\033[0m\n");
                 continue;
             }
 
@@ -2455,7 +2455,7 @@ void collectResponses(char responses[], const char *diseases[], int count, int *
             }
             else
             {
-                printf("Invalid input. Please enter 'y' or 'nn'.\n");
+                printf("\033[1;31mInvalid input. Please enter 'y' or 'n'.\033[0m\n");
             }
         }
         p++; // Move to the next result
@@ -2482,7 +2482,7 @@ int confirmAction()
 
         if (strlen(response) != 1)
         {
-            printf("Invalid input. Please enter 'y' or 'n'.\n");
+            printf("\033[1;31mInvalid input. Please enter 'y' or 'n'.\033[0m\n");
             continue;
         }
 
@@ -2499,7 +2499,7 @@ int confirmAction()
         }
         else
         {
-            printf("Invalid input. Please enter 'y' or 'n'.\n");
+            printf("\033[1;31mInvalid input. Please enter 'y' or 'n'.\033[0m\n");
         }
     } while (1);
 }
