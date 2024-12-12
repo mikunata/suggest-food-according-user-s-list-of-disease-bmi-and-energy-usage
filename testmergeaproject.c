@@ -2181,6 +2181,7 @@ void flush_input()
         ; // Clear input buffer
 }
 float checking(int yourcal)
+
 {
     typedef struct
     {
@@ -2436,16 +2437,22 @@ float checking(int yourcal)
 void collectResponses(char responses[], const char *diseases[], int count, int *p)
 {
     int i;
-    char input[10];
+    char input[30];
+    char ui;
     char response;
 
     printf("\n");
-    printf("-----Answer the following questions with----- \n'y' (yes) or 'n' (no)");
-    printf("\n");
-    flush_input();
+    printf("-----Answer the following questions with 'y' (yes) or 'n' (no)-----\n");
+    printf("-----         Please recheck your ans before submitting       -----\n");
+    printf("-----                Understand? Type soneting                -----\n");
+     getchar();
+     flush_input();
+
+     printf("\033[A\033[2K");
     for (i = 0; i < count; i++)
     {
         int valid = 0;
+
 
         while (!valid)
         {
@@ -2481,6 +2488,7 @@ void collectResponses(char responses[], const char *diseases[], int count, int *
     }
 }
 
+
 int confirmAction()
 {
     char response[10]; // Buffer to handle excessive input
@@ -2489,7 +2497,7 @@ int confirmAction()
     {
         printf("\n");
         printf("-----Do you want to confirm these responses?-----\n(y/n): ");
-        printf("\n");
+
 
         if (fgets(response, sizeof(response), stdin) == NULL)
         {
@@ -2514,20 +2522,24 @@ int confirmAction()
         else if (response[0] == 'n')
         {
             printf("Restarting...\n");
+            system("cls");
+
+
             return 0;
         }
         else
         {
             printf("\033[1;31mInvalid input. Please enter 'y' or 'n'.\033[0m\n");
         }
-    } while (1);
+    }
+    while (1);
 }
 void displaySummary(const char responses[], const char *diseases[], int count)
 {
     printf("\n-----Summary of Responses-----\n");
     for (int i = 0; i < count; i++)
     {
-        printf("%s: %s\n", diseases[i], (responses[i] == 'y' ? "Yes" : "No"));
+        printf("%s: \033[1;33m%s\033[0m\n", diseases[i], (responses[i] == 'y' ? "Yes" : "No"));
     }
 }
 // end function4
