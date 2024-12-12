@@ -302,7 +302,7 @@ int user_register()
 int main()
 {
     char choice[10];
-    printf("---select------------\n");
+    printf("---home page---------\n");
     printf("1.register      \n");
     printf("2.login         \n");
     printf("3.Exit program  \n");
