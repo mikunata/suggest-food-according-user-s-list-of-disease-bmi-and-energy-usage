@@ -2121,7 +2121,7 @@ void readFilemlc()
     else
     {
         int i = 0;
-        while (i < 75)
+        while (i < 76)
         {
             int h;
             h = fscanf(fp, "%30[^,],%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", food[i].name, &food[i].min_cal, &food[i].lim[0], &food[i].lim[1], &food[i].lim[2], &food[i].lim[3], &food[i].lim[4], &food[i].lim[5], &food[i].lim[6], &food[i].lim[7], &food[i].lim[8], &food[i].lim[9]);
@@ -2155,7 +2155,7 @@ void readFile7()
     else
     {
         int i = 0;
-        while (i < 32)
+        while (i < 31)
         {
             int h;
             h = fscanf(fp2, "%30[^,],%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", food7[i].name, &food7[i].min_cal, &food7[i].price, &food7[i].lim[0], &food7[i].lim[1], &food7[i].lim[2], &food7[i].lim[3], &food7[i].lim[4], &food7[i].lim[5], &food7[i].lim[6], &food7[i].lim[7], &food7[i].lim[8], &food7[i].lim[9]);
@@ -2306,17 +2306,17 @@ float checking(int yourcal)
     }
     readFilemlc();
     readFile7();
-    for (i = 0; i < 75; i++)
+    for (i = 0; i < 31; i++)
         food7[i].max_cal = food7[i].min_cal + 100;
-    for (i = 0; i < 34; i++)
-        food[i].max_cal = food[i].min_cal + 130;
+    for (i = 0; i < 76; i++)
+        food[i].max_cal = food[i].min_cal + 100;
 
     int h, j;
     system("cls");
     printf("---recommended food in MLC---");
     printf("\n\n");
     matcher = 0;
-    for (i = 0; i < 75; i++)
+    for (i = 0; i < 76; i++)
     {
         h = 0;
 
