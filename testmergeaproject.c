@@ -2889,16 +2889,20 @@ void drawgraph(FILE *dietaryinfo)
     rewind(dietaryinfo);
     char line[256], date[15];
     int calories, meal_day, meal_month, meal_year;
+    
     while (fgets(line, 256, dietaryinfo))
     {
         if (sscanf(line, "%*s %*s %*d %*d %*d %*d %s %d", date, &calories) == 2)
         {
             sscanf(date, "%d/%d/%d", &meal_day, &meal_month, &meal_year);
-            if (meal_month == month && meal_year == year)
-            {
-                int week_index = (meal_day - 1) % 7;
+            int start_day_of_week = 1 + ((day - 1) / 7) * 7;
+            int end_day_of_week = start_day_of_week + 6;
+            if (meal_month == month && meal_year == year &&meal_day >= start_day_of_week && meal_day <= end_day_of_week )
+            {   
+                int week_index = (meal_day-1) % 7;
                 bars[week_index] += calories;
             }
+            
         }
     }
     for (i = 0; i < 30; i++)
