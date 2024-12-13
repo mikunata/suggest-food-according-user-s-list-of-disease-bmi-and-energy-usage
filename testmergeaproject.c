@@ -998,7 +998,7 @@ void calculate_calories(char user[50])
             Qin = 0;
             while (Qin == 0)
             {
-                do
+                while (1)
                 {
                     printf("        %4d|--> Is this year in B.E.(Buddhist Era)?\n", Ye);
                     printf("B.E.:%d ?\n (Y/N):", Ye);
@@ -1011,7 +1011,7 @@ void calculate_calories(char user[50])
                     else
                         printf("Please do it correctly, I beg you, my dear.\n");
 
-                } while (1);
+                }
 
                 Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
                 if (tolower(Bud_ADom) == 'y' && Qin == 1)
@@ -1032,7 +1032,7 @@ void calculate_calories(char user[50])
             Qin = 0;
             while (Qin == 0)
             {
-                do
+                while (1)
                 {
                     printf("           |--> Is this year in A.D(Anno Domini)?\n");
                     printf("A.D.:%d ?\n(Y/N):", Ye);
@@ -1045,7 +1045,7 @@ void calculate_calories(char user[50])
                     else
                         printf("Please do it correctly, I beg you, my dear.\n");
 
-                } while (1);
+                }
                 Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
                 if (tolower(Bud_ADom) == 'n' && Qin == 1)
                 {
@@ -1109,7 +1109,7 @@ void calculate_calories(char user[50])
     printf("%02d:%02d \n", T1, T2);
     do
     {
-        do
+        while (1)
         {
             system("cls");
             printf("Do you know the calories? \n If you know, you will type 1 (Know your calories(format1)) ,but if you don't know, you will type 0.(calculate your calories(format2))\n ,Or if you want to back, you will type 3\n :");
@@ -1122,7 +1122,7 @@ void calculate_calories(char user[50])
             else
                 printf("Please do it correctly, I beg you, my dear.\n");
 
-        } while (1);
+        }
 
         if (knowncal == 1)
         {
@@ -1145,7 +1145,7 @@ void calculate_calories(char user[50])
                     }
                     printf("(----------\\\\*_*//----------)\n");
                     /*Cal=getNumericInputWithComma();*/
-                    do
+                    while (1)
                     {
                         printf("Please, enter your meal's calories(Kcal).\n: ");
 
@@ -1159,7 +1159,7 @@ void calculate_calories(char user[50])
                         else
                             printf("Please do it correctly, I beg you, my Honey.\n");
 
-                    } while (1);
+                    }
                     Neg = 1;
                 } while (Cal < 0);
             }
@@ -1195,7 +1195,7 @@ void calculate_calories(char user[50])
                     {
                         printf("Please, enter Positive Integer.\n");
                     }
-                    do
+                    while (1)
                     {
                         printf("Protein (g): ");
 
@@ -1209,7 +1209,7 @@ void calculate_calories(char user[50])
                         else
                             printf("Please do it correctly, I beg you, my Honey.\n");
 
-                    } while (1);
+                    }
                     Neg = 1;
                 } while (Prot < 0);
             }
@@ -1224,7 +1224,7 @@ void calculate_calories(char user[50])
                     {
                         printf("Please, enter Positive Integer.\n");
                     }
-                    do
+                    while (1)
                     {
                         printf("Carbohydrates(sugar&starch) (g): ");
 
@@ -1238,7 +1238,7 @@ void calculate_calories(char user[50])
                         else
                             printf("Please do it correctly, I beg you, my Sweetie.\n");
 
-                    } while (1);
+                    }
                     Neg = 1;
                 } while (Car < 0);
             }
@@ -1253,7 +1253,7 @@ void calculate_calories(char user[50])
                     {
                         printf("Please, enter Positive Integer.\n");
                     }
-                    do
+                    while (1)
                     {
                         printf("Fat(g): ");
 
@@ -1267,7 +1267,7 @@ void calculate_calories(char user[50])
                         else
                             printf("Please do it correctly, I beg you, my dear.\n");
 
-                    } while (1);
+                    }
                     Neg = 1;
                 } while (Fat < 0);
             }
@@ -1282,7 +1282,7 @@ void calculate_calories(char user[50])
                     {
                         printf("Please, enter Positive Integer.\n");
                     }
-                    do
+                    while (1)
                     {
                         printf("Dietary fiber (g): ");
 
@@ -1296,7 +1296,7 @@ void calculate_calories(char user[50])
                         else
                             printf("Please do it correctly, I beg you, my dear.\n");
 
-                    } while (1);
+                    }
                     Neg = 1;
                 } while (Fi < 0);
             }
@@ -1348,7 +1348,7 @@ void calculate_calories(char user[50])
             strcpy(filename, user);
             strcat(filename, "_dietary_information");
             FILE *CLR = fopen(filename, "a+");
-            LOUIS = 0;
+            LOUIS = 1;
             printf("You want to record this data.\n");
             replaceSpacesWithUnderscore(MN);
             fprintf(CLR, "%s ", MN);
@@ -1369,6 +1369,7 @@ void calculate_calories(char user[50])
         else if (REC == 3)
         {
             system("cls");
+            LOUIS=1;
             printf("You want to back to the calculate calories page.\n");
             printf("Go to the calculate calaries page.\n");
             edit_data_calculate_calories(user); // อย่าลืมเชื่อมไปหน้ารวมฟังก์ชั่น;
@@ -1605,7 +1606,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                         Qin = 0;
                         while (Qin == 0)
                         {
-                            do
+                            while (1)
                             {
                                 printf("           |--> Is this year in B.E.(Buddhist Era)?\n");
                                 printf("B.E.:%d ?\n(Y/N):", Ye);
@@ -1618,7 +1619,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                                 else
                                     printf("Please do it correctly, I beg you, my dear.\n");
 
-                            } while (1);
+                            }
                             Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
                             if (tolower(Bud_ADom) == 'y' && Qin == 1)
                             {
@@ -1637,7 +1638,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                         Qin = 0;
                         while (Qin == 0)
                         {
-                            do
+                            while (1)
                             {
                                 printf("           |--> Is this year in A.D(Anno Domini)?\n");
                                 printf("A.D.:%d ?\n(Y/N):", Ye);
@@ -1650,7 +1651,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                                 else
                                     printf("Please do it correctly, I beg you, my dear.\n");
 
-                            } while (1);
+                            }
 
                             Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
                             if (tolower(Bud_ADom) == 'n' && Qin == 1)
@@ -1697,7 +1698,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                         Qin = 0;
                         while (Qin == 0)
                         {
-                            do
+                            while (1)
                             {
                                 printf("           |--> Is this year in B.E.(Buddhist Era)?\n");
                                 printf("B.E.:%d ?\n(Y/N):", Ye);
@@ -1710,7 +1711,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                                 else
                                     printf("Please do it correctly, I beg you, my dear.\n");
 
-                            } while (1);
+                            } 
 
                             Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
                             if (tolower(Bud_ADom) == 'y' && Qin == 1)
@@ -1730,7 +1731,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                         Qin = 0;
                         while (Qin == 0)
                         {
-                            do
+                            while (1)
                             {
                                 printf("           |--> Is this year in A.D(Anno Domini)?\n");
                                 printf("A.D.:%d?\n(Y/N):", Ye);
@@ -1743,7 +1744,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                                 else
                                     printf("Please do it correctly, I beg you, my dear.\n");
 
-                            } while (1);
+                            }
 
                             Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
                             if (tolower(Bud_ADom) == 'n' && Qin == 1)
@@ -1778,7 +1779,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                         {
                             printf("Please, enter Positive Integer.\n");
                         }
-                        do
+                        while (1)
                         {
                             printf("New Calories (g): ");
 
@@ -1792,7 +1793,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                             else
                                 printf("Please do it correctly, I beg you, my dear.\n");
 
-                        } while (1);
+                        }
                         Neg = 1;
                     } while (record->calories < 0);
                 }
@@ -1882,7 +1883,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                         {
                             printf("Please, enter Positive Integer.\n");
                         }
-                        do
+                        while (1)
                         {
                             printf("New proteins (g): ");
 
@@ -1896,7 +1897,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                             else
                                 printf("Please do it correctly, I beg you, my dear.\n");
 
-                        } while (1);
+                        } 
                         Neg = 1;
                     } while (record->protein < 0);
                 }
@@ -1919,7 +1920,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                         {
                             printf("Please, enter Positive Integer.\n");
                         }
-                        do
+                        while (1)
                         {
                             printf("New carbohydrates (g): ");
 
@@ -1933,7 +1934,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                             else
                                 printf("Please do it correctly, I beg you, my dear.\n");
 
-                        } while (1);
+                        }
                         Neg = 1;
                     } while (record->carbs < 0);
                 } // อ่าน newline เพื่อป้องกันปัญหา
@@ -1956,7 +1957,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                         {
                             printf("Please, enter Positive Integer.\n");
                         }
-                        do
+                        while (1)
                         {
                             printf("New fat (g): ");
 
@@ -1970,7 +1971,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                             else
                                 printf("Please do it correctly, I beg you, my dear.\n");
 
-                        } while (1);
+                        }
                         Neg = 1;
                     } while (record->fat < 0);
                 } // อ่าน newline เพื่อป้องกันปัญหา
@@ -1994,7 +1995,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                         {
                             printf("Please, enter Positive Integer.\n");
                         }
-                        do
+                        while (1)
                         {
                             printf("New dietary fiber (g): ");
 
@@ -2008,7 +2009,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                             else
                                 printf("Please do it correctly, I beg you, my dear.\n");
 
-                        } while (1);
+                        }
                         Neg = 1;
                     } while (record->fiber < 0);
                 }
@@ -2046,7 +2047,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                         Qin = 0;
                         while (Qin == 0)
                         {
-                            do
+                            while (1)
                             {
                                 printf("           |--> Is this year in B.E.(Buddhist Era)?\n");
                                 printf("B.E.:%d ?\n(Y/N):", Ye);
@@ -2059,7 +2060,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                                 else
                                     printf("Please do it correctly, I beg you, my dear.\n");
 
-                            } while (1);
+                            }
 
                             Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
                             if (tolower(Bud_ADom) == 'y' && Qin == 1)
@@ -2079,7 +2080,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                         Qin = 0;
                         while (Qin == 0)
                         {
-                            do
+                            while (1)
                             {
                                 printf("           |--> Is this year in A.D(Anno Domini)?\n");
                                 printf("A.D.:%d ?\n(Y/N):", Ye);
@@ -2092,7 +2093,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                                 else
                                     printf("Please do it correctly, I beg you, my dear.\n");
 
-                            } while (1);
+                            }
 
                             Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
                             if (tolower(Bud_ADom) == 'n' && Qin == 1)
@@ -2139,7 +2140,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                         Qin = 0;
                         while (Qin == 0)
                         {
-                            do
+                            while (1)
                             {
                                 printf("           |--> Is this year in B.E.(Buddhist Era)?\n");
                                 printf("B.E.:%d ?\n(Y/N):", Ye);
@@ -2152,7 +2153,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                                 else
                                     printf("Please do it correctly, I beg you, my dear.\n");
 
-                            } while (1);
+                            }
 
                             Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
                             if (tolower(Bud_ADom) == 'y' && Qin == 1)
@@ -2172,7 +2173,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                         Qin = 0;
                         while (Qin == 0)
                         {
-                            do
+                            while (1)
                             {
                                 printf("           |--> Is this year in A.D(Anno Domini)?\n");
                                 printf("A.D.:%d ?\n(Y/N):", Ye);
@@ -2185,7 +2186,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                                 else
                                     printf("Please do it correctly, I beg you, my dear.\n");
 
-                            } while (1);
+                            }
 
                             Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
                             if (tolower(Bud_ADom) == 'n' && Qin == 1)
@@ -2241,7 +2242,7 @@ void edit_data(char user[50])
         do
         {
             Emperor = 0;
-            do
+            while (1)
             {
                 printf("\nEnter the item number you want to edit.(choose In. 1-%d): ", count);
                 int result25;
@@ -2253,7 +2254,7 @@ void edit_data(char user[50])
                     break;
                 else
                     printf("Please do it correctly, I beg you, my dear.\n");
-            } while (1);
+            }
 
             if (recordIndex < 1 || recordIndex > count)
             {
@@ -2305,7 +2306,7 @@ void edit_data_calculate_calories(char user[50])
 {
     int Prot, Car, Fat, Fit, Fi, Cal, Mo, Da, Ye, T1, T2, io;
     char Ans[10];
-    printf("What do you want to ...? \n 1.Record or calculate calories from format recorded [ 1.calories(Kcal) or 2.nutrients(gram) ] \n 2.edit your recorded data \n 3.back to the selecfunction page \n**Your answer is 1,2 or 3** \n :");
+    printf("What do you want to ...? \n 1.Record or calculate calories from format recorded [ 1.calories(Kcal) or 2.nutrients(gram) ] \n 2.edit your recorded data \n 3.back to the selectfunction page \n**Your answer is 1,2 or 3** \n :");
     gets(Ans);
     io = 0;
     if (strcmp(Ans, "1") == 0)
