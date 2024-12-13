@@ -1319,7 +1319,8 @@ void calculate_calories(char user[50])
     } while (Crown == 0);
 
     do
-    {   do{
+    {   while(1)
+        {
         printf("Do you want to record this calories? \n If you want to do, you will type 1 ,but if you don't want to record, you will type 0.\n ,Or if you want to back to the  and don't record this data, you will type 3\n :");
         
                         
@@ -1333,7 +1334,7 @@ void calculate_calories(char user[50])
                 printf("Please do it correctly, I beg you, my dear.\n");
             
         
-                } while (1);
+            } 
          
         if (REC == 1)
         {
