@@ -88,6 +88,7 @@ int verify_resetpass(char[50]);
 int startresetpass(char[50]);
 int forgetpass(char[50]);
 int showdatatous(char n[50]);
+int editdata(char u[50]);
 // function 1
 int forgetpass(char forget_user[50]) // ลืมรหัสผ่าน
 {
@@ -163,7 +164,43 @@ int user_register()
         printf("Surname   : ");
         scanf("%[^\n]", surname);
         su = surname;
-        clearspace(su);
+        strcat(name2, surname);
+        int t = 0;
+        if ((f = fopen(name2, "r")) != NULL)
+        {
+            while (1)
+            {
+                system("cls");
+                char l[10];
+                printf("This name is already signed up\n");
+                printf("1.go login\n2.go home\n");
+                printf("choose:");
+                scanf("%s", l);
+                if (strcmp(l, "1") == 0)
+                {
+                    t = 1;
+                    system("cls");
+                    login();
+                    break;
+                }
+                if (strcmp(l, "2") == 0)
+                {
+                    t = 1;
+                    system("cls");
+                    main();
+                    break;
+                }
+                else
+                    printf("pls choose one in choice\n");
+                if (t == 1)
+                    break;
+            }
+        }
+        if(t==1)
+            break;
+        else
+        {
+          clearspace(su);
         do
         {
             printf("Sex(male/female): ");
@@ -299,7 +336,9 @@ int user_register()
             system("cls");
             goback();
         }
+      }
     }
+    
 }
 int main()
 {
@@ -500,7 +539,8 @@ void select_function(char user[50]) // เอาparameter user ไปต่อ�
     printf("2.calculate calaries\n");
     printf("3.display your data\n");
     printf("4.summary in graph\n");
-    printf("5.logout\n");
+    printf("5.edit your data\n");
+    printf("6.logout\n");
     printf("------------------------------\n");
     printf("choose : ");
     scanf("%s", f_c);
@@ -525,6 +565,10 @@ void select_function(char user[50]) // เอาparameter user ไปต่อ�
     }
     else if (strcmp(f_c, "5") == 0)
     {
+        editdata(user);
+    }
+    else if (strcmp(f_c, "6") == 0)
+    {
         system("cls");
         main();
     }
@@ -533,6 +577,164 @@ void select_function(char user[50]) // เอาparameter user ไปต่อ�
         system("cls");
         printf("pls select num in menu!\n");
         select_function(user);
+    }
+}
+int editdata(char u[50])
+{
+    char sex[10], password[50], comfirm_pass[50], verify_qa[50], verify_ans[50], data_age[50],
+        data_sex[50], data_weight[50], data_height[50], data_exercise[50], data_pass[50],
+        data_verify_qa[50], data_verify_ans[50];
+    int age, wi, hi, exi;
+    while (1)
+    {
+        char i[10];
+        printf("-edit-----------\n");
+        printf("1.age\n");
+        printf("2.sex\n");
+        printf("3.weight\n");
+        printf("4.height\n");
+        printf("5.exercise\n");
+        printf("6.password\n");
+        printf("7.question for forgeting password\n");
+        printf("8.back\n");
+        printf("----------------\n");
+        printf("choose:");
+        scanf("%s", i);
+        if (strcmp(i, "1") == 0)
+        {
+            while (1)
+            {
+                char agi[10];
+                printf("Age       : ");
+                scanf("%d", &age);
+                gets(agi);
+                if (age > 0 && agi[0] == '\0')
+                    break;
+                else
+                    printf("pls enter real information!\n");
+            }
+            strcpy(data_age, u);
+            strcat(data_age, "_age");
+            f = fopen(data_age, "w");
+            fprintf(f, "%d", age);
+            fclose(f);
+        }
+        if (strcmp(i, "2") == 0)
+        {
+            do
+            {
+                printf("Sex(male/female): ");
+                scanf("%s", sex);
+                if (strcmp(sex, "male") != 0 && strcmp(sex, "female") != 0)
+                    printf("pls select from bracklet!!\n");
+            } while (strcmp(sex, "male") != 0 && strcmp(sex, "female") != 0);
+            strcpy(data_sex, u);
+            strcat(data_sex, "_sex");
+            f = fopen(data_sex, "w");
+            fprintf(f, "%s", sex);
+            fclose(f);
+        }
+        if (strcmp(i, "3") == 0)
+        {
+            while (1)
+            {
+                char wei[10];
+                printf("Weight(kg)   : ");
+                scanf("%f", &wi);
+                gets(wei);
+                if (wi > 0 && wei[0] == '\0')
+                    break;
+                else
+                    printf("pls enter real information!\n");
+            }
+
+            strcpy(data_weight, u);
+            strcat(data_weight, "_weight");
+            f = fopen(data_weight, "w");
+            fprintf(f, "%.2f", wi);
+            fclose(f);
+        }
+        if (strcmp(i, "4") == 0)
+        {
+            while (1)
+            {
+                char hei[10];
+                printf("Height(meter): ");
+                scanf("%f", &hi);
+                gets(hei);
+                if ((hi <= 2) && (hi > 0) && hei[0] == '\0')
+                    break;
+                else
+                    printf("pls enter real information!\n");
+            }
+            strcpy(data_height, u);
+            strcat(data_height, "_height");
+            f = fopen(data_height, "w");
+            fprintf(f, "%.2f", hi);
+            fclose(f);
+        }
+        if (strcmp(i, "5") == 0)
+        {
+            while (1)
+            {
+                char exe[10];
+                printf("Exercise per week(max is 5): ");
+                scanf("%d", &exi);
+                gets(exe);
+                if (exi <= 5 && exi >= 0 && exe[0] == '\0')
+                    break;
+                else
+                    printf("pls select from bracklet!!\n");
+            }
+            strcpy(data_exercise, u);
+            strcat(data_exercise, "_exercise");
+            f = fopen(data_exercise, "w");
+            fprintf(f, "%d", exi);
+            fclose(f);
+        }
+        if (strcmp(i, "6") == 0)
+        {
+            do
+            {
+                char *p, *cp;
+                p = &password[0], cp = &comfirm_pass[0];
+                fflush(stdin);
+                printf("Create your password:");
+                hpassword(p);
+                fflush(stdin);
+                printf("comfirm your password:");
+                hpassword(cp);
+                if (strcmp(password, comfirm_pass) != 0)
+                    printf("check your password!\n");
+            } while (strcmp(password, comfirm_pass) != 0);
+            strcpy(data_pass, u);
+            strcat(data_pass, "_password");
+            f = fopen(data_pass, "w");
+            fprintf(f, "%s", password);
+            fclose(f);
+        }
+        if (strcmp(i, "7") == 0)
+        {
+            printf("create your verify question for forgeting password: ");
+            scanf(" %[^\n]", verify_qa);
+            printf("correct answer for your verify: ");
+            scanf(" %[^\n]", verify_ans);
+            strcpy(data_verify_qa, u);
+            strcat(data_verify_qa, "_verify_qa");
+            f = fopen(data_verify_qa, "w");
+            fprintf(f, "%s", verify_qa);
+            fclose(f);
+            strcpy(data_verify_ans, u);
+            strcat(data_verify_ans, "_verify_ans");
+            f = fopen(data_verify_ans, "w");
+            fprintf(f, "%s", verify_ans);
+            fclose(f);
+        }
+        if (strcmp(i, "8") == 0)
+        {
+            select_function(u);
+            break;
+        }
     }
 }
 int goback() // ย้อนกลับไป
@@ -1010,7 +1212,6 @@ void calculate_calories(char user[50])
                         break;
                     else
                         printf("Please do it correctly, I beg you, my dear.\n");
-
                 }
 
                 Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
@@ -1044,7 +1245,6 @@ void calculate_calories(char user[50])
                         break;
                     else
                         printf("Please do it correctly, I beg you, my dear.\n");
-
                 }
                 Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
                 if (tolower(Bud_ADom) == 'n' && Qin == 1)
@@ -1121,7 +1321,6 @@ void calculate_calories(char user[50])
                 break;
             else
                 printf("Please do it correctly, I beg you, my dear.\n");
-
         }
 
         if (knowncal == 1)
@@ -1158,7 +1357,6 @@ void calculate_calories(char user[50])
                         }
                         else
                             printf("Please do it correctly, I beg you, my Honey.\n");
-
                     }
                     Neg = 1;
                 } while (Cal < 0);
@@ -1208,7 +1406,6 @@ void calculate_calories(char user[50])
                         }
                         else
                             printf("Please do it correctly, I beg you, my Honey.\n");
-
                     }
                     Neg = 1;
                 } while (Prot < 0);
@@ -1237,7 +1434,6 @@ void calculate_calories(char user[50])
                         }
                         else
                             printf("Please do it correctly, I beg you, my Sweetie.\n");
-
                     }
                     Neg = 1;
                 } while (Car < 0);
@@ -1266,7 +1462,6 @@ void calculate_calories(char user[50])
                         }
                         else
                             printf("Please do it correctly, I beg you, my dear.\n");
-
                     }
                     Neg = 1;
                 } while (Fat < 0);
@@ -1295,7 +1490,6 @@ void calculate_calories(char user[50])
                         }
                         else
                             printf("Please do it correctly, I beg you, my dear.\n");
-
                     }
                     Neg = 1;
                 } while (Fi < 0);
@@ -1369,7 +1563,7 @@ void calculate_calories(char user[50])
         else if (REC == 3)
         {
             system("cls");
-            LOUIS=1;
+            LOUIS = 1;
             printf("You want to back to the calculate calories page.\n");
             printf("Go to the calculate calaries page.\n");
             edit_data_calculate_calories(user); // อย่าลืมเชื่อมไปหน้ารวมฟังก์ชั่น;
@@ -1618,7 +1812,6 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                                     break;
                                 else
                                     printf("Please do it correctly, I beg you, my dear.\n");
-
                             }
                             Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
                             if (tolower(Bud_ADom) == 'y' && Qin == 1)
@@ -1650,7 +1843,6 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                                     break;
                                 else
                                     printf("Please do it correctly, I beg you, my dear.\n");
-
                             }
 
                             Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
@@ -1710,8 +1902,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                                     break;
                                 else
                                     printf("Please do it correctly, I beg you, my dear.\n");
-
-                            } 
+                            }
 
                             Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
                             if (tolower(Bud_ADom) == 'y' && Qin == 1)
@@ -1743,7 +1934,6 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                                     break;
                                 else
                                     printf("Please do it correctly, I beg you, my dear.\n");
-
                             }
 
                             Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
@@ -1792,7 +1982,6 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                             }
                             else
                                 printf("Please do it correctly, I beg you, my dear.\n");
-
                         }
                         Neg = 1;
                     } while (record->calories < 0);
@@ -1896,8 +2085,7 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                             }
                             else
                                 printf("Please do it correctly, I beg you, my dear.\n");
-
-                        } 
+                        }
                         Neg = 1;
                     } while (record->protein < 0);
                 }
@@ -1933,7 +2121,6 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                             }
                             else
                                 printf("Please do it correctly, I beg you, my dear.\n");
-
                         }
                         Neg = 1;
                     } while (record->carbs < 0);
@@ -1970,7 +2157,6 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                             }
                             else
                                 printf("Please do it correctly, I beg you, my dear.\n");
-
                         }
                         Neg = 1;
                     } while (record->fat < 0);
@@ -2008,7 +2194,6 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                             }
                             else
                                 printf("Please do it correctly, I beg you, my dear.\n");
-
                         }
                         Neg = 1;
                     } while (record->fiber < 0);
@@ -2059,7 +2244,6 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                                     break;
                                 else
                                     printf("Please do it correctly, I beg you, my dear.\n");
-
                             }
 
                             Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
@@ -2092,7 +2276,6 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                                     break;
                                 else
                                     printf("Please do it correctly, I beg you, my dear.\n");
-
                             }
 
                             Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
@@ -2152,7 +2335,6 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                                     break;
                                 else
                                     printf("Please do it correctly, I beg you, my dear.\n");
-
                             }
 
                             Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
@@ -2185,7 +2367,6 @@ void editRecord(FoodRecord *record, FoodRecord *Real, FoodRecord *data)
                                     break;
                                 else
                                     printf("Please do it correctly, I beg you, my dear.\n");
-
                             }
 
                             Qin = (tolower(Bud_ADom) == 'y' || tolower(Bud_ADom) == 'n' ? 1 : 0);
@@ -2889,7 +3070,7 @@ void drawgraph(FILE *dietaryinfo)
     rewind(dietaryinfo);
     char line[256], date[15];
     int calories, meal_day, meal_month, meal_year;
-    
+
     while (fgets(line, 256, dietaryinfo))
     {
         if (sscanf(line, "%*s %*s %*d %*d %*d %*d %s %d", date, &calories) == 2)
@@ -2897,12 +3078,11 @@ void drawgraph(FILE *dietaryinfo)
             sscanf(date, "%d/%d/%d", &meal_day, &meal_month, &meal_year);
             int start_day_of_week = 1 + ((day - 1) / 7) * 7;
             int end_day_of_week = start_day_of_week + 6;
-            if (meal_month == month && meal_year == year &&meal_day >= start_day_of_week && meal_day <= end_day_of_week )
-            {   
-                int week_index = (meal_day-1) % 7;
+            if (meal_month == month && meal_year == year && meal_day >= start_day_of_week && meal_day <= end_day_of_week)
+            {
+                int week_index = (meal_day - 1) % 7;
                 bars[week_index] += calories;
             }
-            
         }
     }
     for (i = 0; i < 30; i++)
