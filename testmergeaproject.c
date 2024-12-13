@@ -565,7 +565,7 @@ void select_function(char user[50]) // เอาparameter user ไปต่อ�
     }
     else if (strcmp(f_c, "5") == 0)
     {
-        system("cls");
+        
         editdata(user);
     }
     else if (strcmp(f_c, "6") == 0)
@@ -588,6 +588,7 @@ int editdata(char u[50])
     int age, wi, hi, exi;
     while (1)
     {
+        system("cls");
         char i[10];
         printf("-edit-----------\n");
         printf("1.age\n");
