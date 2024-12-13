@@ -585,7 +585,8 @@ int editdata(char u[50])
     char sex[10], password[50], comfirm_pass[50], verify_qa[50], verify_ans[50], data_age[50],
         data_sex[50], data_weight[50], data_height[50], data_exercise[50], data_pass[50],
         data_verify_qa[50], data_verify_ans[50];
-    int age, wi, hi, exi;
+    int age, exi;
+    float wi,hi;
     while (1)
     {
         system("cls");
@@ -658,17 +659,17 @@ int editdata(char u[50])
         }
         if (strcmp(i, "4") == 0)
         {
-            while (1)
-            {
-                char hei[10];
-                printf("Height(meter): ");
-                scanf("%f", &hi);
-                gets(hei);
-                if ((hi <= 2) && (hi > 0) && hei[0] == '\0')
-                    break;
-                else
-                    printf("pls enter real information!\n");
-            }
+           while (1)
+        {
+            char hei[10];
+            printf("Height(meter): ");
+            scanf("%f", &hi);
+            gets(hei);
+            if (hi <= 2 && hi > 0 && hei[0] == '\0')
+                break;
+            else
+                printf("pls enter real information!\n");
+        }
             strcpy(data_height, u);
             strcat(data_height, "_height");
             f = fopen(data_height, "w");
@@ -734,6 +735,7 @@ int editdata(char u[50])
         }
         if (strcmp(i, "8") == 0)
         {
+            system("cls");
             select_function(u);
             break;
         }
